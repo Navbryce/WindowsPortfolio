@@ -1,0 +1,17 @@
+<div [style.display] ="this.minimizedStatus ? 'none': 'block'" [@minimizeState]="minimized" #windowComponent [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper" style="min-width: 200px; min-height: 200px;">
+  <div class="header-wrapper">
+      <div #headerBar class="actual-header">
+        <h5 class="header">HEADER {{id}}</h5>
+      </div>
+      <div class="buttons">
+        <span [icon]="'minimize'" (click)="minimizeListener($event)"></span>
+        <span [icon]="expanded == null ? 'expand' : 'expand-reverse'" (click)="expandListener($event)"></span>
+        <span [icon]="'close'" (click)="closeListener($event)"></span>
+      </div>
+  </div>
+  <div class="content-wrapper">
+    <ng-content></ng-content>
+    CONTENT<br>CONTENT<br>CONTENT<br>
+    {{programDefinition.icon}}
+  </div>
+</div>

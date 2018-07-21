@@ -1,0 +1,68 @@
+.time {
+  align-items: center;
+  display: flex;
+  font-size: 12px;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  right: 10px;
+  height: 100%;
+}
+.wrapper {
+  bottom: 0;
+  height: 40px;
+  position: absolute;
+  user-select: none;
+  width: 100%;
+
+  .content {
+    color: white;
+    height: 100%;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+
+    .buttons {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      position: absolute;
+
+      .button {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        margin-left: 3px;
+        margin-right: 3px;
+        width: 50px;
+      }
+
+      .windows-button {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        & > div {
+          background-image: url("../../assets/taskbar-assets/images/windows.png");
+          height: 18px;
+          width: 18px;
+        }
+        &:hover > div {
+          background-image: url("../../assets/taskbar-assets/images/windows-active.png");
+        }
+      }
+    }
+  }
+
+  &::after { /*background div*/
+    background-color: black;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: .8;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+  }
+}

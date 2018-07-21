@@ -1,0 +1,20 @@
+<div class="wrapper">
+  <div class="content">
+    <div class="buttons">
+      <div class="button windows-button">
+        <div class="windows-button">
+        </div>
+      </div>
+      <div *ngFor="let programStatus of _iconsArray" program-icon [imageSource]="programStatus.programDefinition.icon" [status]="programStatus.status" (iconClick)="clickListener(programStatus, $event)" class="button" >
+      </div>
+    </div>
+    <div class="time">
+      <div>
+        {{_currentDate | date:'h:mm a'}}
+      </div>
+      <div>
+        {{_currentDate | date:'M/d/y'}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+svg {
+  stroke: black;
+  stroke-width: 5;
+  shape-rendering: "crispEdges";
+}
+
+.close {
+  transition: stroke 200ms;
+  &:hover {
+    background-color: red !important;
+    svg {
+      stroke: white !important;
+    }
+  }
+}
+.wrapper {
+  display: inline-block;
+  padding-bottom: 5px;
+  padding-left:15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  transition: background-color 200ms;
+
+   &:hover {
+    background-color: rgb(200, 200, 200);
+  }
+}

@@ -1,0 +1,4 @@
+<div (click)="clickListener(0)" [ngClass]="status == 1 ? 'focus' : 'focus-not'" class="wrapper">
+  <img src="{{imageSource}}">
+  <span *ngIf="status != -2" class="blue-bar"></span>
+</div>

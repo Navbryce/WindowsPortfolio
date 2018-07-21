@@ -1,0 +1,46 @@
+.wrapper {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  img, span {
+    position: relative;
+    z-index: 1;
+  }
+  .blue-bar {
+    background-color: #89b6ff;
+    bottom: 0px;
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    width: 100%;
+  }
+}
+@mixin template($color, $lighten) {
+  &::after {
+    background-color: $color;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: .6;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+  }
+  &:hover {
+    &::after {
+      background-color: lighten($color, $lighten);
+    }
+  }
+}
+.focus-not {
+  @include template(rgb(0, 0, 0), 30%);
+}
+.focus {
+  @include template(rgb(130, 130, 130), 20%);
+}

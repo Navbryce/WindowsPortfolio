@@ -1,0 +1,71 @@
+.content-wrapper {
+  display: inline-block;
+  min-width: auto;
+}
+
+.focused {
+  border: 2px solid #04a7ff;
+  .actual-header h5 {
+    color: black;
+  }
+}
+.focused-not {
+  border: 2px solid transparent; /*makes adding the blue border not resize everything*/
+  .actual-header h5 {
+    color: rgb(100, 100, 100);
+  }
+}
+
+.header-wrapper {
+  height: 40px;
+  width: 100%;
+  position: relative;
+
+  .actual-header {
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    user-select: none;
+
+    &::after {
+      background-color: white;
+      display: block;
+      content: '';
+      left: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 0;
+    }
+  }
+
+
+  .buttons {
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .header {
+    color: black;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+
+.wrapper {
+  background-color: white;
+  display: block;
+  height: 400px;
+  padding: 0;
+  position: absolute;
+  user-select: none;
+  width: 20%;
+}
