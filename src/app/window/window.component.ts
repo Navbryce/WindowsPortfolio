@@ -78,9 +78,19 @@ export class WindowComponent {
 
     // add listeners
     this.addListeners();
-    this.windowResize(250, 250);
-    this.setWindowLocation(50, 50);
 
+    if (this.programDefinition.lastClosed != null) {
+      this.setWindowLocation(this.programDefinition.lastClosed.x, this.programDefinition.lastClosed.y);
+      this.windowResize(this.programDefinition.lastClosed.width, this.programDefinition.lastClosed.height);
+      console.log(this.programDefinition);
+      if (this.programDefinition.lastClosed.expanded != null) {
+        this.toggleExpand(true);
+      }
+    } else {
+      this.setWindowLocation(50, 50);
+      this.windowResize(250, 250);
+
+    }
 
     this.windowComponent.nativeElement.id = this.id;
     this.initializeTaskbarHandshake();
@@ -162,6 +172,13 @@ export class WindowComponent {
     if (newStatus != this.closed) {
       await this.setMinimize(newStatus); // hide the window
       this.closed = newStatus;
+      this.programDefinition.lastClosed = {
+        height: this.currentHeight,
+        width: this.currentWidth,
+        x: this.currentX,
+        y: this.currentY,
+        expanded: this.expanded
+      };
       this.closeWindow.emit(true); // tell the wrapper program to close this instance of the program
     }
   }

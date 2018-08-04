@@ -1,0 +1,46 @@
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(blue, $color, $percentage);
+}
+
+.wrapper {
+  $width: 60px;
+  display: inline-block;
+  height: ($width * 1.5);
+  margin: 2px;
+  user-select: none;
+  width: $width;
+
+  .content-wrapper {
+    $iconWidth: $width - 20px;
+    // have a transparent border so that when the user selects the icon and an actual border is added, the content doesn't move
+    border: 1px solid rgba(0, 0, 0, 0);
+
+    img {
+      height: $iconWidth;
+      object-fit: contain;
+      width: $iconWidth;
+    }
+    p {
+      color: white;
+      font-size: 9pt;
+      margin-bottom: 0px;
+      margin-top: 5px;
+      text-align: center;
+      text-shadow: 2px 2px 1px black;
+    }
+  }
+}
+.selected {
+  $color: rgb(70, 130, 244);
+  $startingColor: rgba($color, .3);
+  background-color: $startingColor;
+  border: 1px tint($startingColor, 20%) solid !important;
+
+  &:hover {
+    background-color: tint(shade($startingColor, 10%), 10%);
+  }
+}

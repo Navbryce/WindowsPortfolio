@@ -16,16 +16,4 @@
     z-index: 1;
   }
 
-  .background {
-    background-image: url("../assets/general-images/background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;    bottom: 0;
-    height: 100%;
-    left: 0;
-    object-fit: cover;
-    position: absolute;
-    top: 0px;
-    width: 100%;
-    z-index: -1;
-  }
 }

@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { ProgramListService } from './program-list.service';
 
 // TODO THIS NEEDS TO BE RENAMED TO PROGRAM CONTROLLER
-// IN CHARGE OF UPDATING AND MAINTAINING PROGRAM STATUSES. 
+// IN CHARGE OF UPDATING AND MAINTAINING PROGRAM STATUSES.
 
 @Injectable()
 export class TaskbarService {
@@ -16,7 +16,7 @@ export class TaskbarService {
   1: Focused
   */
   private _update = new BehaviorSubject<string>(null);  // string represents the id of what is being updated
-
+  public activeProgramsCount: any = {}; // key is the program definition id. value is the count
   public currentFocusId = null;
   public get pinProgramsDesktop () { // returns the programs that are permanently pinned to the desktop
     return this.programListService.desktopProgramsArray;
@@ -33,10 +33,13 @@ export class TaskbarService {
 
   public closeProgram (id: string) {
    this.findNewFocusWithAction(id, -2);
+   this.activeProgramsCount[this._taskbarMap[id].programDefinition.id] -= 1;
   }
 
   public createProgramInstanceFromDef (programDefinition): any {  // send the program definition of the program you're trying to instantiate. will make the program
-    this.programListService.createProgram(programDefinition);
+    if (!programDefinition.unique || (this.activeProgramsCount[programDefinition.id] == null || this.activeProgramsCount[programDefinition.id] == 0)) {
+      this.programListService.createProgram(programDefinition);
+    }
   }
 
   public createProgramInstanceFromId (programId: string): any {
@@ -44,16 +47,20 @@ export class TaskbarService {
     programId - THE programID NOT the instance id.
     returns the programDefinition
     */
-    return this.programListService.createProgramFromId(programId);
+    return this.createProgramInstanceFromDef(this.programListService.programsMap[programId]);
   }
 
-  public createProgramStatus (id: string, image_source: string, programDefinition: any, status: number): any {  // returns the status object. throws Exception if status already in array
+  public createProgramStatus (id: string, image_source: string, programDefinition: any, status: number): any {
+    /* returns the status object. throws Exception if status already in array
+      only called when a program reopens or is being opened
+    */
     var returnObject;
     if (this._taskbarMap[id] != null) {
       if (this._taskbarMap[id] == -2 && status != -2) { // the program used to have a status of -2, meaning the program is being reopened
          this.updateProgramStatus(id, status);
       } else {
         returnObject = new Error(`The program with ${id} already had a status object created for it and the program was not previously closed.`);
+        return returnObject;
       }
     } else {
       returnObject = {
@@ -66,6 +73,7 @@ export class TaskbarService {
       this._update.next(id);
       this.taskbarArray.push(returnObject);
     }
+    this.activeProgramsCount[programDefinition.id] = this.activeProgramsCount[programDefinition.id] == null ? 1 : this.activeProgramsCount[programDefinition.id] + 1;
     return returnObject;
   }
 
@@ -104,7 +112,6 @@ export class TaskbarService {
     if (statusObject != null) {
       returnValue = statusObject;
       if (statusObject.status != newStatus) {  // only send the update event if the program icon actually has a new status
-
         statusObject.status = newStatus;
         this._update.next(id);
       }

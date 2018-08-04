@@ -8,7 +8,6 @@ import { ProgramDefinitions } from './programs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @ViewChild('background') background: ElementRef;
   @ViewChild('desktop', {read: ViewContainerRef}) desktop: ViewContainerRef;
 
   constructor (private componentFactoryResolver: ComponentFactoryResolver, private programListService: ProgramListService, private taskbarService: TaskbarService) {
@@ -16,11 +15,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-      var background = <HTMLElement> this.background.nativeElement;
-      background.addEventListener("mousedown", ($event) => {
-        this.taskbarService.updateFocus(null);
-      });
-
       // set up the listeners for creating programs. NOTE: This is done in NgOnInit because @ViewChild needs to be initialized before createProgram can be called
       this.createStreamLoop = this.createStreamLoop.bind(this);
       this.programListService.createStream.subscribe(this.createStreamLoop);

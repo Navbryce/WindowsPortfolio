@@ -4,3 +4,27 @@ body {
   padding: 0;
   overflow: hidden;
 }
+
+.flex {
+  display: flex;
+  &.horizon-cent {
+    justify-content: center;
+  }
+  &.column {
+    flex-direction: column;
+  }
+  &.vert-cent {
+    align-items: center;
+  }
+}
+
+.full {
+  @extend .full-height;
+  @extend .full-width;
+}
+.full-height {
+  height: 100%;
+}
+.full-width {
+  width: 100%;
+}
