@@ -1,7 +1,7 @@
-<div [style.display] ="this.minimizedStatus ? 'none': 'block'" [@minimizeState]="minimized" #windowComponent [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper" style="min-width: 200px; min-height: 200px;">
+<div [style.display] ="this.minimizedStatus ? 'none': 'block'" [@minimizeState]="minimized" #windowComponent [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper">
   <div class="header-wrapper">
       <div #headerBar class="actual-header">
-        <h5 class="header">HEADER {{id}}</h5>
+        <h5 class="header">{{headerText}}</h5>
       </div>
       <div class="buttons">
         <span [icon]="'minimize'" (click)="minimizeListener($event)"></span>

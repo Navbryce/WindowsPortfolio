@@ -6,6 +6,9 @@
   @return mix(blue, $color, $percentage);
 }
 
+$color: rgb(70, 130, 244);
+$startingColor: rgba($color, .3);
+
 .wrapper {
   $width: 60px;
   display: inline-block;
@@ -32,11 +35,13 @@
       text-align: center;
       text-shadow: 2px 2px 1px black;
     }
+    &:hover {
+      background-color: tint(shade($startingColor, 10%), 10%);
+      border: 1px tint($startingColor, 20%) solid !important;
+    }
   }
 }
 .selected {
-  $color: rgb(70, 130, 244);
-  $startingColor: rgba($color, .3);
   background-color: $startingColor;
   border: 1px tint($startingColor, 20%) solid !important;
 

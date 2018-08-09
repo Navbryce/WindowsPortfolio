@@ -26,6 +26,7 @@ export class WindowComponent {
   static skipFrame = 1; // use to make faster
 
   private frameCounter = 0;
+  private _headerText: string; // honestly i need to start transitioning to using _ to denote private variables
   private minimized: any; // an array with the minimized info and parameters for the animation
 
   public closed: boolean; // true if closed
@@ -38,6 +39,13 @@ export class WindowComponent {
 
   public expanded: any; // either null (not expanded) or {"previousHeight":..., "previousWidth": ..., "previousX": ..., "previousY": ...}
   public focused: boolean;
+  public get headerText () {
+    return this._headerText;
+  }
+  public set headerText (newText: string) {
+    this._headerText = newText;
+    this.updateMinValues();
+  }
   public id: string;
 
   public minimizedStatus: boolean = false; // true if minimized
@@ -75,16 +83,22 @@ export class WindowComponent {
     this.id = this.inputId;
     this.viewportResized({}); // updated global values like windowWidth and windowHeight (must be called first because other functions in constructor are dependent on the values updated by this ufnction)
 
+    // set default header this
+    this.headerText = this.inputId;
+    this.updateMinValues();
 
     // add listeners
     this.addListeners();
 
     if (this.programDefinition.lastClosed != null) {
-      this.setWindowLocation(this.programDefinition.lastClosed.x, this.programDefinition.lastClosed.y);
-      this.windowResize(this.programDefinition.lastClosed.width, this.programDefinition.lastClosed.height);
+
       console.log(this.programDefinition);
       if (this.programDefinition.lastClosed.expanded != null) {
         this.toggleExpand(true);
+        this.expanded = this.programDefinition.lastClosed.expanded;
+      } else {
+        this.setWindowLocation(this.programDefinition.lastClosed.x, this.programDefinition.lastClosed.y);
+        this.windowResize(this.programDefinition.lastClosed.width, this.programDefinition.lastClosed.height);
       }
     } else {
       this.setWindowLocation(50, 50);
@@ -205,6 +219,12 @@ export class WindowComponent {
     setTimeout(() => { // disable transitions after the transition runs
       this.windowComponent.nativeElement.style.transition = "";
     }, 100)
+  }
+
+  public updateMinValues (): void {
+    /* call this if the header bar text changes for some reason */
+    this.minHeight = 40;
+    this.minWidth = 126 + this.headerText.length * 5;
   }
 
   // PUBLIC FUNCTIONS END
@@ -422,9 +442,11 @@ export class WindowComponent {
         });
       }
     } else {
-      window.requestAnimationFrame(() => {
-        this.windowResize(deltaX, this.currentHeight);
-      });
+      if (deltaX >= this.minWidth) {
+        window.requestAnimationFrame(() => {
+          this.windowResize(deltaX, this.currentHeight);
+        });
+      }
     }
   }
 
@@ -443,9 +465,11 @@ export class WindowComponent {
           });
         }
       } else {
-        window.requestAnimationFrame(() => {
-          this.windowResize(this.currentWidth, deltaY);
-        });
+        if (deltaY >= this.minHeight) {
+          window.requestAnimationFrame(() => {
+            this.windowResize(this.currentWidth, deltaY);
+          });
+        }
       }
     }
   }
@@ -484,8 +508,6 @@ export class WindowComponent {
   private viewportResized (event) {
     this.windowWidth = document.documentElement.clientWidth;
     this.windowHeight = document.documentElement.clientHeight;
-    this.minWidth = parseInt(this.windowComponent.nativeElement.style.minWidth);
-    this.minHeight = parseInt(this.windowComponent.nativeElement.style.minHeight);
   }
 
     // Resizing/Window Movement Listeners/Actions END
