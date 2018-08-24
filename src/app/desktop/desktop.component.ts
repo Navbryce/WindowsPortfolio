@@ -1,6 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ShortcutComponent } from './shortcut';
 
+// custom components
+import { CustomComponent } from '../basic';
+
 // services
 import { TaskbarService } from '../services';
 
@@ -9,17 +12,24 @@ import { TaskbarService } from '../services';
   templateUrl: './desktop.component.html',
   styleUrls: ['./desktop.component.scss']
 })
-export class DesktopComponent implements OnInit {
+export class DesktopComponent extends CustomComponent implements OnInit {
   /*
   PURPOSE: Desktop shortcuts, background image, changing focus from program to desktop when clicked
   */
+  public readonly ICON_WIDTH: number = 60;
+  public readonly ICON_HEIGHT: number = 90;
+
+  public height: number;
   public programDefinitions: Array<any>;
   public selected: ShortcutComponent = null;
+  public width: number;
+
+  private iconGrid: Array<Array<any>>;
 
   @ViewChild('wrapper') wrapper: ElementRef;
 
   constructor (private taskbarService: TaskbarService) {
-
+    super();
   }
 
   ngOnInit () {
@@ -27,7 +37,8 @@ export class DesktopComponent implements OnInit {
     background.addEventListener("mousedown", ($event) => {
       this.taskbarService.updateFocus(null);
     });
-    this.forceUpdatedDesktop();
+    this.forceUpdatedDesktop(); // get program definitions
+    this.windowResize();
   }
 
   public forceUpdatedDesktop (): void {
@@ -67,5 +78,22 @@ export class DesktopComponent implements OnInit {
         this.launchProgram(event.program);
         break;
     }
+  }
+
+  public refreshIconGrid (): void {
+    /*
+    Refreshes the icon grid based on the desktop size
+    */
+    var numberOfColumns = this.width / this.ICON_WIDTH;
+    var numberOfRows = this.height / this.ICON_HEIGHT;
+  }
+
+  public windowResize (): void {
+    /* called when the window resizes
+      program definitions already need to be set
+     */
+    this.width = this.wrapper.nativeElement.offsetWidth;
+    this.height = this.wrapper.nativeElement.offsetHeight;
+    this.refreshIconGrid();
   }
 }
