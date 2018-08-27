@@ -26,6 +26,7 @@ export class ShortcutComponent implements OnInit {
         program: this.programDefinition
       });
     });
+
   }
   // END Private Functions
 }

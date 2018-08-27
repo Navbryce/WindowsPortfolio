@@ -47,6 +47,21 @@ export class DesktopComponent extends CustomComponent implements OnInit {
 
   }
 
+  public getCorresponding (x: number, y: number): any {
+    /*
+    x - pixel value that describes x position
+    y - pixel value that describes y position
+    returns {column: {{number}}, row: {{number}}}
+    */
+    return {column: Math.floor(x / this.ICON_WIDTH), row: Math.floor(y / this.ICON_HEIGHT)};
+  }
+
+  public iconMoveListener (event: any): void {
+    /* called when an icon has been moved */
+    var newPosition = this.getCorresponding(event.x, event.y);
+    console.log(newPosition);
+  }
+
   public launchProgram (programDefinition: any): void {
     /* call to launch a program */
     this.taskbarService.createProgramInstanceFromDef(programDefinition);
@@ -84,8 +99,18 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     /*
     Refreshes the icon grid based on the desktop size
     */
-    var numberOfColumns = this.width / this.ICON_WIDTH;
-    var numberOfRows = this.height / this.ICON_HEIGHT;
+    var numberOfColumns = Math.floor(this.width / this.ICON_WIDTH);
+    var numberOfRows = Math.floor(this.height / this.ICON_HEIGHT);
+
+    if (this.iconGrid == null ||
+      (numberOfRows != this.iconGrid.length || numberOfColumns != this.iconGrid[0].length)) {
+      var newIconGrid: Array<Array<any>> = new Array<Array<any>>(numberOfRows);
+      newIconGrid.map((array) => {
+        return new Array<any>(numberOfColumns);
+      });
+      this.iconGrid = newIconGrid;
+      console.log(`Number of columns ${numberOfColumns} and number of rows ${numberOfRows}`);
+    }
   }
 
   public windowResize (): void {
@@ -96,4 +121,15 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     this.height = this.wrapper.nativeElement.offsetHeight;
     this.refreshIconGrid();
   }
+
+  /* BEGIN Private Functions */
+  private moveIcon (element: HTMLElement, positionObject: any) {
+    /*
+    Used to move the shortcut icons
+    element - the shortcut's HTML Element
+    positionObject - an object with a 'column' and 'row' keys
+    */
+  }
+  /* END Private Functions */
+
 }

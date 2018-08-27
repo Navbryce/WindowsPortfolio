@@ -1,6 +1,6 @@
 <div #wrapper class="wrapper">
   <div>
-    <shortcut *ngFor="let programDefinition of programDefinitions" #shortcut (click)="selectListener(shortcut)" (event)="shortcutEventListener($event)" [programDefinition]="programDefinition" style="display: inline-block;"></shortcut>
+    <shortcut *ngFor="let programDefinition of programDefinitions" #shortcut (click)="selectListener(shortcut)" (dragend)="iconMoveListener($event)" (event)="shortcutEventListener($event)" [programDefinition]="programDefinition" style="display: inline-block;"></shortcut>
   </div>
   <div #background class="background"></div>
 </div>
