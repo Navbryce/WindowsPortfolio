@@ -29,7 +29,7 @@ import { ProgramListService } from './services';
     BrowserModule,
     BrowserAnimationsModule
   ],
-  entryComponents: [TestProgram],
+  entryComponents: [ShortcutComponent, TestProgram],
   providers: [ProgramListService, TaskbarService],
   bootstrap: [AppComponent]
 })

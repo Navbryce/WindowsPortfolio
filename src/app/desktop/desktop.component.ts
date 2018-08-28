@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ShortcutComponent } from './shortcut';
 
 // custom components
@@ -16,8 +16,11 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   /*
   PURPOSE: Desktop shortcuts, background image, changing focus from program to desktop when clicked
   */
-  public readonly ICON_WIDTH: number = 60;
-  public readonly ICON_HEIGHT: number = 90;
+
+  private shortCutReferences: Array<any> = []; // all the shortcut component references
+
+  public static readonly ICON_WIDTH: number = 60;
+  public static readonly ICON_HEIGHT: number = 100;
 
   public height: number;
   public programDefinitions: Array<any>;
@@ -27,8 +30,10 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   private iconGrid: Array<Array<any>>;
 
   @ViewChild('wrapper') wrapper: ElementRef;
+  @ViewChild('shortCutWrapper', {read: ViewContainerRef}) shortCutWrapper: ViewContainerRef;
 
-  constructor (private taskbarService: TaskbarService) {
+
+  constructor (private componentFactoryResolver: ComponentFactoryResolver, private taskbarService: TaskbarService) {
     super();
   }
 
@@ -38,6 +43,7 @@ export class DesktopComponent extends CustomComponent implements OnInit {
       this.taskbarService.updateFocus(null);
     });
     this.forceUpdatedDesktop(); // get program definitions
+    this.windowResize = this.windowResize.bind(this);
     this.windowResize();
   }
 
@@ -53,13 +59,13 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     y - pixel value that describes y position
     returns {column: {{number}}, row: {{number}}}
     */
-    return {column: Math.floor(x / this.ICON_WIDTH), row: Math.floor(y / this.ICON_HEIGHT)};
+    return {column: Math.floor(x / DesktopComponent.ICON_WIDTH), row: Math.floor(y / DesktopComponent.ICON_HEIGHT)};
   }
 
   public iconMoveListener (event: any): void {
     /* called when an icon has been moved */
     var newPosition = this.getCorresponding(event.x, event.y);
-    console.log(newPosition);
+    this.moveIcon(event.element, newPosition);
   }
 
   public launchProgram (programDefinition: any): void {
@@ -99,17 +105,34 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     /*
     Refreshes the icon grid based on the desktop size
     */
-    var numberOfColumns = Math.floor(this.width / this.ICON_WIDTH);
-    var numberOfRows = Math.floor(this.height / this.ICON_HEIGHT);
+    this.shortCutReferences.forEach((shortCutReference: any) => {
+        shortCutReference.destroy(); // destroy all the old shortcuts references
+    });
+    this.shortCutReferences = []; // all the old shortcuts have been deleted
+
+    var calculation = this.getCorresponding(this.width, this.height);
+    var numberOfColumns = calculation.column;
+    var numberOfRows = calculation.row;
 
     if (this.iconGrid == null ||
       (numberOfRows != this.iconGrid.length || numberOfColumns != this.iconGrid[0].length)) {
-      var newIconGrid: Array<Array<any>> = new Array<Array<any>>(numberOfRows);
-      newIconGrid.map((array) => {
-        return new Array<any>(numberOfColumns);
+      var newIconGrid: Array<Array<any>> = Array.apply(null, Array(numberOfRows));
+      newIconGrid = newIconGrid.map((array) => {
+        return Array.apply(null, Array(numberOfColumns));
       });
       this.iconGrid = newIconGrid;
       console.log(`Number of columns ${numberOfColumns} and number of rows ${numberOfRows}`);
+
+      // create and  place the shortcuts
+      let rowCounter: number = 0;
+      let columnCounter: number = 0;
+      this.programDefinitions.forEach((programDefinition) => {
+        this.createShortcut(programDefinition, {row: rowCounter, column: columnCounter});
+        rowCounter = (rowCounter + 1) % numberOfRows;
+        if (rowCounter == 0) {
+          columnCounter += 1;
+        }
+      });
     }
   }
 
@@ -123,13 +146,77 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   }
 
   /* BEGIN Private Functions */
+  private createShortcut (programDefinition: any, positionObject: any) {
+    /* creates and inserts a shortcut component
+      programDefinition - standard programDefinition
+      positionObject - standard position object (row, column)
+    */
+    var programComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ShortcutComponent);
+    var programReference: any = this.shortCutWrapper.createComponent(programComponentFactory);
+    var componentInstance: ShortcutComponent = <ShortcutComponent>(programReference.instance)
+    componentInstance.initialPosition = DesktopComponent.convertToPosition(positionObject);
+    componentInstance.programDefinition = programDefinition;
+
+    // bind the event listeners
+    this.selectListener = this.selectListener.bind(this);
+    this.iconMoveListener = this.iconMoveListener.bind(this);
+    this.shortcutEventListener = this.shortcutEventListener.bind(this);
+    componentInstance.wrapper.nativeElement.addEventListener('click', () => {
+      this.selectListener(componentInstance.programDefinition);
+    });
+    componentInstance.wrapper.nativeElement.addEventListener('dragend', (event) => {
+      event.element = componentInstance.wrapper.nativeElement;
+      this.iconMoveListener(event);
+    });
+    componentInstance.event.subscribe(this.shortcutEventListener);
+
+    // add the program reference to the array so it can be destroyed if needed
+    this.shortCutReferences.push(programReference);
+
+    // update the icon grid
+    setTimeout(() => {
+      this.iconGrid[positionObject.row][positionObject.column] = this.wrapper.nativeElement;
+    }, 500);
+  }
+
   private moveIcon (element: HTMLElement, positionObject: any) {
     /*
     Used to move the shortcut icons
     element - the shortcut's HTML Element
     positionObject - an object with a 'column' and 'row' keys
     */
+
+    let previousPosition = this.getCorresponding(DesktopComponent.getValue(element.style.left),
+    DesktopComponent.getValue(element.style.top));
+    if (positionObject.row >= 0 && positionObject.column >= 0){
+      let existingElement = this.iconGrid[positionObject.row][positionObject.column];
+      if (existingElement == null || existingElement == undefined) {
+
+
+        this.iconGrid[positionObject.row][positionObject.column] = element;
+        let position = DesktopComponent.convertToPosition(positionObject);
+        element.style.left = position.x + 'px';
+        element.style.top = position.y + 'px';
+
+        // update the previous position as empty
+        this.iconGrid[previousPosition.row][previousPosition.column] = null;
+      } else {
+
+      }
+    }
   }
   /* END Private Functions */
+
+  /* BEGIN Static Functions */
+  public static convertToPosition (positionObject: any) {
+    /* takes standard position object and returns object with x and y keys */
+    return {x: positionObject.column * this.ICON_WIDTH, y: positionObject.row * this.ICON_HEIGHT}
+  }
+
+  public static getValue (valueString: string) {
+    /* value string containing 'px' */
+    return parseInt(valueString, 10);
+  }
+  /* END Static Functions */
 
 }

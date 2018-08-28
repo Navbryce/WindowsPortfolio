@@ -6,15 +6,30 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
   styleUrls: ["./shortcut.component.scss"]
 })
 export class ShortcutComponent implements OnInit {
+
+  public column: number;
+  public initialPosition: any // initialPosition - object with x (number) and y (number) keys
+  public row: number;
+
   @Input() programDefinition: any;
   @Input() selected: boolean = false;
 
   @Output('event') event: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('contentWrapper') contentWrapper: ElementRef;
+  @ViewChild('wrapper') wrapper: ElementRef;
+
+  constructor () {
+  }
 
   ngOnInit () {
     this.addEventListeners();
+    if (this.initialPosition) {
+      let nativeElement = this.wrapper.nativeElement;
+      nativeElement.style.left = this.initialPosition.x + 'px';
+      nativeElement.style.top = this.initialPosition.y + 'px';
+      console.log(this.initialPosition);
+    }
   }
 
   // BEGIN Private Functions
