@@ -1,11 +1,24 @@
+import { ConsoleComponent } from './console'
 import { TestProgram } from './test-program/test-program.component';
 
-export var ProgramDefinitions = [ // positionOnLastClose set by window
+export var ProgramDefinitions = [ // positionOnLastClose set by windodw
+  {
+    component: ConsoleComponent,
+    id: 'console',
+    icon: './assets/programs/console/terminal-icon.png',
+    name: 'Console',
+    openOnStart: false,
+    pin: {
+      desktop: true,
+      taskbar: true
+    },
+    unique: false
+  },
   {
     component: TestProgram,
     id: "windowOne",
     icon: "./assets/taskbar-assets/images/windows.png",
-    name: "Test Program One",
+    name: "Settings",
     openOnStart: false,
     pin: {
       desktop: true,

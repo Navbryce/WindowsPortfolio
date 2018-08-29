@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // components
 import { AppComponent } from './app.component';
 import { IconComponent } from './window/icons'
-import { ProgramComponent, TestProgram } from './programs';
+import { ConsoleComponent, ProgramComponent, TestProgram } from './programs';
 import { DesktopComponent, ShortcutComponent } from './desktop';
 import { TaskbarComponent, ProgramIconComponent } from './taskbar'
 import { WindowComponent } from './window/';
@@ -17,6 +17,7 @@ import { ProgramListService } from './services';
 @NgModule({
   declarations: [
     AppComponent,
+    ConsoleComponent,
     DesktopComponent,
     IconComponent,
     ProgramIconComponent,
@@ -29,7 +30,7 @@ import { ProgramListService } from './services';
     BrowserModule,
     BrowserAnimationsModule
   ],
-  entryComponents: [ShortcutComponent, TestProgram],
+  entryComponents: [ConsoleComponent, ShortcutComponent, TestProgram],
   providers: [ProgramListService, TaskbarService],
   bootstrap: [AppComponent]
 })

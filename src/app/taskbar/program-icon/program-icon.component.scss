@@ -9,6 +9,11 @@
     position: relative;
     z-index: 1;
   }
+  img {
+    height: 18px;
+    object-fit: contain;
+    width: 18px;
+  }
   .blue-bar {
     background-color: #89b6ff;
     bottom: 0px;

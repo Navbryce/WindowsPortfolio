@@ -5,10 +5,14 @@ import { ProgramComponent } from '../program-component.class';
   templateUrl: './test-program.component.html',
   styleUrls: ['./test-program.component.scss']
 })
-export class TestProgram extends ProgramComponent{
+export class TestProgram extends ProgramComponent {
 
   constructor () {
     super(); // generates defaults if not defined, such as id
+  }
+
+  public windowResize (): void {
+    
   }
 
   // @Input() programDefinition: any see /programs for more info (comes from extended class);

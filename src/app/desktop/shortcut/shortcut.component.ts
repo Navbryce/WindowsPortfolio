@@ -28,7 +28,6 @@ export class ShortcutComponent implements OnInit {
       let nativeElement = this.wrapper.nativeElement;
       nativeElement.style.left = this.initialPosition.x + 'px';
       nativeElement.style.top = this.initialPosition.y + 'px';
-      console.log(this.initialPosition);
     }
   }
 

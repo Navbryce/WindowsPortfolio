@@ -121,7 +121,7 @@ export class DesktopComponent extends CustomComponent implements OnInit {
         return Array.apply(null, Array(numberOfColumns));
       });
       this.iconGrid = newIconGrid;
-      console.log(`Number of columns ${numberOfColumns} and number of rows ${numberOfRows}`);
+      // console.log(`Number of columns ${numberOfColumns} and number of rows ${numberOfRows}`);
 
       // create and  place the shortcuts
       let rowCounter: number = 0;
@@ -164,7 +164,17 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     componentInstance.wrapper.nativeElement.addEventListener('click', () => {
       this.selectListener(componentInstance.programDefinition);
     });
+    componentInstance.wrapper.nativeElement.addEventListener('dragstart', (event) => {
+      // sets the default mouse cursor to a normal cursor
+      event.dataTransfer.effectAllowed = "move";
+    });
+    this.wrapper.nativeElement.addEventListener('dragover', (event) => {
+      // sets the default mouse cursor to a normal cursor
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+    });
     componentInstance.wrapper.nativeElement.addEventListener('dragend', (event) => {
+      // call the move listener
       event.element = componentInstance.wrapper.nativeElement;
       this.iconMoveListener(event);
     });
@@ -188,7 +198,9 @@ export class DesktopComponent extends CustomComponent implements OnInit {
 
     let previousPosition = this.getCorresponding(DesktopComponent.getValue(element.style.left),
     DesktopComponent.getValue(element.style.top));
-    if (positionObject.row >= 0 && positionObject.column >= 0){
+    if (positionObject.row >= 0 && positionObject.column >= 0
+        && positionObject.row < this.iconGrid.length
+        && positionObject.column < this.iconGrid[0].length) {
       let existingElement = this.iconGrid[positionObject.row][positionObject.column];
       if (existingElement == null || existingElement == undefined) {
 
