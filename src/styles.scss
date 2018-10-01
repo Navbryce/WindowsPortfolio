@@ -16,6 +16,12 @@ body {
   &.vert-cent {
     align-items: center;
   }
+  &.vert-top {
+    align-items: flex-start;
+  }
+  .grow {
+    flex: 1;
+  }
 }
 
 .full {

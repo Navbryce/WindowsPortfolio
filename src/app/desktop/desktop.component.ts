@@ -29,8 +29,8 @@ export class DesktopComponent extends CustomComponent implements OnInit {
 
   private iconGrid: Array<Array<any>>;
 
-  @ViewChild('wrapper') wrapper: ElementRef;
   @ViewChild('shortCutWrapper', {read: ViewContainerRef}) shortCutWrapper: ViewContainerRef;
+  @ViewChild('wrapper') wrapper: ElementRef;
 
 
   constructor (private componentFactoryResolver: ComponentFactoryResolver, private taskbarService: TaskbarService) {
@@ -80,7 +80,9 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     if (this.selected != null) {
       this.selected.selected = false;
     }
-    component.selected = true;
+    if (!!component) {
+      component.selected = true;
+    }
     this.selected = component;
     return this.selected;
   }
@@ -162,7 +164,7 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     this.iconMoveListener = this.iconMoveListener.bind(this);
     this.shortcutEventListener = this.shortcutEventListener.bind(this);
     componentInstance.wrapper.nativeElement.addEventListener('click', () => {
-      this.selectListener(componentInstance.programDefinition);
+      this.selectListener(componentInstance);
     });
     componentInstance.wrapper.nativeElement.addEventListener('dragstart', (event) => {
       // sets the default mouse cursor to a normal cursor

@@ -11,8 +11,8 @@ export class TestProgram extends ProgramComponent {
     super(); // generates defaults if not defined, such as id
   }
 
-  public windowResize (): void {
-    
+  public windowResize (event: any): void {
+
   }
 
   // @Input() programDefinition: any see /programs for more info (comes from extended class);

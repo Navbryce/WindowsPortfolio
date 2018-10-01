@@ -1,5 +1,11 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
-  <div>
-    aaaaaa
+  <div class="full">
+    <div  #consoleWrapper [style.font-size.pt]="fontSize" class="console-output full">
+      <p *ngFor="let line of lines" class="output">{{line}}</p>
+      <div class="flex input vert-top">
+        <p [style.margin-right.px]="fontSize">{{user}}@{{currentDirectory}} $</p>
+        <textarea #inputArea (keyDown.enter)="consoleKeyListener($event)" [style.font-size.pt]="fontSize" autofocus="true" class="grow"></textarea>
+      </div>
+    </div>
   </div>
 </window-component>

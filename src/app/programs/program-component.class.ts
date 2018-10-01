@@ -24,7 +24,7 @@ export abstract class ProgramComponent extends CustomComponent {
     });
   }
 
-  public abstract windowResize(): void;
+  public abstract windowResize(event: any): void;
 
 
 }

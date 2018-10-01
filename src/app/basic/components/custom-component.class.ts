@@ -1,3 +1,3 @@
 export abstract class CustomComponent {
-  public abstract windowResize ();
+  public abstract windowResize (event: any);
 }

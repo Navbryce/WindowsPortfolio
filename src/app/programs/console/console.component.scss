@@ -1,0 +1,28 @@
+p, textarea {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.console-output {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.input {
+  textarea {
+    background: none;
+    border: none;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.output {
+  width: 100%;
+  word-wrap: break-word;
+}

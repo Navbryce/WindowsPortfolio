@@ -69,7 +69,7 @@ export class WindowComponent {
 
   @Output() closeWindow = new EventEmitter <boolean>(); // a programatic event emitter. accessed by the program-component class
   @Output() minimize = new EventEmitter <boolean>();
-
+  @Output() resizeFlag = new EventEmitter<any>(); // outputs object with width and height keys
 
   @ViewChild('headerBar') headerBar: ElementRef;
   @ViewChild('windowComponent') windowComponent: ElementRef;
@@ -84,7 +84,7 @@ export class WindowComponent {
     this.viewportResized({}); // updated global values like windowWidth and windowHeight (must be called first because other functions in constructor are dependent on the values updated by this ufnction)
 
     // set default header this
-    this.headerText = this.inputId;
+    this.headerText = this.programDefinition.name;
     this.updateMinValues();
 
     // add listeners
@@ -102,7 +102,7 @@ export class WindowComponent {
       }
     } else {
       this.setWindowLocation(50, 50);
-      this.windowResize(250, 250);
+      this.windowResize(500, 500);
 
     }
 
@@ -480,6 +480,7 @@ export class WindowComponent {
     element.style.height = `${newHeight}px`;
     this.currentWidth = newWidth;
     this.currentHeight = newHeight;
+    this.resizeNotify()
   }
 
   private setWindowLocation (x: number, y: number): void { // set the window location
@@ -502,6 +503,11 @@ export class WindowComponent {
       this.currentX = x;
       this.currentY = y;
     }
+  }
+
+  private resizeNotify () {
+    // called when the window has been resized
+    this.resizeFlag.emit({height: this.currentHeight, width: this.currentWidth});
   }
 
   @HostListener('window:resize', ['$event'])
