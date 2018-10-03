@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+
 p, textarea {
   margin: 0;
   padding: 0;
@@ -8,13 +10,22 @@ ul {
 }
 
 .console-output {
+  background-color: black;
   overflow-x: hidden;
   overflow-y: scroll;
 }
+
+$color: #00ff00;
+$consoleFont: 'Inconsolata', monospace;
 .input {
+  color: $color;
+  font-family: $consoleFont;
+
   textarea {
     background: none;
     border: none;
+    color: $color;
+    font-family: $consoleFont;
     resize: none;
 
     &:focus {
@@ -23,6 +34,8 @@ ul {
   }
 }
 .output {
+  color: $color;
+  font-family: $consoleFont;
   width: 100%;
   word-wrap: break-word;
 }

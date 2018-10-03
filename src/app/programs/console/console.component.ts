@@ -1,22 +1,25 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ProgramComponent } from '../program-component.class';
 
+// non angular components and classes
+import { Console } from './console.class';
+
 @Component({
   selector: 'console',
   styleUrls: ['./console.component.scss'],
   templateUrl: './console.component.html'
 })
 export class ConsoleComponent extends ProgramComponent {
-  public currentDirectory: String = "c:/users/"
+  public console: Console;
   public fontSize: number = 12;
   public lines: Array<String> = [];
-  public user: String = "navbryce"
 
   @ViewChild('consoleWrapper') consoleWrapper: ElementRef;
   @ViewChild('inputArea') inputArea: ElementRef;
 
   constructor () {
     super(); // generates defaults if not defined, such as id
+    this.console = new Console("/home/", "navbryce");
   }
 
   public consoleKeyListener (event: any): void {
@@ -26,12 +29,12 @@ export class ConsoleComponent extends ProgramComponent {
     // prevent enter from making a space
     event.preventDefault();
 
-    this.runCommand(command, this.currentDirectory, this.user);
+    this.runCommand(command);
   }
 
-  public runCommand (command: String, currentDirectory: String, user: String): boolean {
+  public runCommand (command: String): boolean {
     // add the command
-    this.addLine(user + '@' + currentDirectory + ' $ ' + command);
+    this.addLine(this.console.user + '@' + this.console.directory + ' $ ' + command);
     return true;
   }
 
