@@ -22,7 +22,7 @@ import {TaskbarService} from '../services';
 ]
 })
 export class WindowComponent {
-  static acceptableError = 10;
+  static acceptableError = 10; // make sure it aligns with the transparent frame's padding
   static skipFrame = 1; // use to make faster
 
   private frameCounter = 0;
@@ -64,10 +64,13 @@ export class WindowComponent {
   public windowHeight: number; // browser height
   public windowWidth: number; // browser width
 
+  private body: HTMLElement = document.getElementById("body");
+
   @Input() programDefinition: any;
   @Input() inputId: string;
 
   @Output() closeWindow = new EventEmitter <boolean>(); // a programatic event emitter. accessed by the program-component class
+  @Output() focusChanged = new EventEmitter<boolean>();
   @Output() minimize = new EventEmitter <boolean>();
   @Output() resizeFlag = new EventEmitter<any>(); // outputs object with width and height keys
 
@@ -122,6 +125,7 @@ export class WindowComponent {
     // console.log(`from ${this.focused} to ${newStatus}`);
     if (newStatus != this.focused) {
       this.focused = newStatus;
+      this.focusChanged.emit(newStatus);
       this.changeDetector.detectChanges(); // for some reason, sometimes a change in focus status is not detected (when the components are first created)
       if (newStatus) {
         this.setZ(2);
@@ -331,6 +335,8 @@ export class WindowComponent {
         this.setCursor("ew-resize");
       } else if (this.onTB != 0) {
         this.setCursor("ns-resize");
+      } else {
+        this.setCursor("default");
       }
     });
   }
@@ -364,13 +370,14 @@ export class WindowComponent {
   private onSideBorderCheck ($event, checkExtremes: boolean): number { // checkExtremes as false will disable checking for extremes. AKA if the cursor is 100 pixels from the left and checkExtremes is false, it will still say its on the side border
     var acceptableError = WindowComponent.acceptableError;
     var offsetX = $event.x - this.currentX;
-
     var onSideBorder = 0;
-    if ((offsetX > this.currentWidth - acceptableError && (!checkExtremes || offsetX < this.currentWidth + acceptableError)) && this.expanded == null) {
+
+    if (((offsetX > this.currentWidth - acceptableError) && (!checkExtremes || offsetX < this.currentWidth + acceptableError)) && this.expanded == null) {
       onSideBorder = 1;
     } else if (((!checkExtremes ||offsetX > -acceptableError) && (offsetX < acceptableError)) && this.expanded == null) {
       onSideBorder = -1;
     }
+
     return onSideBorder; // 0 - no; -1 - left side; 1 - right side
   }
 
@@ -427,7 +434,7 @@ export class WindowComponent {
   }
 
   private resizeSideMovement ($event) { // called after the user clicks and move their mouse on the side borders
-
+    event.preventDefault();
     this.onSideBorderCheckUpdate($event, false); // updates this.onSideBorder variable
 
     var acceptableError = WindowComponent.acceptableError;
@@ -451,6 +458,7 @@ export class WindowComponent {
   }
 
   private resizeTBMovement ($event) { // called after the user clicks and move their mouse on the TB borders
+    event.preventDefault();
     if ($event.clientY >= 0) { // make sure the mouse is within the screen
       this.onTBCheckUpdate($event, false); // updates this.onSideBorder variable
       var acceptableError = WindowComponent.acceptableError;
@@ -476,8 +484,8 @@ export class WindowComponent {
 
   private windowResize (newWidth: number, newHeight: number) {
     var element = <HTMLElement>this.windowComponent.nativeElement;
-    element.style.width = `${newWidth}px`;
-    element.style.height = `${newHeight}px`;
+    element.style.width = `${newWidth - WindowComponent.acceptableError}px`; // - acceptable error because transparent frame
+    element.style.height = `${newHeight - WindowComponent.acceptableError}px`; // - acceptable error because transparent frame
     this.currentWidth = newWidth;
     this.currentHeight = newHeight;
     this.resizeNotify()

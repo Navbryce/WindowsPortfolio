@@ -1,5 +1,6 @@
 .content-wrapper {
   overflow: hidden;
+  height: calc(100% - 31px); // -31 because of header
 }
 
 .focused {
@@ -16,7 +17,7 @@
 }
 
 .header-wrapper {
-  height: 40px;
+  height: 31px;
   position: relative;
   width: 100%;
 
@@ -67,14 +68,18 @@
   }
 }
 
-
-.wrapper {
-  background-color: white;
-  display: block;
+.transparent-frame {
   height: 400px;
   overflow: hidden;
-  padding: 0;
+  padding: 10px; /* make sure this aligns with acceptable error */
   position: absolute;
   user-select: none;
   width: 20%;
+}
+.wrapper {
+  background-color: white;
+  display: block;
+  height: 100%;
+  position: relative;
+  width: 100%;
 }

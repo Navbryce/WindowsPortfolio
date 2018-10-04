@@ -1,15 +1,17 @@
-<div [style.display] ="this.minimizedStatus ? 'none': 'block'" [@minimizeState]="minimized" #windowComponent [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper">
-  <div class="header-wrapper">
-      <div #headerBar class="actual-header">
-        <h5 class="header">{{headerText}}</h5>
-      </div>
-      <div class="buttons">
-        <span [icon]="'minimize'" (click)="minimizeListener($event)"></span>
-        <span [icon]="expanded == null ? 'expand' : 'expand-reverse'" (click)="expandListener($event)"></span>
-        <span [icon]="'close'" (click)="closeListener($event)"></span>
-      </div>
-  </div>
-  <div class="content-wrapper full">
-    <ng-content></ng-content>
+<div [style.display] ="this.minimizedStatus ? 'none': 'block'" [@minimizeState]="minimized" #windowComponent class="transparent-frame">
+  <div [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper">
+    <div class="header-wrapper">
+        <div #headerBar class="actual-header">
+          <h5 class="header">{{headerText}}</h5>
+        </div>
+        <div class="buttons">
+          <span [icon]="'minimize'" (click)="minimizeListener($event)"></span>
+          <span [icon]="expanded == null ? 'expand' : 'expand-reverse'" (click)="expandListener($event)"></span>
+          <span [icon]="'close'" (click)="closeListener($event)"></span>
+        </div>
+    </div>
+    <div class="content-wrapper full-width">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>
