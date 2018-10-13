@@ -1,6 +1,6 @@
-<window-component [inputId]="id" [programDefinition]="programDefinition">
+<window-component [inputId]="id" [programDefinition]="programDefinition" (focusChanged)="focusChanged($event)">
   <div class="full">
-    <div  #consoleWrapper [style.font-size.pt]="fontSize" class="console-output full">
+    <div #consoleWrapper [style.font-size.pt]="fontSize" (click)="focusChanged(true)" class="console-output full">
       <p *ngFor="let line of lines" class="output">{{line}}</p>
       <div class="flex input vert-top">
         <p>{{console.user}}@{{console.directory}} $&nbsp;</p>

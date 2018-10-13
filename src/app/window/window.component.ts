@@ -70,7 +70,7 @@ export class WindowComponent {
   @Input() inputId: string;
 
   @Output() closeWindow = new EventEmitter <boolean>(); // a programatic event emitter. accessed by the program-component class
-  @Output() focusChanged = new EventEmitter<boolean>();
+  @Output() focusChanged = new EventEmitter<boolean>(); // outputs when the focus has changed
   @Output() minimize = new EventEmitter <boolean>();
   @Output() resizeFlag = new EventEmitter<any>(); // outputs object with width and height keys
 
@@ -212,8 +212,12 @@ export class WindowComponent {
       };
       var windowHeight = this.windowHeight;
       var windowWidth = this.windowWidth;
-      this.setWindowLocation(0, 0);
-      this.windowResize(windowWidth, windowHeight - 40); // -40 - the width of the taskbar
+
+      // acceptable error represents the frame's padding
+      let frameWidth = WindowComponent.acceptableError; // transparent frame
+      this.setWindowLocation(-frameWidth, -frameWidth);
+      this.windowResize(windowWidth + frameWidth, windowHeight - 40 + frameWidth); // -40 - the width of the taskbar
+
     } else if (!newStatus && this.expanded != null) {
       this.windowComponent.nativeElement.style.transition = "all 100ms"; // I don't feel like using angular animations for this one
       this.windowResize(this.expanded.previousWidth, this.expanded.previousHeight); // if the resize is done after the window moves back to its original position, the move will be blocked because the window will go past the size of the screen
@@ -497,11 +501,11 @@ export class WindowComponent {
     var windowHeight = this.windowHeight;
 
     // Make sure it doesn't go out the window
-
-    x = x + this.currentWidth > this.windowWidth ? this.windowWidth - this.currentWidth : x;
-    x = x < 0 ? 0 : x;
-    y = y + this.currentHeight > this.windowHeight ? this.windowHeight - this.currentHeight : y;
-    y = y < 0 ? 0 : y;
+    let frameWidth = WindowComponent.acceptableError; // transparent frame
+    x = x + this.currentWidth - frameWidth > this.windowWidth ? this.windowWidth - frameWidth/2 - this.currentWidth : x;
+    x = x + frameWidth < 0 ? -frameWidth : x;
+    y = y + this.currentHeight - frameWidth > this.windowHeight ? this.windowHeight - frameWidth/2 - this.currentHeight : y;
+    y = y + frameWidth < 0 ? -frameWidth : y;
 
     if (x != this.currentX || y != this.currentY) {
       var element = <HTMLElement>this.windowComponent.nativeElement;
