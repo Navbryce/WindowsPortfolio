@@ -12,6 +12,7 @@ import { Console } from './console.class';
 export class ConsoleComponent extends ProgramComponent {
   public console: Console;
   public fontSize: number = 12;
+  private history: Array<String> = [];
   public lines: Array<String> = [];
 
   @ViewChild('consoleWrapper') consoleWrapper: ElementRef;
@@ -63,8 +64,9 @@ export class ConsoleComponent extends ProgramComponent {
     // run the command
 
     // add the line to the console history
+    this.history.push(command);
     this.addLine(this.console.user + '@' + this.console.directory + ' $ ' + command);
-    return this.console.runCommand(command);
+    return this.console.runCommandFromConsole(command);
   }
 
   public windowResize (event: any): void {
