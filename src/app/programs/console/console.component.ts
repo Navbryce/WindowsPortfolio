@@ -4,28 +4,35 @@ import { ProgramComponent } from '../program-component.class';
 // non angular components and classes
 import { Console } from './console.class';
 
+// services
+import { TaskbarService } from '../../services';
+
 @Component({
   selector: 'console',
   styleUrls: ['./console.component.scss'],
   templateUrl: './console.component.html'
 })
 export class ConsoleComponent extends ProgramComponent {
+  private history: Array<String> = [];
+
   public console: Console;
   public fontSize: number = 12;
-  private history: Array<String> = [];
   public lines: Array<String> = [];
+  public set text (text: String) {
+    this.inputArea.nativeElement.text = text;
+  }
 
   @ViewChild('consoleWrapper') consoleWrapper: ElementRef;
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor () {
+  constructor (private taskBarService: TaskbarService) {
     // generates defaults if not defined, such as id
     super();
 
     // bind the "this" context of addLine
     this.addLine = this.addLine.bind(this);
 
-    this.console = new Console("/home/", "navbryce", this.addLine);
+    this.console = new Console("/home/", "navbryce", this.addLine, taskBarService);
   }
 
   public addLine (line: String): boolean {

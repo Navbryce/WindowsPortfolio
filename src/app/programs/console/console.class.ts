@@ -1,9 +1,13 @@
 import { Commands } from './commands.var';
 
+// services
+import { TaskbarService } from '../../services';
+
 export class Console {
   private currentDirectory: String;
   private currentUser: String;
   private outputListener: Function;
+  private taskbarService: TaskbarService
 
   get directory (): String {
     return this.currentDirectory;
@@ -21,17 +25,27 @@ export class Console {
     this.currentUser = user;
   }
 
-  constructor (directory: String, user: String, outputListener: Function) {
+  constructor (directory: String, user: String, outputListener: Function,
+  taskbarService: TaskbarService) {
     this.directory = directory;
     this.user = user;
     this.outputListener = outputListener; // called when trying to output something
+    this.taskbarService = taskbarService;
   }
 
   public executeCommand (command: any, args: Array<String>): boolean {
-    command.output.forEach((outputLine: String) => {
-      this.output(outputLine);
-    });
-    console.log(args);
+    // text output
+    if (!!command.output) {
+      command.output.forEach((outputLine: String) => {
+        this.output(outputLine);
+      });
+    }
+
+    if (!!command.launch) {
+      command.launch.forEach((programID: string) => {
+        this.launchProgram(programID);
+      });
+    }
     return true;
   }
 
@@ -52,6 +66,11 @@ export class Console {
     command = command.replace(/  +/g, ' ');
 
     return command.split(" ");
+  }
+
+  private launchProgram (programID: string) {
+    /* Launches the program with the programID */
+    this.taskbarService.createProgramInstanceFromId(programID);
   }
 
   private output (line: String): void {

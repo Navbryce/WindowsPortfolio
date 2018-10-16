@@ -18,6 +18,7 @@ export class ProgramListService { // this is in charge of creating programs and 
   }
 
   public createProgram (program: any): void { // aka RUN program based on a program definition
+    program.count++;
     this.createStreamQueue.push(program);
     this._create.next(program);
   }
@@ -31,7 +32,8 @@ export class ProgramListService { // this is in charge of creating programs and 
   public processProgramDefinitions (programs: Array<any>) {
     this.programsArray = programs;
     programs.forEach((program) => {
-      this.programsMap[program.id] = programs;
+      program.count = 0; 
+      this.programsMap[program.id] = program;
       if (program.pin.desktop) {
         this.desktopProgramsArray.push(program);
       }

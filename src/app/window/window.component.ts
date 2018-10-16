@@ -93,18 +93,24 @@ export class WindowComponent {
     // add listeners
     this.addListeners();
 
-    if (this.programDefinition.lastClosed != null) {
+    /* the offset because there are multipled instances. -1 because
+    the count includes the current instance */
+   var instanceOffset: number = 20 * (this.programDefinition.count - 1);
 
-      console.log(this.programDefinition);
+    if (this.programDefinition.lastClosed != null) {
       if (this.programDefinition.lastClosed.expanded != null) {
         this.toggleExpand(true);
         this.expanded = this.programDefinition.lastClosed.expanded;
       } else {
-        this.setWindowLocation(this.programDefinition.lastClosed.x, this.programDefinition.lastClosed.y);
+
+        this.setWindowLocation(this.programDefinition.lastClosed.x + instanceOffset,
+          this.programDefinition.lastClosed.y + instanceOffset);
         this.windowResize(this.programDefinition.lastClosed.width, this.programDefinition.lastClosed.height);
       }
     } else {
-      this.setWindowLocation(50, 50);
+      /* set the window location. offset because the previous instance is
+      still open */
+      this.setWindowLocation(50 + instanceOffset, 50 + instanceOffset);
       this.windowResize(500, 500);
 
     }

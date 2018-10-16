@@ -47,7 +47,9 @@ export class TaskbarService {
     programId - THE programID NOT the instance id.
     returns the programDefinition
     */
-    return this.createProgramInstanceFromDef(this.programListService.programsMap[programId]);
+    var programDefinition = this.programListService.programsMap[programId];
+
+    return this.createProgramInstanceFromDef(programDefinition);
   }
 
   public createProgramStatus (id: string, image_source: string, programDefinition: any, status: number): any {

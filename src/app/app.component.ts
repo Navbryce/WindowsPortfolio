@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
     componentInstance.programDefinition = programDefinition;
     componentInstance.closeWindow.subscribe((signal) => { // the listener for the closeWindow output (the output is signaled when the window is ready to close. delete this isntance)
       programReference.destroy(); // destroy the component
+      programDefinition.count--; // there is one less instance of the program
     });
   }
 
