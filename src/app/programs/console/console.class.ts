@@ -7,7 +7,7 @@ export class Console {
   private currentDirectory: String;
   private currentUser: String;
   private outputListener: Function;
-  private taskbarService: TaskbarService
+  private taskbarService: TaskbarService;
 
   get directory (): String {
     return this.currentDirectory;
@@ -34,25 +34,46 @@ export class Console {
   }
 
   public executeCommand (command: any, args: Array<String>): boolean {
-    // text output
-    if (!!command.output) {
-      command.output.forEach((outputLine: String) => {
-        this.output(outputLine);
-      });
+    let runCommand;
+    if (command != null) {
+
+      // text output
+      if (!!command.output) {
+        command.output.forEach((outputLine: String) => {
+          this.output(outputLine);
+        });
+      }
+      // the command should run any other commands
+      if (!!command.execute) {
+        runCommand = true;
+
+        command.execute.forEach((subCommand: any) => {
+          const commandObject = this.getCommandFromID(subCommand.id, true);
+          const subArgs = subCommand.args.map((argIndex) => {
+            return argIndex < args.length ? args[argIndex] : null;
+          });
+          this.executeCommand(commandObject, subArgs);
+        });
+      }
+
+      // the command should launch any programs (windows)
+      if (!!command.launch) {
+        command.launch.forEach((programID: string) => {
+          this.launchProgram(programID);
+        });
+      }
+    } else {
+      runCommand = false;
     }
 
-    if (!!command.launch) {
-      command.launch.forEach((programID: string) => {
-        this.launchProgram(programID);
-      });
-    }
-    return true;
+
+    return runCommand;
   }
 
   public runCommandFromConsole (command: String): boolean {
     /* Runs a command. Returns true if successful */
-    var args = this.getArgs(command);
-    var commandObject = Commands[args[0]];
+    const args = this.getArgs(command);
+    const commandObject = this.getCommandFromID(args[0], true);
     args.splice(0, 1);
     return !!commandObject && this.executeCommand(commandObject, args);
   }
@@ -65,7 +86,17 @@ export class Console {
     // get rid of extra spaces
     command = command.replace(/  +/g, ' ');
 
-    return command.split(" ");
+    return command.split(' ');
+  }
+
+  private getCommandFromID (id: string, printError: boolean): any {
+    /* Gets the command from the id */
+    const command = Commands[id];
+    if (!command) {
+      this.output(`${id} is not recognized as an internal or external command.` 
+      + ` Run "help" for a list of commands.`);
+    }
+    return command;
   }
 
   private launchProgram (programID: string) {

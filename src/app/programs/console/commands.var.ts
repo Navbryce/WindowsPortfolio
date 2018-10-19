@@ -1,5 +1,3 @@
-import { ProgramDefinitions } from '..';
-
 // export at bottom
 
 var RawCommands: any = {
@@ -11,17 +9,36 @@ var RawCommands: any = {
   },
   github: {
     output: [
-      "<a href='https://github.com/navbryce/' target='_blank'>Click here</a>"
+      "<a href='https://github.com/navbryce/' target='_blank'>Click here for GitHub</a>"
     ]
   },
   gitlab: {
     output: [
-      "<a href='https://gitlab.com/navbryce/' target='_blank'>Click here</a>"
+      "<a href='https://gitlab.com/navbryce/' target='_blank'>Click here for GitLab</a>"
+    ]
+  },
+  git: {
+    execute: [
+      {
+        id: 'github',
+        args: [
+        ]
+      },
+      {
+        id: 'gitlab',
+        args: [
+        ]
+      }
     ]
   },
   console: {
     launch: [
       "console"
+    ]
+  },
+  resume: {
+    output: [
+      "<a href='/assets/portfolio-documents/SoftwareResume.pdf' target='_blank'>Click here for Resume</a>"
     ]
   }
 };

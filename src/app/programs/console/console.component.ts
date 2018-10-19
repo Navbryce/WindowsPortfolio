@@ -69,7 +69,6 @@ export class ConsoleComponent extends ProgramComponent {
 
   public runCommand (command: String): boolean {
     // run the command
-
     // add the line to the console history
     this.history.push(command);
     this.addLine(this.console.user + '@' + this.console.directory + ' $ ' + command);
