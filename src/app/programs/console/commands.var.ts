@@ -33,7 +33,10 @@ var RawCommands: any = {
   },
   console: {
     launch: [
-      "console"
+      {
+        id: 'console',
+        args: ''
+      }
     ]
   },
   resume: {

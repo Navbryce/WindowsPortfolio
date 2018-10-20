@@ -40,7 +40,7 @@ export class Console {
       // text output
       if (!!command.output) {
         command.output.forEach((outputLine: String) => {
-          this.output(outputLine);
+          this.output(this.substituteArgs(outputLine, args));
         });
       }
       // the command should run any other commands
@@ -58,8 +58,8 @@ export class Console {
 
       // the command should launch any programs (windows)
       if (!!command.launch) {
-        command.launch.forEach((programID: string) => {
-          this.launchProgram(programID);
+        command.launch.forEach((programLaunchObject: any) => {
+          this.launchProgram(programLaunchObject);
         });
       }
     } else {
@@ -99,14 +99,46 @@ export class Console {
     return command;
   }
 
-  private launchProgram (programID: string) {
+  private launchProgram (programLaunch: any) {
     /* Launches the program with the programID */
-    this.taskbarService.createProgramInstanceFromId(programID);
+    this.taskbarService.createProgramInstanceFromId(programLaunch.id);
   }
 
   private output (line: String): void {
     /* call when trying to output something */
     this.outputListener(line);
+  }
+
+  private substituteArgs (line: String, args: Array<String>): String {
+    /* Substitutes in the the args into the string following the format
+      ${number} where number represents arg index. Nesting not supported */
+    let output = '';
+
+    while (line.includes('${')) {
+      const index = line.indexOf('${');
+      const endIndex = line.indexOf('}');
+      if (endIndex !== -1) {
+        const argNumber = parseInt(line.substring(index + 2, endIndex), 10);
+
+        let arg;
+        if (argNumber !== NaN && argNumber < args.length) {
+          arg = args[argNumber];
+        } else {
+          arg = '';
+        }
+        // add everything before the arg and the arg to the output
+        output += line.substring(0, index) + arg;
+        // cut off the end of the line and reduce it
+        line = line.substring(endIndex + 1, line.length);
+      } else {
+        // there's no more close brackets so no more args need to be substituted
+        output += line;
+        line = '';
+      }
+    }
+    output += line; // the rest of the line
+
+    return output;
   }
 
   // END Private Functions

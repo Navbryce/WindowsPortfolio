@@ -20,11 +20,12 @@ export class AppComponent implements OnInit {
       this.programListService.createStream.subscribe(this.createStreamLoop);
   }
 
-  public createProgram (programDefinition: any): void {
+  public createProgram (programDefinition: any, args: any = null): void {
     var programComponentFactory = this.componentFactoryResolver.resolveComponentFactory(programDefinition.component);
     var programReference = this.desktop.createComponent(programComponentFactory);
     var componentInstance: ProgramComponent = <ProgramComponent>(programReference.instance)
     componentInstance.programDefinition = programDefinition;
+    componentInstance.programArgs = args;
     componentInstance.closeWindow.subscribe((signal) => { // the listener for the closeWindow output (the output is signaled when the window is ready to close. delete this isntance)
       programReference.destroy(); // destroy the component
       programDefinition.count--; // there is one less instance of the program
@@ -36,7 +37,7 @@ export class AppComponent implements OnInit {
     if (queue.length > 0) {
       let queue = this.programListService.createStreamQueue;
       let program = queue.shift();
-      this.createProgram(program);
+      this.createProgram(program.program, program.args);
       this.createStreamLoop();
     }
   }

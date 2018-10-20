@@ -36,20 +36,20 @@ export class TaskbarService {
    this.activeProgramsCount[this._taskbarMap[id].programDefinition.id] -= 1;
   }
 
-  public createProgramInstanceFromDef (programDefinition): any {  // send the program definition of the program you're trying to instantiate. will make the program
+  public createProgramInstanceFromDef (programDefinition: any, args: any = null): any {  // send the program definition of the program you're trying to instantiate. will make the program
     if (!programDefinition.unique || (this.activeProgramsCount[programDefinition.id] == null || this.activeProgramsCount[programDefinition.id] == 0)) {
-      this.programListService.createProgram(programDefinition);
+      this.programListService.createProgram(programDefinition, args);
     }
   }
 
-  public createProgramInstanceFromId (programId: string): any {
+  public createProgramInstanceFromId (programId: string, args: any = null): any {
     /*
     programId - THE programID NOT the instance id.
     returns the programDefinition
     */
     var programDefinition = this.programListService.programsMap[programId];
 
-    return this.createProgramInstanceFromDef(programDefinition);
+    return this.createProgramInstanceFromDef(programDefinition, args);
   }
 
   public createProgramStatus (id: string, image_source: string, programDefinition: any, status: number): any {

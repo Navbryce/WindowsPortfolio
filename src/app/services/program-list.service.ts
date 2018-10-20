@@ -17,15 +17,15 @@ export class ProgramListService { // this is in charge of creating programs and 
   constructor() {
   }
 
-  public createProgram (program: any): void { // aka RUN program based on a program definition
+  public createProgram (program: any, args: any = null): void { // aka RUN program based on a program definition
     program.count++;
-    this.createStreamQueue.push(program);
+    this.createStreamQueue.push({program: program, args: args});
     this._create.next(program);
   }
 
-  public createProgramFromId (programId: string): any { // creates a program from the program definition. returns the program definition
+  public createProgramFromId (programId: string, args: any = null): any { // creates a program from the program definition. returns the program definition
     var programDefinition = this.programsMap[programId];
-    this.createProgram(programDefinition);
+    this.createProgram(programDefinition, args);
     return programDefinition;
   }
 
