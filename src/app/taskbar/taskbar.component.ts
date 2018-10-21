@@ -6,10 +6,11 @@ import { TaskbarService } from '../services';
   styleUrls: ['./taskbar.component.scss']
 })
 export class TaskbarComponent implements OnInit {
-  private _currentDate: Date;
-  private _permanentMap: any = {}; // a map of the programs with permanent pins on the taskbar where the ID is the programId NOT the window ID
-  private _iconsArray: Array<any> = []; // an array of program statuses of all the icons on the taskbar.
-  private _iconsMap : any = {}; // a map that provides easy access to the the statuses stored in icons (allows for one way data binding with the icon with easy search). the key is the program definition id.
+  public currentDate: Date;
+  public permanentMap: any = {}; // a map of the programs with permanent pins on the taskbar where the ID is the programId NOT the window ID
+  public iconsArray: Array<any> = []; // an array of program statuses of all the icons on the taskbar.
+  public iconsMap : any = {}; // a map that provides easy access to the the statuses stored in icons (allows for one way data binding with the icon with easy search). the key is the program definition id.
+
 
   constructor (private taskbarService: TaskbarService) {
   }
@@ -34,17 +35,17 @@ export class TaskbarComponent implements OnInit {
   }
 
   public updateCurrentDate (callback: Function): void {
-    this._currentDate = new Date();
+    this.currentDate = new Date();
     callback();
   }
 
   public renderIcon (programStatus) { // adds or updates a program to the taskbar
     var programDefinition = programStatus.programDefinition;
-    if (this._iconsMap[programDefinition.id] == null) { // the icon doesn't exist yet. store the new status in the map and add it to the icon arary
-      this._iconsMap[programDefinition.id] = programStatus;
-      this._iconsArray.push(programStatus);
+    if (this.iconsMap[programDefinition.id] == null) { // the icon doesn't exist yet. store the new status in the map and add it to the icon arary
+      this.iconsMap[programDefinition.id] = programStatus;
+      this.iconsArray.push(programStatus);
     } else { // update the existing status
-      let existingStatus = this._iconsMap[programDefinition.id];
+      let existingStatus = this.iconsMap[programDefinition.id];
       existingStatus.status = programStatus.status; // it's possible the status changed
       existingStatus.id = programStatus.id; // it's possible the id changed
     }
@@ -72,9 +73,9 @@ export class TaskbarComponent implements OnInit {
   }
 
   private createPermanentMap (permanentPrograms: Array<any>) {
-    this._permanentMap = {};
+    this.permanentMap = {};
     permanentPrograms.forEach((programDefinition) => {
-      this._permanentMap[programDefinition.id] = programDefinition;
+      this.permanentMap[programDefinition.id] = programDefinition;
     });
   }
 

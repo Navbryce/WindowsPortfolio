@@ -18,11 +18,12 @@ export class ProgramIconComponent implements OnInit {
   ngOnInit() {
   }
 
-  // BEGIN Private Functions
-
-  private clickListener (action: number) { // outputs what was clicked (main button - 0; little close button - -1)
+  public clickListener (action: number) { // outputs what was clicked (main button - 0; little close button - -1)
     this.iconClick.emit(action);
   }
+  // BEGIN Private Functions
+
+
 
   // End Private Functions
 

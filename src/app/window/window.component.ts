@@ -25,9 +25,7 @@ export class WindowComponent {
   static acceptableError = 10; // make sure it aligns with the transparent frame's padding
   static skipFrame = 1; // use to make faster
 
-  private frameCounter = 0;
-  private _headerText: string; // honestly i need to start transitioning to using _ to denote private variables
-  private minimized: any; // an array with the minimized info and parameters for the animation
+  public minimized: any; // an array with the minimized info and parameters for the animation
 
   public closed: boolean; // true if closed
 
@@ -65,6 +63,8 @@ export class WindowComponent {
   public windowWidth: number; // browser width
 
   private body: HTMLElement = document.getElementById("body");
+  private frameCounter = 0;
+  private _headerText: string; // honestly i need to start transitioning to using _ to denote private variables
 
   @Input() programDefinition: any;
   @Input() inputId: string;
@@ -122,6 +122,18 @@ export class WindowComponent {
     this.closed = false;
   }
   // PUBLIC FUNCTIONS BEGIN
+  public closeListener ($event): void { // called when the close button is pressed
+    this.taskbarService.closeProgram(this.id);
+  }
+
+  public expandListener ($event): void { // called when the expand button is pressed
+    this.toggleExpand(this.expanded == null);
+  }
+
+  public minimizeListener ($event): void { // called when the minimize button is pressed
+    this.setMinimizeWithUpdate(true);
+  }
+
   public setCursor (cursor: string) {
     var element = <HTMLElement>this.windowComponent.nativeElement;
     element.style.cursor = cursor;
@@ -349,18 +361,6 @@ export class WindowComponent {
         this.setCursor("default");
       }
     });
-  }
-
-  private closeListener ($event): void { // called when the close button is pressed
-    this.taskbarService.closeProgram(this.id);
-  }
-
-  private expandListener ($event): void { // called when the expand button is pressed
-    this.toggleExpand(this.expanded == null);
-  }
-
-  private minimizeListener ($event): void { // called when the minimize button is pressed
-    this.setMinimizeWithUpdate(true);
   }
 
   private moveWindowListener ($event): void { // called when user's mouse moves while clicking the header bar
