@@ -14,5 +14,17 @@ export var ProgramDefinitions = [ // positionOnLastClose set by windodw
       taskbar: true
     },
     unique: false
+  },
+  {
+    component: BrowserComponent,
+    id: 'browser',
+    icon: './assets/programs/browser/browser.png',
+    name: 'Browser',
+    openOnStart: true,
+    pin: {
+      desktop: true,
+      taskbar: true
+    },
+    unique: false
   }
 ];

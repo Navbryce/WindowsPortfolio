@@ -31,6 +31,11 @@ var RawCommands: any = {
       }
     ]
   },
+  linkedin: {
+    output: [
+      "<a href='https://www.linkedin.com/in/bryce-plunkett-930b77164' target='_blank'>Click here for LinkedIn</a>"
+    ]
+  },
   console: {
     launch: [
       {

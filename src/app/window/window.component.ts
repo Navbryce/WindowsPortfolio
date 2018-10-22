@@ -63,6 +63,7 @@ export class WindowComponent {
   public windowWidth: number; // browser width
 
   private body: HTMLElement = document.getElementById("body");
+  private expandingFlag = false; // let's the header bar know to disable move listener
   private frameCounter = 0;
   private _headerText: string; // honestly i need to start transitioning to using _ to denote private variables
 
@@ -233,13 +234,20 @@ export class WindowComponent {
 
       // acceptable error represents the frame's padding
       let frameWidth = WindowComponent.acceptableError; // transparent frame
-      this.setWindowLocation(-frameWidth, -frameWidth);
       this.windowResize(windowWidth + frameWidth, windowHeight - 40 + frameWidth); // -40 - the width of the taskbar
+      this.setWindowLocation(-frameWidth, -frameWidth);
+
 
     } else if (!newStatus && this.expanded != null) {
+      // mark when the the transition begins
+      this.expandingFlag = true;
       this.windowComponent.nativeElement.style.transition = "all 100ms"; // I don't feel like using angular animations for this one
       this.windowResize(this.expanded.previousWidth, this.expanded.previousHeight); // if the resize is done after the window moves back to its original position, the move will be blocked because the window will go past the size of the screen
       this.setWindowLocation(this.expanded.previousX, this.expanded.previousY);
+      // mark when the transition ends
+      setTimeout(() => {
+        this.expandingFlag = false;
+      }, 110);
       this.expanded = null;
     }
     setTimeout(() => { // disable transitions after the transition runs
@@ -304,7 +312,6 @@ export class WindowComponent {
     // drag and drop listeners
     var headerBar = <HTMLElement> this.headerBar.nativeElement;
     headerBar.addEventListener("mousedown", ($event) => {
-      if (this.expanded == null) {
         this.translationX = $event.x - this.currentX;
         this.translationY = $event.y - this.currentY;
         this.frameCounter = 0; // reset the frame counter
@@ -315,7 +322,6 @@ export class WindowComponent {
           document.removeEventListener("mouseup", mouseUpFunction);
         };
         document.addEventListener("mouseup", mouseUpFunction);
-      }
     });
   }
 
@@ -364,16 +370,29 @@ export class WindowComponent {
   }
 
   private moveWindowListener ($event): void { // called when user's mouse moves while clicking the header bar
-    if (!this.resizing) { // deactivate moving the window with the header bar while the window is resizing
-      this.frameCounter = (this.frameCounter) % WindowComponent.skipFrame;
-      if (this.frameCounter == 0) {
-        var mouseX = $event.x;
-        var mouseY = $event.y;
-        window.requestAnimationFrame(() => {
-          this.setWindowLocation(mouseX - this.translationX, mouseY - this.translationY);
-        });
+    if (!this.resizing && !this.expandingFlag) { // deactivate moving the window with the header bar while the window is resizing and NOT in the process of expanding
+      if (!!this.expanded) {
+        /* if it's expand, unexpand the window */
+        // the ratio of how far along the bar you clicked (50%, 5%, ...)
+        const ratio = ($event.x - this.currentX) / this.currentWidth;
+        const translation = ratio * this.expanded.previousWidth;
+        this.expanded.previousX = this.currentX + ($event.x - this.currentX) - translation;
+        this.expanded.previousY = $event.y - this.translationY;
+
+        this.translationX = translation;
+
+        this.toggleExpand(false);
+      } else {
+        this.frameCounter = (this.frameCounter) % WindowComponent.skipFrame;
+        if (this.frameCounter == 0) {
+          var mouseX = $event.x;
+          var mouseY = $event.y;
+          window.requestAnimationFrame(() => {
+            this.setWindowLocation(mouseX - this.translationX, mouseY - this.translationY);
+          });
+        }
+        this.frameCounter += 1;
       }
-      this.frameCounter += 1;
     }
   }
 
@@ -498,7 +517,7 @@ export class WindowComponent {
     element.style.height = `${newHeight - WindowComponent.acceptableError}px`; // - acceptable error because transparent frame
     this.currentWidth = newWidth;
     this.currentHeight = newHeight;
-    this.resizeNotify()
+    this.resizeNotify();
   }
 
   private setWindowLocation (x: number, y: number): void { // set the window location

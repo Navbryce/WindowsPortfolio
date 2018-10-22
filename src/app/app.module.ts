@@ -1,14 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 // components
 import { AppComponent } from './app.component';
 import { DesktopComponent, ShortcutComponent } from './desktop';
-import { BrowserComponent, ConsoleComponent, ProgramComponent, TestProgram } from './programs';
-import { TaskbarComponent, ProgramIconComponent } from './taskbar'
+import { BrowserComponent, ConsoleComponent, TestProgram } from './programs';
+import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
-import { IconComponent } from './window/icons'
+import { IconComponent } from './window/icons';
 
 
 // services
@@ -30,7 +31,8 @@ import { ProgramListService } from './services';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    PdfViewerModule
   ],
   entryComponents: [BrowserComponent, ConsoleComponent, ShortcutComponent, TestProgram],
   providers: [ProgramListService, TaskbarService],
