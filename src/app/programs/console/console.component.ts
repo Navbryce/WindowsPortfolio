@@ -5,6 +5,7 @@ import { ProgramComponent } from '../program-component.class';
 import { Console } from './console.class';
 
 // services
+import { HttpClient } from '@angular/common/http';
 import { TaskbarService } from '../../services';
 
 @Component({
@@ -16,7 +17,7 @@ export class ConsoleComponent extends ProgramComponent {
   private history: Array<String> = [];
 
   public console: Console;
-  public fontSize: number = 12;
+  public fontSize = 12;
   public lines: Array<String> = [];
   public set text (text: String) {
     this.inputArea.nativeElement.text = text;
@@ -25,14 +26,14 @@ export class ConsoleComponent extends ProgramComponent {
   @ViewChild('consoleWrapper') consoleWrapper: ElementRef;
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor (private taskBarService: TaskbarService) {
+  constructor (private httpClient: HttpClient, private taskBarService: TaskbarService) {
     // generates defaults if not defined, such as id
     super();
 
     // bind the "this" context of addLine
     this.addLine = this.addLine.bind(this);
 
-    this.console = new Console("/home/", "navbryce", this.addLine, taskBarService);
+    this.console = new Console('/', 'navbryce', httpClient, this.addLine, taskBarService);
   }
 
   public addLine (line: String): boolean {

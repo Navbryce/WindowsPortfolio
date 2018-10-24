@@ -1,11 +1,16 @@
 import { Commands } from './commands.var';
 
 // services
+import { HttpClient } from '@angular/common/http';
 import { TaskbarService } from '../../services';
+
+// classes
+import { Filesystem } from '../../basic';
 
 export class Console {
   private currentDirectory: String;
   private currentUser: String;
+  private fileSystem: Filesystem;
   private outputListener: Function;
   private taskbarService: TaskbarService;
 
@@ -25,10 +30,11 @@ export class Console {
     this.currentUser = user;
   }
 
-  constructor (directory: String, user: String, outputListener: Function,
-  taskbarService: TaskbarService) {
+  constructor (directory: String, user: String, httpClient: HttpClient,
+    outputListener: Function, taskbarService: TaskbarService) {
     this.directory = directory;
     this.user = user;
+    this.fileSystem = new Filesystem(httpClient);
     this.outputListener = outputListener; // called when trying to output something
     this.taskbarService = taskbarService;
   }

@@ -16,11 +16,10 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   /*
   PURPOSE: Desktop shortcuts, background image, changing focus from program to desktop when clicked
   */
+  public static readonly ICON_WIDTH: number = 80;
+  public static readonly ICON_HEIGHT: number = 150;
 
   private shortCutReferences: Array<any> = []; // all the shortcut component references
-
-  public static readonly ICON_WIDTH: number = 60;
-  public static readonly ICON_HEIGHT: number = 100;
 
   public height: number;
   public programDefinitions: Array<any>;

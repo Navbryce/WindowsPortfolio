@@ -370,7 +370,9 @@ export class WindowComponent {
   }
 
   private moveWindowListener ($event): void { // called when user's mouse moves while clicking the header bar
-    if (!this.resizing && !this.expandingFlag) { // deactivate moving the window with the header bar while the window is resizing and NOT in the process of expanding
+    /* deactivate moving the window with the header bar
+    while the window is resizing and NOT in the process of expanding */
+    if (!this.resizing && !this.expandingFlag) {
       if (!!this.expanded) {
         /* if it's expand, unexpand the window */
         // the ratio of how far along the bar you clicked (50%, 5%, ...)

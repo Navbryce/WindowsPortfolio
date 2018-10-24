@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 // components
@@ -13,8 +14,8 @@ import { IconComponent } from './window/icons';
 
 
 // services
-import { TaskbarService } from './services';
-import { ProgramListService } from './services';
+import {ProgramListService, TaskbarService } from './services';
+import { HttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -32,10 +33,11 @@ import { ProgramListService } from './services';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     PdfViewerModule
   ],
   entryComponents: [BrowserComponent, ConsoleComponent, ShortcutComponent, TestProgram],
-  providers: [ProgramListService, TaskbarService],
+  providers: [HttpClient, ProgramListService, TaskbarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
