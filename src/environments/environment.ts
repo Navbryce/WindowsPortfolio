@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   backend: {
-    ip: 'localhost',
+    ip: 'http://localhost',
     port: '8080'
   }
 };

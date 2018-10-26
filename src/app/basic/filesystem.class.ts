@@ -28,8 +28,17 @@ export class Filesystem {
     }
 
     private getFileList (path: String): Array<String> {
-        this.client.get(Filesystem.backend + '/files').subscribe((data) => {
+        // define the body of the request
+        const body = {
+            currentDirectory: this.directory
+        };
+
+        this.client.post(Filesystem.backend + '/files', body).subscribe((data) => {
             console.log(data);
+        }, (error) => {
+            console.error(error);
+            console.error('The backend could not be queried');
+            // handle the error in a more visual way for the user
         });
         return [];
     }
