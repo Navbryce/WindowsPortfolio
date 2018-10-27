@@ -21,29 +21,33 @@ export class Filesystem {
 
     private client: HttpClient;
     private currentDirectory: string;
+    private directoryContents: Array<any>;
 
     constructor (client: HttpClient, startingDirectory: string = '/') {
         this.client = client;
         this.directory = startingDirectory;
     }
 
-    private getFileList (path: String): Array<String> {
-        // define the body of the request
-        const body = {
-            currentDirectory: this.directory
-        };
+    private async getFileList (path: String): Promise<any> {
+        /* Return a promise that promises a list of all the
+        files/directories*/
+        return new Promise((resolve, reject) => {
+            // define the body of the request
+            const body = {
+                currentDirectory: this.directory
+            };
 
-        this.client.post(Filesystem.backend + '/files', body).subscribe((data) => {
-            console.log(data);
-        }, (error) => {
-            console.error(error);
-            console.error('The backend could not be queried');
-            // handle the error in a more visual way for the user
+            this.client.post(Filesystem.backend + '/files', body).subscribe((data: Array<any>) => {
+                resolve(data);
+            }, (error) => {
+                reject([error]);
+                console.error('The backend could not be queried');
+                // handle the error in a more visual way for the user
+            });
         });
-        return [];
     }
 
-    private updateFileList (): Array<String> {
-        return this.getFileList(this.directory);
+    private async updateFileList () {
+        this.directoryContents = await this.getFileList(this.directory);
     }
 }

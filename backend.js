@@ -1,11 +1,27 @@
 const express = require('express');
+
+var ArgumentParser = require('argparse').ArgumentParser;
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
 
-const distPath = path.join(__dirname, '/dist');
+// parse arguments
+var parser = new ArgumentParser({
+  version: '0.0.1',
+  addHelp:true,
+  description: 'Windows Portfolio Backend'
+});
+parser.addArgument(
+  [ '-d', '--dist' ],
+  {
+    help: 'path from app (as root) that points to dist. don\'t include / at start',
+    defaultValue: 'dist/'
+  }
+);
+var args = parser.parseArgs();
+const distPath = path.join(__dirname, args.dist);
 
 // Serve only the static files form the npmdist directory
 app.use(express.static(distPath));
@@ -28,8 +44,12 @@ app.get('/', (req,res) => {
 
 app.post("/files", (req, res) => {
     /* Let the angular app know the files in a directory */
-    console.log(getFiles(req.body.currentDirectory));
-    res.json(req.body);
+    getFiles(req.body.currentDirectory).then((success) => {
+        res.json(success);
+    })
+    .catch((error) => {
+        res.json({error: error});
+    });
 });
 
 
@@ -37,8 +57,32 @@ app.post("/files", (req, res) => {
 or default to 8080. */
 app.listen(process.env.PORT || 8080);
 
+/* Helper Functions */
 
-function getFiles (direcPath) {
-    /* Return the files within a directory */
-    return fs.readdirSync(distPath + direcPath);
+async function getFiles (direcPath) {
+    /* Return a promise that returns the files and directories
+     within a directory */
+    return new Promise((resolve, reject) => {
+        let files;
+        try {
+            files = fs.readdirSync(distPath + direcPath);  
+        } catch (error) {
+            reject(error);
+        }
+        let output = {files: [], dirs: []};
+        files.forEach((file) => {
+            try {
+                let result = fs.lstatSync(distPath + direcPath + file);
+
+                /* not all files might be directories or files, so don't just 
+                use if else. explicitly check for each one */
+                result.name = file;
+                result.isDirectory() && output.dirs.push(result);
+                result.isFile() && output.files.push(result);
+            } catch (error) {
+                reject(error);
+            }
+        });
+        resolve(output);
+    });
 }

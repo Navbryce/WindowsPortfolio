@@ -1,0 +1,8 @@
+{
+    "id": "portfolio-backend",
+    "append": true,
+    "watch": true,
+    "script": "backend.js",
+    "args": ["--dist", "src/"],
+    "sourceDir": "C:/Users/navba/Downloads/ADevenirProjects/WindowsPortfolio"
+}
