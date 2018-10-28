@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class Filesystem {
     // backend url
     public static readonly backend: string = environment.backend.ip +
-    ':' + environment.backend.port;
+    (environment.backend.port != null ? (':' + environment.backend.port) : '');
     // the "faux" root directory
     public static readonly root: string = '/assets/portfolio-documents';
 
@@ -58,7 +58,7 @@ export class Filesystem {
         try {
             this.directoryContents = await this.getFileList(this.directory);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             this.directoryContents = {files: [], dirs: []};
         }
         this.filesSubject.next(this.directoryContents);
