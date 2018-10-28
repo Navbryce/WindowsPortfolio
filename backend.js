@@ -1,6 +1,6 @@
 const express = require('express');
 
-var ArgumentParser = require('argparse').ArgumentParser;
+const ArgumentParser = require('argparse').ArgumentParser;
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
@@ -13,6 +13,7 @@ var parser = new ArgumentParser({
   addHelp:true,
   description: 'Windows Portfolio Backend'
 });
+
 parser.addArgument(
   [ '-d', '--dist' ],
   {
