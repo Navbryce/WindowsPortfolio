@@ -52,6 +52,15 @@ app.post("/files", (req, res) => {
         res.json({error: error});
     });
 });
+app.get("/filesTest", (req, res) => {
+    /* Let the angular app know the files in a directory */
+    getFiles(req.body.currentDirectory).then((success) => {
+        res.json(success);
+    })
+    .catch((error) => {
+        res.json({error: error});
+    });
+});
 
 
 /* Listen for the app on the Heroku port (if set as an env variable)

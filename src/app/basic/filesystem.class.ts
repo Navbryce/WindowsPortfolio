@@ -55,7 +55,12 @@ export class Filesystem {
     }
 
     private async updateFileList () {
-        this.directoryContents = await this.getFileList(this.directory);
+        try {
+            this.directoryContents = await this.getFileList(this.directory);
+        } catch (error) {
+            console.log(error);
+            this.directoryContents = {files: [], dirs: []};
+        }
         this.filesSubject.next(this.directoryContents);
     }
 }
