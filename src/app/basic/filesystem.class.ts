@@ -1,3 +1,6 @@
+// event
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 // environment
 import { environment } from '../../environments/environment';
 
@@ -14,18 +17,22 @@ export class Filesystem {
     get directory (): string {
         return this.currentDirectory;
     }
-    set directory (directory: string) {
-        this.currentDirectory = Filesystem.root + directory;
-        this.updateFileList();
-    }
+
+    public directoryContents: any;
+    // subscribe to filesSubject to get file updates pushes
+    public filesSubject: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
 
     private client: HttpClient;
     private currentDirectory: string;
-    private directoryContents: Array<any>;
 
     constructor (client: HttpClient, startingDirectory: string = '/') {
         this.client = client;
-        this.directory = startingDirectory;
+        this.cd(startingDirectory);
+    }
+
+    public async cd (directory: String) {
+        this.currentDirectory = Filesystem.root + directory;
+        this.updateFileList();
     }
 
     private async getFileList (path: String): Promise<any> {
@@ -49,5 +56,6 @@ export class Filesystem {
 
     private async updateFileList () {
         this.directoryContents = await this.getFileList(this.directory);
+        this.filesSubject.next(this.directoryContents);
     }
 }

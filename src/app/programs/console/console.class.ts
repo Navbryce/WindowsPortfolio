@@ -42,13 +42,19 @@ export class Console {
   public executeCommand (command: any, args: Array<String>): boolean {
     let runCommand;
     if (command != null) {
-
       // text output
       if (!!command.output) {
         command.output.forEach((outputLine: String) => {
           this.output(this.substituteArgs(outputLine, args));
         });
       }
+
+      // the command wants to run a function
+      if (!!command.commandFunction) {
+        this.output = this.output.bind(this); // bind the this context
+        command.commandFunction(args, this.fileSystem, this.output);
+      }
+
       // the command should run any other commands
       if (!!command.execute) {
         runCommand = true;

@@ -1,3 +1,5 @@
+import { Filesystem } from "../../basic";
+
 // export at bottom
 
 var RawCommands: any = {
@@ -6,6 +8,20 @@ var RawCommands: any = {
       "Welcome to the help menu",
       "<b>Commands: </b>",
     ]
+  },
+  cd: {
+    commandFunction (args: Array<String>, fileSystem: Filesystem, output: Function) {
+    }
+  },
+  ls: {
+    commandFunction (args: Array<String>, fileSystem: Filesystem, output: Function) {
+      fileSystem.directoryContents.files.forEach((file) => {
+        output(file.name);
+      });
+      fileSystem.directoryContents.dirs.forEach((dir) => {
+        output(dir.name + '/');
+      });
+    }
   },
   github: {
     output: [
