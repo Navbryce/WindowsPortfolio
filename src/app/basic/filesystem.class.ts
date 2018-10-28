@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 export class Filesystem {
     // backend url
     public static readonly backend: string = environment.backend.ip +
-    (environment.backend.port != null ? (':' + environment.backend.port) : '');
+    (environment.backend.port.length > 0 ? (':' + environment.backend.port) : '');
     // the "faux" root directory
     public static readonly root: string = '/assets/portfolio-documents';
 
