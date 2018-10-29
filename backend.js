@@ -23,6 +23,10 @@ parser.addArgument(
 );
 var args = parser.parseArgs();
 const distPath = path.join(__dirname, args.dist);
+// the "faux" root directory
+const assetsRoot = '/assets/portfolio-documents';
+const assetsPath = path.join(distPath, assetsRoot);
+
 
 // Serve only the static files form the npmdist directory
 app.use(express.static(distPath));
@@ -49,19 +53,10 @@ app.post("/files", (req, res) => {
         res.json(success);
     })
     .catch((error) => {
+        console.error(error);
         res.json({error: error});
     });
 });
-app.get("/filesTest", (req, res) => {
-    /* Let the angular app know the files in a directory */
-    getFiles(req.body.currentDirectory).then((success) => {
-        res.json(success);
-    })
-    .catch((error) => {
-        res.json({error: error});
-    });
-});
-
 
 /* Listen for the app on the Heroku port (if set as an env variable)
 or default to 8080. */
@@ -74,15 +69,25 @@ async function getFiles (direcPath) {
      within a directory */
     return new Promise((resolve, reject) => {
         let files;
+        let simpPath;
         try {
-            files = fs.readdirSync(distPath + direcPath);  
+            // combine the assets path with the user requested path
+            simpPath = path.join(assetsPath, direcPath);
+            if (path.relative(assetsPath, simpPath).includes('..')) {
+                /* the user is trying to access something outside assets.
+                prevent them */
+                simpPath = assetsPath; 
+            }
+            files = fs.readdirSync(simpPath);  
         } catch (error) {
             reject(error);
         }
-        let output = {files: [], dirs: []};
+
+        // set the simp path to the user's "relative root"
+        let output = {files: [], dirs: [], simpPath: '/' + path.relative(assetsPath, simpPath)};
         files.forEach((file) => {
             try {
-                let result = fs.lstatSync(distPath + direcPath + file);
+                let result = fs.lstatSync(simpPath + '/' + file);
 
                 /* not all files might be directories or files, so don't just 
                 use if else. explicitly check for each one */

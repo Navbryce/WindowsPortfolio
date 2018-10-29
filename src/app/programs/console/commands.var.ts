@@ -10,7 +10,8 @@ var RawCommands: any = {
     ]
   },
   cd: {
-    commandFunction (args: Array<String>, fileSystem: Filesystem, output: Function) {
+    commandFunction (args: Array<string>, fileSystem: Filesystem, output: Function) {
+      fileSystem.cd(args[0]);
     }
   },
   ls: {

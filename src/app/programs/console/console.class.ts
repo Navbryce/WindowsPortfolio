@@ -30,12 +30,17 @@ export class Console {
     this.currentUser = user;
   }
 
-  constructor (directory: String, user: String, httpClient: HttpClient,
+  constructor (directory: string, user: String, httpClient: HttpClient,
     outputListener: Function, taskbarService: TaskbarService) {
     this.directory = directory;
     this.user = user;
-    this.fileSystem = new Filesystem(httpClient);
-    this.outputListener = outputListener; // called when trying to output something
+    this.fileSystem = new Filesystem(httpClient, directory);
+    // subscribe to changes in directory
+    this.fileSystem.directorySubject.subscribe((newValue: string) => {
+      this.directory = newValue;
+    });
+    // the function called when trying to output something
+    this.outputListener = outputListener;
     this.taskbarService = taskbarService;
   }
 
