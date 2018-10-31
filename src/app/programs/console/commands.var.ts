@@ -10,8 +10,9 @@ var RawCommands: any = {
     ]
   },
   cd: {
-    commandFunction (args: Array<string>, fileSystem: Filesystem, output: Function) {
-      fileSystem.cd(args[0]);
+    async commandFunction (args: Array<string>, fileSystem: Filesystem, output: Function) {
+      const result = await fileSystem.cd(args[0]);
+      !result && output(`cd: ${args[0]}: No such file or directory`);
     }
   },
   ls: {
@@ -94,4 +95,4 @@ function processCommands (commands: any): any {
 }
 
 // export the Commands object
-export var Commands = processCommands(RawCommands);
+export const Commands = processCommands(RawCommands);

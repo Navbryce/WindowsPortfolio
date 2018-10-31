@@ -36,11 +36,8 @@ export class Filesystem {
         this.cd(startingDirectory);
     }
 
-    public async cd (newDirec: string) {
-        // update the directory being cd'd on
-        this.currentDirectory = this.directory + newDirec;
-        // update the file list
-        this.updateFileList();
+    public async cd (newDirec: string): Promise<Boolean> {
+        return await this.updateFileList(this.directory + newDirec);
     }
 
     private async getFileList (path: String): Promise<any> {
@@ -49,7 +46,7 @@ export class Filesystem {
         return new Promise((resolve, reject) => {
             // define the body of the request
             const body = {
-                currentDirectory: this.directory
+                currentDirectory: path
             };
 
             this.client.post(Filesystem.backend + '/files', body).subscribe((data: any) => {
@@ -66,16 +63,19 @@ export class Filesystem {
         });
     }
 
-    private async updateFileList () {
-        try {
-            this.directoryContents = await this.getFileList(this.directory);
-            // get the simplified path
-            this.directory = this.directoryContents.simpPath;
-            // console.log(this.directoryContents);
-        } catch (error) {
-            console.error(error);
-            this.directoryContents = {files: [], dirs: []};
-        }
-        this.filesSubject.next(this.directoryContents);
+    private async updateFileList (path: string): Promise<Boolean> {
+        return new Promise<Boolean>(async (resolve, reject) => {
+            try {
+                this.directoryContents = await this.getFileList(path);
+                // get the simplified path
+                this.directory = this.directoryContents.simpPath;
+                this.filesSubject.next(this.directoryContents);
+                resolve(true);
+                // console.log(this.directoryContents);
+            } catch (error) {
+                console.error(error);
+                resolve(false);
+            }
+        });
     }
 }

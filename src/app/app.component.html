@@ -1,6 +1,17 @@
-<div class="browser-wrapper">
+<div [hidden]="mobilePrompt" class="browser-wrapper">
   <div #desktop class="content">
     <desktop></desktop>
   </div>
   <taskbar></taskbar>
 </div>
+<ng-container *ngIf="mobilePrompt">
+  <p>
+    This website is designed for a desktop experience. With this in mind,
+    would you like to continue to a simplified experience, AKA, my resume?
+    If you continue, this prompt will NOT be asked again.
+  </p>
+  <div>
+    <a href="{{environment.backend.full}}/assets/portfolio-documents/SoftwareResume.pdf"><button>Simplified</button></a>
+    <button (click)="mobilePrompt = false; mobilePromptAnswered = true;">Continue</button>
+  </div>
+</ng-container>

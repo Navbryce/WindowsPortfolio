@@ -1,21 +1,34 @@
-import { ElementRef, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ElementRef, Component, ComponentFactoryResolver, HostListener, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ProgramComponent } from './programs';
 import { ProgramListService, TaskbarService } from './services';
 import { ProgramDefinitions } from './programs';
+import { CustomComponent } from './basic';
+import { environment } from '../environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends CustomComponent implements OnInit {
+  public environment: any = environment;
+  public mobilePrompt: Boolean = true;
+  // if the mobile prompt has already been answered
+  public mobilePromptAnswered: Boolean = false;
+
   @ViewChild('desktop', {read: ViewContainerRef}) desktop: ViewContainerRef;
 
   constructor (private componentFactoryResolver: ComponentFactoryResolver, private programListService: ProgramListService, private taskbarService: TaskbarService) {
+    super();
     this.programListService.processProgramDefinitions(ProgramDefinitions); // entry point. tells everything to load in
   }
 
   ngOnInit() {
-      // set up the listeners for creating programs. NOTE: This is done in NgOnInit because @ViewChild needs to be initialized before createProgram can be called
+      // make sure the mobile version is not needed at start
+      this.windowResize({width: window.innerWidth});
+
+      /* set up the listeners for creating programs. NOTE:
+      This is done in NgOnInit because @ViewChild needs to be
+       initialized before createProgram can be called */
       this.createStreamLoop = this.createStreamLoop.bind(this);
       this.programListService.createStream.subscribe(this.createStreamLoop);
   }
@@ -40,5 +53,17 @@ export class AppComponent implements OnInit {
       this.createProgram(program.program, program.args);
       this.createStreamLoop();
     }
+  }
+  public windowResize (event: any) {
+    const triggerWidth = 570;
+    this.mobilePrompt = event.width <= triggerWidth && !this.mobilePromptAnswered;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  public resize(event): void {
+    /* Trigger the resize events */
+    event.width = window.innerWidth;
+    event.height = window.innerHeight;
+    this.windowResize(event);
   }
 }
