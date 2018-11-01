@@ -1,4 +1,5 @@
-import { Filesystem } from "../../basic";
+import { Filesystem } from '../../basic';
+import { browserCommand } from "../browser/browser-command.function";
 
 // export at bottom
 
@@ -10,13 +11,13 @@ var RawCommands: any = {
     ]
   },
   cd: {
-    async commandFunction (args: Array<string>, fileSystem: Filesystem, output: Function) {
+    async commandFunction (args: Array<string>, fileSystem: Filesystem, output: Function, executeCommand: Function) {
       const result = await fileSystem.cd(args[0]);
       !result && output(`cd: ${args[0]}: No such file or directory`);
     }
   },
   ls: {
-    commandFunction (args: Array<String>, fileSystem: Filesystem, output: Function) {
+    commandFunction (args: Array<String>, fileSystem: Filesystem, output: Function, executeCommand: Function) {
       fileSystem.directoryContents.files.forEach((file) => {
         output(file.name);
       });
@@ -24,6 +25,9 @@ var RawCommands: any = {
         output(dir.name + '/');
       });
     }
+  },
+  pdf: {
+    commandFunction: browserCommand
   },
   github: {
     output: [

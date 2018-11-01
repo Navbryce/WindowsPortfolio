@@ -57,7 +57,8 @@ export class Console {
       // the command wants to run a function
       if (!!command.commandFunction) {
         this.output = this.output.bind(this); // bind the this context
-        command.commandFunction(args, this.fileSystem, this.output);
+        command.commandFunction(args, this.fileSystem, this.output, 
+          this.executeCommand);
       }
 
       // the command should run any other commands
