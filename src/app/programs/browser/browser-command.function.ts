@@ -26,7 +26,7 @@ export async function browserCommand (args: Array<string>, fileSystem: Filesyste
                     }
                 ]
             };
-            executeCommand(command, [fileName]);
+            executeCommand(command, [fileSystem.directory + '/' + fileName]);
         } else {
             output(`The file ${fileName} does not exist`);
         }
