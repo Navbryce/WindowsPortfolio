@@ -56,8 +56,10 @@ export class Console {
 
       // the command wants to run a function
       if (!!command.commandFunction) {
-        this.output = this.output.bind(this); // bind the this context
-        command.commandFunction(args, this.fileSystem, this.output, 
+        // bind the this contexts
+        this.output = this.output.bind(this); // used to output text
+        this.executeCommand = this.executeCommand.bind(this); // used to execute a command object
+        command.commandFunction(args, this.fileSystem, this.output,
           this.executeCommand);
       }
 
@@ -77,7 +79,7 @@ export class Console {
       // the command should launch any programs (windows)
       if (!!command.launch) {
         command.launch.forEach((programLaunchObject: any) => {
-          this.launchProgram(programLaunchObject);
+          this.launchProgram(programLaunchObject, args);
         });
       }
     } else {
@@ -117,9 +119,34 @@ export class Console {
     return command;
   }
 
-  private launchProgram (programLaunch: any) {
+  private launchProgram (programLaunch: any, args: Array<String>): Error {
     /* Launches the program with the programID */
-    this.taskbarService.createProgramInstanceFromId(programLaunch.id);
+    let error: Error = null;
+    const map = programLaunch.argsMap;
+    let programArgs = null; // null by default
+    if (programLaunch.argsMap != null) {
+      programArgs = {};
+      for (let counter = 0; counter < programLaunch.argsMap.length; counter++) {
+        if (counter < args.length) {
+          // null signifies not use the argument at that index
+          if (map[counter] != null) {
+            /*
+            the index represents which argument in the array of arguments to use.
+            the value at the index represents the key to store that value under
+            */
+           programArgs[map[counter]] = args[counter];
+          }
+        } else {
+          error = new Error('Not enough arguments supplied');
+          break;
+        }
+      }
+    }
+    // if there is no error
+    if (!error) {
+      this.taskbarService.createProgramInstanceFromId(programLaunch.id, programArgs);
+    }
+    return error;
   }
 
   private output (line: String): void {

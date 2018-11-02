@@ -7,8 +7,30 @@ import { Filesystem } from '../../basic';
  * @param output - the function that can be used to output text
  * @param executeCommand  - pass a command to this function to execute it
  */
-export function browserCommand (args: Array<string>, fileSystem: Filesystem,
+export async function browserCommand (args: Array<string>, fileSystem: Filesystem,
     output: Function, executeCommand: Function) {
-    let fileName = args[0];
-    console.log(Filesystem.getExtension(fileName));
+    const fileName = args[0];
+    if (Filesystem.getExtension(fileName) === 'pdf') {
+        if (await fileSystem.fileExists(fileName)) {
+            /*
+            launch the actual pdf component. do it through the console instead
+            of directly
+            */
+            const command = {
+                launch: [
+                    {
+                        argsMap: [
+                            'src'
+                        ],
+                        id: 'browser'
+                    }
+                ]
+            };
+            executeCommand(command, [fileName]);
+        } else {
+            output(`The file ${fileName} does not exist`);
+        }
+    } else {
+        output(`The file ${fileName} is not of type pdf`);
+    }
 }

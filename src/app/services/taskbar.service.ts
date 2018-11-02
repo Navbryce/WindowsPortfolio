@@ -126,14 +126,20 @@ export class TaskbarService {
 
   // BEGIN Private Functions
 
-  private findNewFocusWithAction (id: string, newState: number): void { // special actions need to be taken if the program being minimized/closed holds focus (need to find a new window to focus). newState represents the new state of what current has focus (the id)
-    if (id == this.currentFocusId) {
-      let programStatus = this.taskbarArray.find((programStatus) => { // find a new program to receive focus
-        return programStatus.status == 0;
+  private findNewFocusWithAction (id: string, newState: number): void {
+     /* special actions need to be taken if the program being minimized/closed holds focus 
+     (need to find a new window to focus). newState represents the new state 
+     of what current has focus (the id) */
+    if (id === this.currentFocusId) {
+      const programStatus = this.taskbarArray.find((status) => { // find a new program to receive focus
+        return status.status === 0;
       });
-      this.updateFocusAdvanced(programStatus == null ? null : programStatus.id, newState); // -1 tells the taskbar service to minimize the old program with focus (AKA the program with the id that matches the parameter id)
+      // -1 tells the taskbar service to minimize the old program with focus (AKA the program with the id that matches the parameter id)
+      this.updateFocusAdvanced(programStatus == null ? null : programStatus.id, newState); 
     } else {
-      this.updateProgramStatus(id, newState); // since the current program doesn't have focus, just minimize it. you don't need to bother giving another program focus because the focus isn't changing
+      /* since the current program doesn't have focus, just minimize it. 
+      you don't need to bother giving another program focus because the focus isn't changing */
+      this.updateProgramStatus(id, newState);
     }
     // console.log(JSON.stringify(this._taskbarMap));
 

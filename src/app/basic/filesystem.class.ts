@@ -12,7 +12,27 @@ export class Filesystem {
     public static readonly backend: string = environment.backend.ip +
     (environment.backend.port.length > 0 ? (':' + environment.backend.port) : '');
 
-    /**
+    set directory (newDirec: string) {
+        // DO NOT USE TO CD
+        this.currentDirectory = newDirec;
+        this.directorySubject.next(newDirec);
+    }
+    get directory (): string {
+        return this.currentDirectory;
+    }
+
+    public directoryContents: any;
+    // subscribe to directory changes
+    public directorySubject: BehaviorSubject<String> = new BehaviorSubject<String>('/');
+    // subscribe to filesSubject to get file updates pushes
+    public filesSubject: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
+
+    private client: HttpClient;
+    private currentDirectory: string;
+
+
+        // BEGIN: Static Methods
+     /**
      * returns the file's extension or null if there is no extension
      * @param filePath - the path to the file
      */
@@ -48,23 +68,7 @@ export class Filesystem {
         return filePath;
     }
 
-    set directory (newDirec: string) {
-        // DO NOT USE TO CD
-        this.currentDirectory = newDirec;
-        this.directorySubject.next(newDirec);
-    }
-    get directory (): string {
-        return this.currentDirectory;
-    }
-
-    public directoryContents: any;
-    // subscribe to directory changes
-    public directorySubject: BehaviorSubject<String> = new BehaviorSubject<String>('/');
-    // subscribe to filesSubject to get file updates pushes
-    public filesSubject: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
-
-    private client: HttpClient;
-    private currentDirectory: string;
+    // BEGIN: Actual class methods
 
     constructor (client: HttpClient, startingDirectory: string = '/') {
         this.client = client;
@@ -78,7 +82,7 @@ export class Filesystem {
 
     public async fileExists (filePath: string): Promise<Boolean> {
         return new Promise<Boolean>((resolve) => {
-            this.client.post(Filesystem.backend + '/fileExists', {path: filePath})
+            this.client.post(Filesystem.backend + '/fileExists', {path: this.directory + '/' + filePath})
             .subscribe((success) => {
                 resolve(<Boolean>success);
             }, (error) => {
