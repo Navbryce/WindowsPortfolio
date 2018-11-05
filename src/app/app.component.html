@@ -1,3 +1,10 @@
+<div *ngIf="disclaimer" class="disclaimer full-width">
+  <p>
+    Note this website is a WIP. I'm developing it 
+    <a href="https://github.com/Navbryce/WindowsPortfolio" target="_blank">with extendability in mind for other users.</a>
+  </p>
+  <a (click)="disclaimer = !disclaimer" class="disc-toggle"  href="">Ok</a>
+</div>
 <div [hidden]="mobilePrompt" class="browser-wrapper">
   <div #desktop class="content">
     <desktop></desktop>

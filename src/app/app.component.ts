@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent extends CustomComponent implements OnInit {
   public environment: any = environment;
+  public disclaimer: Boolean = true;
   public mobilePrompt: Boolean = true;
   // if the mobile prompt has already been answered
   public mobilePromptAnswered: Boolean = false;

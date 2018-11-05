@@ -14,3 +14,24 @@
   }
 
 }
+.disclaimer {
+  background-color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  position: absolute;
+  z-index: 5;
+
+  p {
+    display: inline;
+    vertical-align: middle;
+  }
+
+  .disc-toggle {
+    display: inline;
+    float: right;
+    font-size: 18pt;
+    opacity: 1;
+    padding-right: 30px;
+    vertical-align: middle;
+  }
+}
