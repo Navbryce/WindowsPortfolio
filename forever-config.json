@@ -4,5 +4,5 @@
     "watch": true,
     "script": "backend.js",
     "args": ["--dist", "src/"],
-    "sourceDir": "C:/Users/navba/Downloads/ADevenirProjects/WindowsPortfolio"
+    "sourceDir": "."
 }

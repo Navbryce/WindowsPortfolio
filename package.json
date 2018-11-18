@@ -13,6 +13,9 @@
     "e2e": "ng e2e",
     "heroku-postbuild": "npm run build"
   },
+  "engines" :  { 
+    "node" : ">=11.2.0" 
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.0.0",
@@ -43,6 +46,7 @@
     "@types/node": "~6.0.60",
     "argparser": "^0.2.2",
     "codelyzer": "^4.0.1",
+    "forever": "^0.15.3",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
