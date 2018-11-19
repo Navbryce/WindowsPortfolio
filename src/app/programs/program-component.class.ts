@@ -26,7 +26,22 @@ export abstract class ProgramComponent extends CustomComponent implements OnInit
     });
   }
 
-  public abstract windowResize(event: any): void;
+  public abstract windowResize (event: any): void;
+  protected compareToDefaultArguments (args, defaultArguments): any {
+    /*
+    Assumes the default arguments contain all the required arguments.
+    Will use the args value if it has it, otherwise it will use the default
+    argument
 
+    ASSUMES: args and defaultArguments are not null objects.
+
+    Does not work with arrays currently and nested objects
+    */
+    const resultArguments: any = {};
+    Object.keys(defaultArguments).forEach((key, index) => {
+      resultArguments[key] = !!args[key] ? args[key] : defaultArguments[key];
+    });
+    return resultArguments;
+  }
 
 }

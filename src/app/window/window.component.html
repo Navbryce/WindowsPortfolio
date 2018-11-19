@@ -2,7 +2,7 @@
   <div [ngClass]="{'focused': this.focused && this.expanded == null, 'focused-not': !this.focused}" class="wrapper">
     <div class="header-wrapper">
         <div #headerBar class="actual-header">
-          <h5 class="header">{{headerText}}</h5>
+          <p class="header">{{headerText}}</p>
         </div>
         <div class="buttons">
           <span [icon]="'minimize'" (click)="minimizeListener($event)"></span>

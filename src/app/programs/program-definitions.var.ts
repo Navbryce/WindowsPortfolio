@@ -1,8 +1,9 @@
 import { BrowserComponent } from './browser';
-import { ConsoleComponent } from './console'
+import { ConsoleComponent } from './console';
+import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { TestProgram } from './test-program/test-program.component';
 
-export var ProgramDefinitions = [ // positionOnLastClose set by windodw
+export let ProgramDefinitions = [ // positionOnLastClose set by windodw
   {
     component: ConsoleComponent,
     id: 'console',
@@ -16,11 +17,23 @@ export var ProgramDefinitions = [ // positionOnLastClose set by windodw
     unique: false
   },
   {
+    component: FileExplorerComponent,
+    id: 'file-explorer',
+    icon: './assets/programs/file-explorer/folder-icon.png',
+    name: 'File Explorer',
+    openOnStart: false,
+    pin: {
+      desktop: true,
+      taskbar: true
+    },
+    unique: false
+  },
+  {
     component: BrowserComponent,
     id: 'browser',
     icon: './assets/programs/browser/browser.png',
     name: 'Browser',
-    openOnStart: true,
+    openOnStart: false,
     pin: {
       desktop: true,
       taskbar: true

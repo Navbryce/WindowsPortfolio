@@ -1,0 +1,35 @@
+table {
+    $nameColumnWidth: 200px;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+    .head > td {
+        border-right: solid 1px rgb(200, 200, 200);
+        color: rgb(0, 84, 139);
+        font-size: 10.5pt;
+    }
+    td {
+        font-size: 10pt;
+        padding-left: 15px;
+    }
+    .date-column {
+        min-width: $nameColumnWidth;
+    }
+    .file-icon {
+        height: 15px;
+        margin-right: 10px;
+        object-fit: contain;
+        width: 15px;
+
+    }
+
+    .file-row:hover {
+        background-color: rgba(96, 191, 255, 0.479);
+    }
+    .gray-text {
+        color: rgb(130, 130, 130);
+    }
+    .name-column {
+        min-width: $nameColumnWidth;
+    }
+}

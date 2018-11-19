@@ -58,11 +58,13 @@
 
   .header {
     color: black;
+    font-size: 10pt;
     margin: 0;
     padding: 0;
     min-width: min-content;
     min-height: min-content;
     position: relative;
+    font-weight: 600;
     white-space: nowrap;
     z-index: 1;
   }
