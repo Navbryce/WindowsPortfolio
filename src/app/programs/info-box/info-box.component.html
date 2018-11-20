@@ -1,0 +1,11 @@
+<window-component [inputId]="id" [programDefinition]="programDefinition" (resizeFlag)="windowResize($event)">
+    <div class="full">
+        <div class="message-box">
+            <p>{{message}}</p>
+        </div>
+        <div>
+            <button (click)="buttonClicked(1)">Ok</button>
+        </div>
+    </div>
+</window-component>
+  

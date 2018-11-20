@@ -2,6 +2,7 @@ import { BrowserComponent } from './browser';
 import { ConsoleComponent } from './console';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { TestProgram } from './test-program/test-program.component';
+import { InfoBoxComponent } from './info-box/info-box.component';
 
 export let ProgramDefinitions = [ // positionOnLastClose set by windodw
   {
@@ -38,6 +39,26 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
       desktop: true,
       taskbar: true
     },
-    unique: false
+    unique: false,
+    openFiles: [
+      'pdf'
+    ]
+  },
+  {
+    component: InfoBoxComponent,
+    id: 'info-box',
+    icon: './assets/programs/info-box/info.png',
+    name: 'Info Box',
+    openOnStart: false,
+    pin: {
+      desktop: false,
+      taskbar: false
+    },
+    unique: false,
+    alwaysUsePreferred: true,
+    preferred: {
+      width: 400,
+      height: 150
+    }
   }
 ];

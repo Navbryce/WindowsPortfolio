@@ -19,6 +19,7 @@
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 10px;
   position: absolute;
+  user-select: none !important;
   z-index: 5;
 
   p {

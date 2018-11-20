@@ -40,14 +40,25 @@ export class TaskbarComponent implements OnInit {
   }
 
   public renderIcon (programStatus) { // adds or updates a program to the taskbar
-    var programDefinition = programStatus.programDefinition;
-    if (this.iconsMap[programDefinition.id] == null) { // the icon doesn't exist yet. store the new status in the map and add it to the icon arary
+    const programDefinition = programStatus.programDefinition;
+
+    // the icon doesn't exist yet. store the new status in the map and add it to the icon arary
+    if (this.iconsMap[programDefinition.id] == null) { 
       this.iconsMap[programDefinition.id] = programStatus;
       this.iconsArray.push(programStatus);
     } else { // update the existing status
-      let existingStatus = this.iconsMap[programDefinition.id];
+      const existingStatus = this.iconsMap[programDefinition.id];
       existingStatus.status = programStatus.status; // it's possible the status changed
       existingStatus.id = programStatus.id; // it's possible the id changed
+
+
+      if (existingStatus.status === -2 && !programDefinition.pin.taskbar) {
+        // remove the program if it's closing and not supposed to be pinned to the taskbar
+        delete this.iconsMap[programDefinition.id];
+        this.iconsArray = this.iconsArray.filter((needle) => {
+          return needle !== existingStatus; // remove the program from the icons array
+        });
+      }
     }
   }
 

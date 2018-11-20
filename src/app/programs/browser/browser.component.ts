@@ -26,8 +26,8 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   private parseArguments (args: any): void {
     /* Parses arguments and configures variables accordingly */
     if (args != null) {
-      if (args.src != null) {
-        this.pdfSource = args.src;
+      if (args.file != null) {
+        this.pdfSource = args.file.path;
       }
     }
   }

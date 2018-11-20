@@ -112,6 +112,7 @@ async function getFiles (direcPath) {
                 /* not all files might be directories or files, so don't just 
                 use if else. explicitly check for each one */
                 result.name = file;
+                result.path = path.join(simpPath, file);
                 result.extension = path.extname(result.name);
                 result.isDirectory() && output.dirs.push(result);
                 result.isFile() && output.files.push(result);

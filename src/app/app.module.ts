@@ -7,7 +7,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 // components
 import { AppComponent } from './app.component';
 import { DesktopComponent, ShortcutComponent } from './desktop';
-import { BrowserComponent, ConsoleComponent, FileExplorerComponent, TestProgram } from './programs';
+import { BrowserComponent, ConsoleComponent, InfoBoxComponent,
+  FileExplorerComponent, TestProgram } from './programs';
 import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
 import { IconComponent } from './window/icons';
@@ -25,6 +26,7 @@ import { HttpClient } from '@angular/common/http';
     DesktopComponent,
     FileExplorerComponent,
     IconComponent,
+    InfoBoxComponent,
     ProgramIconComponent,
     ShortcutComponent,
     TaskbarComponent,
@@ -37,7 +39,8 @@ import { HttpClient } from '@angular/common/http';
     HttpClientModule,
     PdfViewerModule
   ],
-  entryComponents: [BrowserComponent, ConsoleComponent, FileExplorerComponent, ShortcutComponent, TestProgram],
+  entryComponents: [BrowserComponent, ConsoleComponent, FileExplorerComponent,
+    InfoBoxComponent, ShortcutComponent, TestProgram],
   providers: [HttpClient, ProgramListService, TaskbarService],
   bootstrap: [AppComponent]
 })

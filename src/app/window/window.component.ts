@@ -96,9 +96,9 @@ export class WindowComponent {
 
     /* the offset because there are multipled instances. -1 because
     the count includes the current instance */
-   var instanceOffset: number = 20 * (this.programDefinition.count - 1);
+   const instanceOffset: number = 20 * (this.programDefinition.count - 1);
 
-    if (this.programDefinition.lastClosed != null) {
+    if (this.programDefinition.lastClosed != null && !this.programDefinition.alwaysUsePreferred) {
       if (this.programDefinition.lastClosed.expanded != null) {
         this.toggleExpand(true);
         this.expanded = this.programDefinition.lastClosed.expanded;
@@ -112,7 +112,11 @@ export class WindowComponent {
       /* set the window location. offset because the previous instance is
       still open */
       this.setWindowLocation(50 + instanceOffset, 50 + instanceOffset);
-      this.windowResize(500, 500);
+      const preferred = this.programDefinition.preferred;
+      const preferredWidth = !!preferred && !!preferred.width ? preferred.width : 500;
+      const preferredHeight = !!preferred && !!preferred.height ? preferred.height : 500;
+
+      this.windowResize(preferredWidth, preferredHeight);
 
     }
 

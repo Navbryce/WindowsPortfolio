@@ -42,17 +42,20 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
         this.disableSelect = false;
       }, this.fileSelectCooldown);
 
-      // unselect any files
+      // unselect any files that might have been selected
       if (this.selectedFile != null) {
         this.selectedFile.selected = false;
         this.selectedFile = null;
       }
       file.selected = false;
 
+      // actually do something because the file has been double clicked
+
 
       // call the appropriate listeners/event handlers
       if (file.isFile) {
-
+        // try opening the file
+        this.taskBarService.openFile(file);
       } else {
         // it's a directory, so cd
         this.fileSystem.cd('./' + file.name);
@@ -61,6 +64,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
   }
 
   public fileSelect (file: any): void {
+    /* NOT THE SAME AS DOUBLE CLICKING. A SINGLE CLICK */
     if (this.selectedFile != null) {
       // the file has been clicked when already selected
       if (file === this.selectedFile) {
@@ -87,6 +91,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
   // BEGIN: Private Functions
 
   private filesTreeUpdate (files: any): void {
+    // called when the file tree is updated (cd'ed up or down)
     if (files != null) {
       this.currentDirectory = files.simpPath;
       this.currentFiles = Filesystem.getFileArray(files);

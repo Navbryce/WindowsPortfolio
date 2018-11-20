@@ -36,6 +36,10 @@ export class TaskbarService {
    this.activeProgramsCount[this._taskbarMap[id].programDefinition.id] -= 1;
   }
 
+  public createInfoBox (message: String = null, level: String = null, eventHandler: Function = null) {
+    this.programListService.createInfoBox(message, level, eventHandler);
+  }
+
   public createProgramInstanceFromDef (programDefinition: any, args: any = null): any {  // send the program definition of the program you're trying to instantiate. will make the program
     if (!programDefinition.unique || (this.activeProgramsCount[programDefinition.id] == null || this.activeProgramsCount[programDefinition.id] == 0)) {
       this.programListService.createProgram(programDefinition, args);
@@ -93,6 +97,11 @@ export class TaskbarService {
 
   public minimizeProgram (id: string): void {
     this.findNewFocusWithAction(id, -1);
+  }
+
+  public openFile (file: any): void {
+    /* Tries to open the file based on the file object */
+    this.programListService.openFile(file);
   }
 
 
