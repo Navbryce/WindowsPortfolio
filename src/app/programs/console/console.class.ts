@@ -34,7 +34,8 @@ export class Console {
     outputListener: Function, taskbarService: TaskbarService) {
     this.directory = directory;
     this.user = user;
-    this.fileSystem = new Filesystem(httpClient, directory);
+    this.fileSystem = new Filesystem(httpClient, directory,
+      taskbarService.getDefaultProgramsMap());
     // subscribe to changes in directory
     this.fileSystem.directorySubject.subscribe((newValue: string) => {
       this.directory = newValue;

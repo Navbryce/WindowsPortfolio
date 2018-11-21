@@ -94,7 +94,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
     // called when the file tree is updated (cd'ed up or down)
     if (files != null) {
       this.currentDirectory = files.simpPath;
-      this.currentFiles = Filesystem.getFileArray(files);
+      this.currentFiles = this.fileSystem.getFileArray(files);
     } else {
       this.currentFiles = null;
     }
@@ -102,7 +102,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
 
   private initializeValues (processedArguments: any): void {
     this.fileSystem = new Filesystem(this.httpClient,
-      processedArguments.startingDirectory);
+      processedArguments.startingDirectory, this.taskBarService.getDefaultProgramsMap());
     this.fileSystem.filesSubject.subscribe((files) => {
       this.filesTreeUpdate(files);
     });

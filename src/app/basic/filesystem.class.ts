@@ -32,6 +32,7 @@ export class Filesystem {
 
     private client: HttpClient;
     private currentDirectory: string;
+    private defaultProgramsMap: any; // used to determine icon
 
 
     // BEGIN: Static Methods
@@ -58,30 +59,6 @@ export class Filesystem {
     }
 
     /**
-     * returns all the files and directories as a single Array.
-     * an isFile key will denote whether it's a file or directory
-     * @param files - valid files object
-     */
-    public static getFileArray (files: any): Array<any> {
-        let filesArray: Array<any> = [];
-        filesArray = filesArray.concat(files.files.map((file) => {
-            file['isFile'] = true;
-            file['type'] = file.extension.substring(1, file.extension.length);
-            file['icon'] = getIcon(file.type);
-            return file;
-        }));
-
-        filesArray = filesArray.concat(files.dirs.map((dir) => {
-            dir['isFile'] = false;
-            dir['type'] = 'Directory';
-            dir['icon'] = getIcon(dir.type);
-
-            return dir;
-        }));
-        return filesArray;
-    }
-
-    /**
      * returns the file name
      * @param filePath the path of the file
      */
@@ -98,9 +75,10 @@ export class Filesystem {
 
     // BEGIN: Actual class methods
 
-    constructor (client: HttpClient, startingDirectory: string = '/') {
+    constructor (client: HttpClient, startingDirectory: string = '/', defaultProgramsMap: any) {
         this.client = client;
         this.directory = startingDirectory;
+        this.defaultProgramsMap = defaultProgramsMap;
         this.cd(startingDirectory);
     }
 
@@ -119,6 +97,30 @@ export class Filesystem {
             });
         });
 
+    }
+
+    /**
+     * returns all the files and directories as a single Array instead of as a dict.
+     * an isFile key will denote whether it's a file or directory
+     * @param files - valid files object
+     */
+    public getFileArray (files: any): Array<any> {
+        let filesArray: Array<any> = [];
+        filesArray = filesArray.concat(files.files.map((file) => {
+            file['isFile'] = true;
+            file['type'] = file.extension.substring(1, file.extension.length);
+            file['icon'] = getIcon(file.type, this.defaultProgramsMap);
+            return file;
+        }));
+
+        filesArray = filesArray.concat(files.dirs.map((dir) => {
+            dir['isFile'] = false;
+            dir['type'] = 'Directory';
+            dir['icon'] = getIcon(dir.type, this.defaultProgramsMap);
+
+            return dir;
+        }));
+        return filesArray;
     }
 
     // BEGIN: PRIVATE FUNCTIONS

@@ -32,7 +32,6 @@ export class ConsoleComponent extends ProgramComponent {
 
     // bind the "this" context of addLine
     this.addLine = this.addLine.bind(this);
-
     this.console = new Console('/', 'navbryce', httpClient, this.addLine, taskBarService);
   }
 

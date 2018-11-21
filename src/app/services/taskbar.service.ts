@@ -83,6 +83,11 @@ export class TaskbarService {
     return returnObject;
   }
 
+  public getDefaultProgramsMap (): any {
+    /* returns the default programs map */
+    return this.programListService.defaultProgramsMap;
+  }
+
   public getProgramStatus (id: string): any {  // returns the status object
     return this._taskbarMap[id];
   }

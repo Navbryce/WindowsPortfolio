@@ -3,8 +3,15 @@ export const iconMap = {
     default: '/assets/file-icons/file-empty.png'
 };
 
-export function getIcon (fileType: string): string {
+export function getIcon (fileType: string, defaultPrograms: any = null): string {
     fileType = fileType.toLowerCase();
-    const icon = iconMap[fileType];
-    return !!icon ? icon : iconMap['default'];
+    let icon = iconMap[fileType];
+
+    // if the icon doesn't have an icon in the icons map, try to use a defeault program
+    if (defaultPrograms != null && (!icon && defaultPrograms[fileType])) {
+        icon = defaultPrograms[fileType].icon;
+    } else if (!icon) {
+        icon = iconMap['default'];
+    }
+    return icon;
 }
