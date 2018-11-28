@@ -168,16 +168,17 @@ export class WindowComponent {
     });
   }
 
-  public async setMinimize (newStatus: boolean): Promise<boolean> { // newStatus: true - minimized, false  - expanded. returns promise when complete. does NOT send the update signal. also used to hide a program before closing
+  public async setMinimize (newStatus: boolean, translationTransition: boolean = true): Promise<boolean> { // newStatus: true - minimized, false  - expanded. returns promise when complete. does NOT send the update signal. also used to hide a program before closing
     return new Promise<boolean>((resolve, reject) => {
-      var x;
-      var y;
-      var updateMinimizedFunction = (x, y) => { // a nested function that sets the current minimized status with the appropriate parameters
+      let x;
+      let y;
+      // a nested function that sets the current minimized status with the appropriate parameters
+      const updateMinimizedFunction = (xTranslation, yTranslation) => {
         this.minimized = {
           value: newStatus,
           params: {
-            x: x,
-            y: y
+            x: xTranslation,
+            y: yTranslation
           }
         };
 
@@ -188,18 +189,29 @@ export class WindowComponent {
         y = this.currentY;
         updateMinimizedFunction(x, y);
         resolve(true);
-      } else if (!this.closed){ // go into the bottom left corner
-        this.setMinimize(false); // forces the initial style to update itself with the current window position . possibly move this to the moveWindow function
+      } else if (!this.closed) { // go into the bottom left corner
+        /* forces the initial style to update itself with the current window position .
+        possibly move this to the moveWindow function */
+        this.setMinimize(false);
         setTimeout(() => { // gives it time to update the values
-          var windowHeight = this.windowHeight;
-          x = 0;
-          y = windowHeight - this.currentHeight;
-          updateMinimizedFunction(x, y);
+          let xTranslation: number;
+          let yTranslation: number;
+          if (translationTransition) {
+            const windowHeight = this.windowHeight;
+            xTranslation = 0;
+            yTranslation = windowHeight - this.currentHeight;
+          } else {
+            /* if the user doesn't want a moving transition, then translate it
+            to it's current position (resulting in movement) */
+            xTranslation = this.currentX;
+            yTranslation = this.currentY;
+          }
+          updateMinimizedFunction(xTranslation, yTranslation);
           setTimeout(() => {
             this.minimizedStatus = true;
             resolve(true);
           }, 200); // the duration of the tranisition
-        },10);
+        }, 10);
       }
     });
   }
@@ -211,7 +223,7 @@ export class WindowComponent {
 
   public async toggleClose (newStatus: boolean) { // true - closed; false - open
     if (newStatus != this.closed) {
-      await this.setMinimize(newStatus); // hide the window
+      await this.setMinimize(newStatus, false); // hide the window
       this.closed = newStatus;
       this.programDefinition.lastClosed = {
         height: this.currentHeight,

@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 
 // misc classes and functions
 import { getIcon } from './icon-map.var';
+import { ValueTransformer } from '@angular/compiler/src/util';
 
 export class Filesystem {
     // backend url
@@ -60,6 +61,7 @@ export class Filesystem {
 
     /**
      * returns the file name
+     * also works with directories
      * @param filePath the path of the file
      */
     public static getFileName (filePath: string): string {
@@ -73,6 +75,23 @@ export class Filesystem {
         return filePath;
     }
 
+    /**
+     * Returns an array contain a full path to each parent directory and the
+     * inputted directory. Assumes the path has already been simplified.
+     *
+     * @param path - the path you want to decompose
+     */
+    public static getPathPieces (path: String): Array<string> {
+        const result: Array<string> = ['/']; // always start at root
+        let rawPathPieces = path.split(/[/\\]/);
+        rawPathPieces = rawPathPieces.filter((value: string) =>
+        value.length > 0);
+        rawPathPieces.forEach((piece: string, index) => {
+            result.push(result[result.length - 1] + piece + '/');
+        });
+        return result;
+    }
+
     // BEGIN: Actual class methods
 
     constructor (client: HttpClient, startingDirectory: string = '/', defaultProgramsMap: any) {
@@ -83,7 +102,13 @@ export class Filesystem {
     }
 
     public async cd (newDirec: string): Promise<Boolean> {
-        return await this.updateFileList(this.directory + newDirec);
+        let cdPath;
+        if (newDirec.substring(0) === '/' || newDirec.substring(0) === '\\') {
+            cdPath = '/' + newDirec;
+        } else {
+            cdPath = this.directory + newDirec;
+        }
+        return await this.updateFileList(newDirec);
     }
 
     public async fileExists (filePath: string): Promise<Boolean> {
@@ -123,6 +148,14 @@ export class Filesystem {
         return filesArray;
     }
 
+    /**
+     * Returns an array of full paths for the current directory and all
+     * of its parents
+     */
+    public getCurrentPieces (): Array<string> {
+        return Filesystem.getPathPieces(this.currentDirectory);
+    }
+
     // BEGIN: PRIVATE FUNCTIONS
 
     private checkFiles (files: any, name: string): any {
@@ -144,6 +177,7 @@ export class Filesystem {
     private async getFileList (path: String): Promise<any> {
         /* Return a promise that promises a list of all the
         files/directories*/
+
         return new Promise((resolve, reject) => {
             // define the body of the request
             const body = {

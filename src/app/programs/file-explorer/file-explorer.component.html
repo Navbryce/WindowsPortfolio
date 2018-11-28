@@ -1,6 +1,11 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
   <div class="full">
-    <p>{{currentDirectory}}</p>
+    <div>
+      <ng-container *ngFor="let path of currentDirectoryPieces">
+        <directory-button  [path]="path" (click)="this.fileSystem.cd(path)">
+        </directory-button>
+      </ng-container>
+    </div>
     <table *ngIf="currentFiles != null">
       <tr class="head">
         <td class="name-column">Name</td>

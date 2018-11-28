@@ -15,6 +15,7 @@ import { TaskbarService } from '../../services';
 })
 export class FileExplorerComponent extends ProgramComponent implements OnInit {
   public currentDirectory: string;
+  public currentDirectoryPieces: Array<string>;
   public currentFiles: Array<any>;
   public disableSelect = false;
   public fileSystem: Filesystem;
@@ -94,6 +95,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
     // called when the file tree is updated (cd'ed up or down)
     if (files != null) {
       this.currentDirectory = files.simpPath;
+      this.currentDirectoryPieces = this.fileSystem.getCurrentPieces();
       this.currentFiles = this.fileSystem.getFileArray(files);
     } else {
       this.currentFiles = null;
