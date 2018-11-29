@@ -326,14 +326,14 @@ export class WindowComponent {
     this.moveWindowListener = this.moveWindowListener.bind(this); // set the context
 
     // drag and drop listeners
-    var headerBar = <HTMLElement> this.headerBar.nativeElement;
+    const headerBar = <HTMLElement> this.headerBar.nativeElement;
     headerBar.addEventListener("mousedown", ($event) => {
         this.translationX = $event.x - this.currentX;
         this.translationY = $event.y - this.currentY;
         this.frameCounter = 0; // reset the frame counter
         this.setWindowLocation($event.x - this.translationX, $event.y - this.translationY);
         document.addEventListener("mousemove", this.moveWindowListener);
-        var mouseUpFunction =($event) => {
+        const mouseUpFunction = ($event) => {
           document.removeEventListener("mousemove", this.moveWindowListener);
           document.removeEventListener("mouseup", mouseUpFunction);
         };

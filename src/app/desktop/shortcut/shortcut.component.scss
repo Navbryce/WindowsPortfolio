@@ -14,7 +14,7 @@ $startingColor: rgba($color, .3);
   display: inline-block;
   height: ($width * 1.5);
   margin: 2px;
-  overflow: hidden;
+  overflow-x: visible; // otherwise the right border is hidden
   position: absolute;
   user-select: none;
   width: $width;

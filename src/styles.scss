@@ -1,8 +1,27 @@
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(blue, $color, $percentage);
+}
 /* You can add global styles to this file, and also import other style files */
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+.drag-area {
+  $color: rgb(70, 130, 244);
+  $startingColor: rgba($color, .3);
+  background-color: tint(shade($startingColor, 10%), 10%);
+  border: 1px tint($startingColor, 20%) solid !important;
+  display: block;
+  content: '';
+  position: absolute;
+  user-select: none;
+  z-index: 5;
 }
 
 .flex {
@@ -23,7 +42,6 @@ body {
     flex: 1;
   }
 }
-
 .full {
   @extend .full-height;
   @extend .full-width;

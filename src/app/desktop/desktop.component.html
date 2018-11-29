@@ -1,5 +1,15 @@
 <div #wrapper class="wrapper">
   <div #shortCutWrapper>
   </div>
+  <!-- drag-area is a global style -->
+  <ng-container *ngIf="startingDragLocation.x != null && currentDragLocation.width != null">
+    <div class="drag-area"  
+    [style.left.px]="startingDragLocation.x" 
+    [style.top.px]="startingDragLocation.y"
+    [style.width.px]="currentDragLocation.width"
+    [style.height.px] = "currentDragLocation.height"
+    >
+    </div>
+  </ng-container>
   <div #background (click)="selectShortcut(null)" class="background"></div>
 </div>

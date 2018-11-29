@@ -19,17 +19,31 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   public static readonly ICON_WIDTH: number = 80;
   public static readonly ICON_HEIGHT: number = 150;
 
-  private shortCutReferences: Array<any> = []; // all the shortcut component references
-
+  public currentDragLocation: any;
   public height: number;
   public programDefinitions: Array<any>;
   public selected: ShortcutComponent = null;
+  public startingDragLocation: any; // for the drag box on the desktop
   public width: number;
 
-  private iconGrid: Array<Array<any>>;
-
+  @ViewChild('background') background: ElementRef;
   @ViewChild('shortCutWrapper', {read: ViewContainerRef}) shortCutWrapper: ViewContainerRef;
   @ViewChild('wrapper') wrapper: ElementRef;
+
+  private iconGrid: Array<Array<any>>;
+  private shortCutReferences: Array<any> = []; // all the shortcut component references
+
+  /* BEGIN Static Functions */
+  public static convertToPosition (positionObject: any) {
+    /* takes standard position object and returns object with x and y keys */
+    return {x: positionObject.column * this.ICON_WIDTH, y: positionObject.row * this.ICON_HEIGHT}
+  }
+
+  public static getValue (valueString: string) {
+    /* value string containing 'px' */
+    return parseInt(valueString, 10);
+  }
+  /* END Static Functions */
 
 
   constructor (private componentFactoryResolver: ComponentFactoryResolver, private taskbarService: TaskbarService) {
@@ -44,6 +58,9 @@ export class DesktopComponent extends CustomComponent implements OnInit {
     this.forceUpdatedDesktop(); // get program definitions
     this.windowResize = this.windowResize.bind(this);
     this.windowResize();
+
+    // add the event listeners for the click and drag
+    this.addClickAndDragListener();
   }
 
   public forceUpdatedDesktop (): void {
@@ -147,6 +164,34 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   }
 
   /* BEGIN Private Functions */
+
+  private addClickAndDragListener () {
+    const backgroundElement = this.background.nativeElement;
+    this.setStartingDragLocation(null, null);
+    this.setCurrentDragLocation(null, null);
+
+    const dragListener = (event) => {
+      this.setCurrentDragLocation(event.clientX, event.clientY);
+    };
+    backgroundElement.addEventListener('mousedown', (event) => {
+      this.setStartingDragLocation(event.clientX, event.clientY);
+      document.addEventListener('mousemove', dragListener);
+    });
+    const mouseUpListener = (event) => {
+      document.removeEventListener('mousemove', dragListener);
+      // reset the starting drag location and the current pointer location
+      this.setStartingDragLocation(null, null);
+      this.setCurrentDragLocation(null, null);
+
+
+      // remove this listener
+      document.removeEventListener('mouseup', mouseUpListener);
+    };
+
+    // add the mouseup listener
+    window.addEventListener('mouseup', mouseUpListener);
+  }
+
   private createShortcut (programDefinition: any, positionObject: any) {
     /* creates and inserts a shortcut component
       programDefinition - standard programDefinition
@@ -218,18 +263,57 @@ export class DesktopComponent extends CustomComponent implements OnInit {
       }
     }
   }
+
+  private setCurrentDragLocation (width: number, height: number) {
+
+    // get the distance from where the user clicked
+    width = width - this.startingDragLocation.clickX;
+    height = height - this.startingDragLocation.clickY;
+
+    let x: number;
+    let y: number;
+    if (width < 0) {
+      width *= -1; // make width positive
+      x = this.startingDragLocation.clickX - width;
+    } else {
+      x = this.startingDragLocation.clickX;
+    }
+    if (height < 0) {
+      height *= -1; // make height positive
+      y = this.startingDragLocation.clickY - height;
+    } else {
+      y = this.startingDragLocation.clickY;
+    }
+    this.setStartingDragLocation(x, y, this.startingDragLocation.clickX,
+      this.startingDragLocation.clickY);
+    this.currentDragLocation = {
+      width: width,
+      height: height
+    };
+    
+  }
+
+  private setStartingDragLocation (x: number, y: number, clickX: number = null,
+    clickY: number = null) {
+    /* click x stores where the user actually originally clicked. the starting
+      location of the box will move depending on if the user goes above the original click location
+    */
+    if (clickX == null) {
+      clickX = x;
+    }
+    if (clickY == null) {
+      clickY = y;
+    }
+    this.startingDragLocation = {
+      clickX: clickX,
+      clickY: clickY,
+      x: x,
+      y: y
+    };
+  }
+
   /* END Private Functions */
 
-  /* BEGIN Static Functions */
-  public static convertToPosition (positionObject: any) {
-    /* takes standard position object and returns object with x and y keys */
-    return {x: positionObject.column * this.ICON_WIDTH, y: positionObject.row * this.ICON_HEIGHT}
-  }
 
-  public static getValue (valueString: string) {
-    /* value string containing 'px' */
-    return parseInt(valueString, 10);
-  }
-  /* END Static Functions */
 
 }
