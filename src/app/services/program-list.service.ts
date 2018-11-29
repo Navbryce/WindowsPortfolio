@@ -31,8 +31,15 @@ export class ProgramListService { // this is in charge of creating programs and 
 
   public createProgram (program: any, args: any = null): void { // aka RUN program based on a program definition
     program.count++;
-    this.createStreamQueue.push({program: program, args: args});
-    this._create.next(program);
+    if (!program.webLink) {
+      // actually make the program if it's not a webpage
+      this.createStreamQueue.push({program: program, args: args});
+      this._create.next(program);
+    } else {
+      window.open(program.webLink, '_blank');
+
+    }
+
   }
 
   public createProgramFromId (programId: string, args: any = null): any { 

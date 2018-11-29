@@ -64,8 +64,8 @@ export class TaskbarComponent implements OnInit {
 
   // BEGIN Private Functions
   private clickListener (programStatus: any, action: number) { // called when a program icon has been clicked; action - indicates what was clicked: main button - 0; little close button - ()-1)
-    if (action == 0) {
-      let status = programStatus.status; // represents the current program's status
+    if (action === 0) {
+      const status = programStatus.status; // represents the current program's status
       switch (status) {
         case -2:
           this.taskbarService.createProgramInstanceFromDef(programStatus.programDefinition);

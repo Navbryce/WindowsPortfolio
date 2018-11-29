@@ -60,5 +60,41 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
       width: 400,
       height: 150
     }
+  },
+  {
+    component: InfoBoxComponent,
+    id: 'github',
+    icon: './assets/programs/link-programs/github.png',
+    name: 'Github',
+    openOnStart: false,
+    pin: {
+      desktop: true,
+      taskbar: true
+    },
+    webLink: 'https://github.com/Navbryce'
+  },
+  {
+    component: InfoBoxComponent,
+    id: 'gitlab',
+    icon: './assets/programs/link-programs/gitlab.png',
+    name: 'Gitlab',
+    openOnStart: false,
+    pin: {
+      desktop: true,
+      taskbar: false
+    },
+    webLink: 'https://gitlab.com/navbryce/'
+  },
+  {
+    component: InfoBoxComponent,
+    id: 'linkedin',
+    icon: './assets/programs/link-programs/linkedin.png',
+    name: 'Linkedin',
+    openOnStart: false,
+    pin: {
+      desktop: true,
+      taskbar: false
+    },
+    webLink: 'https://www.linkedin.com/in/bryce-plunkett-930b77164'
   }
 ];
