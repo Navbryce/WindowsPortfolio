@@ -5,7 +5,7 @@ A portfolio website that emulates Windows 10. This website can be easily configu
 * node.js >= 11.2.0
 * npm >= 5.6.0
 * angular ^5.0.0 
-* forever ^0.15.3
+* express ^4.16.4
 
 # Developing for personal use
 Follow [this wiki page](https://github.com/Navbryce/WindowsPortfolio/wiki/Getting-Started-as-a-Developer) if you would like to develop and configure this project for personal use.
