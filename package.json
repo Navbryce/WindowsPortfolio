@@ -13,8 +13,9 @@
     "e2e": "ng e2e",
     "heroku-postbuild": "npm run build"
   },
-  "engines" :  { 
-    "node" : ">=11.2.0" 
+  "engines": {
+    "node": ">=11.2.0",
+    "npm": ">= 5.60"
   },
   "private": true,
   "dependencies": {

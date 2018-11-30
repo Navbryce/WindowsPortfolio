@@ -22,6 +22,8 @@ parser.addArgument(
   }
 );
 var args = parser.parseArgs();
+
+// turn the dist path into an absolute path (__dirname points to backend.js directory)
 const distPath = path.join(__dirname, args.dist);
 // the "faux" root directory
 const assetsRoot = '/assets/portfolio-documents';
