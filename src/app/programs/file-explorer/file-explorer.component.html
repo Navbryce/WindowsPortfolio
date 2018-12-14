@@ -1,8 +1,8 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
   <div class="full">
-    <div>
+    <div class="directory-buttons flex">
       <ng-container *ngFor="let path of currentDirectoryPieces">
-        <directory-button  [path]="path" (click)="this.fileSystem.cd(path)">
+        <directory-button [path]="path" (click)="this.fileSystem.cd(path)">
         </directory-button>
       </ng-container>
     </div>

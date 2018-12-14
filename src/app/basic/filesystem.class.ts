@@ -69,7 +69,12 @@ export class Filesystem {
         removeCharacters.forEach((character) => {
             while (filePath.indexOf(character) >= 0) {
                 const index = filePath.indexOf(character);
-                filePath = filePath.substring(0, index + 1);
+                // the slash is at the end of the file path
+                if (index === filePath.length - 1) {
+                    filePath = filePath.substring(0, index);
+                } else {
+                    filePath = filePath.substring(index + 1);
+                }
             }
         });
         return filePath;

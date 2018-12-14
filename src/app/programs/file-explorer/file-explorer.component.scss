@@ -33,3 +33,9 @@ table {
         min-width: $nameColumnWidth;
     }
 }
+.directory-buttons {
+    border: rgb(180, 180, 180) solid 1px;
+    box-sizing: border-box;
+    height: 22px;
+    width: calc(100% - 90px);
+}
