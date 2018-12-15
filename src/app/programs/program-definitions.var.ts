@@ -62,7 +62,6 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     }
   },
   {
-    component: InfoBoxComponent,
     id: 'github',
     icon: './assets/programs/link-programs/github.png',
     name: 'Github',
@@ -74,7 +73,6 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     webLink: 'https://github.com/Navbryce'
   },
   {
-    component: InfoBoxComponent,
     id: 'gitlab',
     icon: './assets/programs/link-programs/gitlab.png',
     name: 'Gitlab',
@@ -86,7 +84,6 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     webLink: 'https://gitlab.com/navbryce/'
   },
   {
-    component: InfoBoxComponent,
     id: 'linkedin',
     icon: './assets/programs/link-programs/linkedin.png',
     name: 'Linkedin',

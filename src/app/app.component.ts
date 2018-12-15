@@ -37,7 +37,7 @@ export class AppComponent extends CustomComponent implements OnInit {
   public createProgram (programDefinition: any, args: any = null): void {
     var programComponentFactory = this.componentFactoryResolver.resolveComponentFactory(programDefinition.component);
     var programReference = this.desktop.createComponent(programComponentFactory);
-    var componentInstance: ProgramComponent = <ProgramComponent>(programReference.instance)
+    var componentInstance: ProgramComponent = <ProgramComponent>(programReference.instance);
     componentInstance.programDefinition = programDefinition;
     componentInstance.programArgs = args;
     componentInstance.closeWindow.subscribe((signal) => { // the listener for the closeWindow output (the output is signaled when the window is ready to close. delete this isntance)

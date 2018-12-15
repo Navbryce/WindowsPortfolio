@@ -13,8 +13,8 @@ export abstract class ProgramComponent extends CustomComponent implements OnInit
   @Input() programArgs: any;
   // outputs the ElementRef. tells the parent to delete the component
   @Output() closeWindow: EventEmitter<boolean> = new EventEmitter<boolean> ();
-
   @ViewChild(WindowComponent) window: WindowComponent;
+
   constructor () {
     super();
     // set default id if the extended program does not define one
