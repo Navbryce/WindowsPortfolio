@@ -8,7 +8,7 @@ A portfolio website that emulates Windows 10. This website can be easily configu
 * express ^4.16.4
 
 # Developing for personal use
-Follow [this wiki page](https://github.com/Navbryce/WindowsPortfolio/wiki/Getting-Started-as-a-Developer) if you would like to develop and configure this project for personal use.
+Follow [this wiki page](https://github.com/Navbryce/WindowsPortfolio/wiki/Getting-Started-as-a-Developer) if you would like to develop and configure a portfolio for personal use. The wiki also includes instructions for setting up free, Heroku hosting.
 
 # Deploying
 Must have node.js and npm with the versions stated above. Must also have angular-cli@1.7.4 installed globally. NOTE: This is *not* how you should deploy the project if you want to develop it and make changes. 
