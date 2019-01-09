@@ -1,6 +1,6 @@
 import { BrowserComponent } from './browser';
 import { ConsoleComponent } from './console';
-import { FileExplorerComponent } from './file-explorer/file-explorer.component';
+import { FileExplorerComponent } from './file-selector/';
 import { TestProgram } from './test-program/test-program.component';
 import { InfoBoxComponent } from './info-box/info-box.component';
 

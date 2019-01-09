@@ -1,0 +1,20 @@
+<div class="full">
+  <div class="directory-buttons flex">
+    <ng-container *ngFor="let path of currentDirectoryPieces">
+      <directory-button [path]="path" (click)="this.fileSystem.cd(path)">
+      </directory-button>
+    </ng-container>
+  </div>
+  <table *ngIf="currentFiles != null">
+    <tr class="head">
+      <td class="name-column">Name</td>
+      <td class="date-column">Date Modified</td>
+      <td>Type</td>
+    </tr>
+    <tr *ngFor="let file of currentFiles" (dblclick)="fileClicked(file)" (click)="fileSelect(file)" class="file-row">
+      <td class="name-column"><img src="{{file.icon}}" class="file-icon">{{file.name}}</td>
+      <td class="date-column gray-text">{{file.mtime | date: 'short'}}</td>
+      <td class="gray-text">{{file.type}}</td>
+    </tr>
+  </table>
+</div>

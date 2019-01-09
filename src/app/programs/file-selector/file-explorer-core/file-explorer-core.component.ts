@@ -1,19 +1,19 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ProgramComponent } from '../program-component.class';
+import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 
 // non angular components and classes
-import { Filesystem } from '../../basic';
+import { Filesystem } from '../../../basic';
 
 // services
 import { HttpClient } from '@angular/common/http';
-import { TaskbarService } from '../../services';
+import { TaskbarService } from '../../../services';
+import { ProgramComponent } from '../../program-component.class';
 
 @Component({
-  selector: 'file-explorer',
-  styleUrls: ['./file-explorer.component.scss'],
-  templateUrl: './file-explorer.component.html'
+  selector: 'file-explorer-core',
+  styleUrls: ['./file-explorer-core.component.scss'],
+  templateUrl: './file-explorer-core.component.html'
 })
-export class FileExplorerComponent extends ProgramComponent implements OnInit {
+export class FileExplorerCore extends ProgramComponent implements OnInit {
   public currentDirectory: string;
   public currentDirectoryPieces: Array<string>;
   public currentFiles: Array<any>;
@@ -22,8 +22,9 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
   public readonly fileSelectCooldown: number;
   public selectedFile: any = null;
 
+  @Input() programArgs: any;
+
   constructor (private httpClient: HttpClient, private taskBarService: TaskbarService) {
-    // generates defaults if not defined, such as id
     super();
   }
 

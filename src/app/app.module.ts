@@ -7,7 +7,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 // components
 import { AppComponent } from './app.component';
 import { DesktopComponent, ShortcutComponent } from './desktop';
-import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, InfoBoxComponent,
+import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, FileExplorerCore,
+   InfoBoxComponent,
   FileExplorerComponent, TestProgram } from './programs';
 import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
@@ -27,6 +28,7 @@ import { Direct } from 'protractor/built/driverProviders';
     DesktopComponent,
     DirectoryButtonComponent,
     FileExplorerComponent,
+    FileExplorerCore,
     IconComponent,
     InfoBoxComponent,
     ProgramIconComponent,

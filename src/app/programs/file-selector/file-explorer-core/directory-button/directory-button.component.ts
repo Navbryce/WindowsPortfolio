@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 // not angular classes
-import { Filesystem } from '../../../basic/';
+import { Filesystem } from '../../../../basic/';
 
 @Component({
     selector: 'directory-button',
