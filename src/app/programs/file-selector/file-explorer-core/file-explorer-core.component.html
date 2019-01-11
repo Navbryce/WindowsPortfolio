@@ -11,7 +11,9 @@
       <td class="date-column">Date Modified</td>
       <td>Type</td>
     </tr>
-    <tr *ngFor="let file of currentFiles" (dblclick)="fileClicked(file)" (click)="fileSelect(file)" class="file-row">
+    <tr *ngFor="let file of currentFiles" (dblclick)="fileClicked(file)" 
+    [ngClass]="{'selected': file === selectedFile}"
+    (click)="fileSelect(file)" class="file-row">
       <td class="name-column"><img src="{{file.icon}}" class="file-icon">{{file.name}}</td>
       <td class="date-column gray-text">{{file.mtime | date: 'short'}}</td>
       <td class="gray-text">{{file.type}}</td>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 
 // non angular components and classes
 import { Filesystem } from '../../../basic';
@@ -23,6 +23,11 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
   public selectedFile: any = null;
 
   @Input() programArgs: any;
+
+  // emits when a file has been double clicked (or clicked twice when selected)
+  @Output() fileOpenEmitter: EventEmitter<any> = new EventEmitter<any>();
+  // emits when a file has been clicked once and has focus (highlighted)
+  @Output() fileSelectEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor (private httpClient: HttpClient, private taskBarService: TaskbarService) {
     super();
@@ -56,8 +61,8 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
 
       // call the appropriate listeners/event handlers
       if (file.isFile) {
-        // try opening the file
-        this.taskBarService.openFile(file);
+        // handle open event'
+        this.fileOpenEmitter.next(file);
       } else {
         // it's a directory, so cd
         this.fileSystem.cd('./' + file.name);
@@ -84,6 +89,7 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
       this.selectedFile = file;
       this.selectedFile.selected = true;
     }
+    this.fileSelectEmitter.emit(this.selectedFile);
   }
 
   public windowResize (event: any): void {

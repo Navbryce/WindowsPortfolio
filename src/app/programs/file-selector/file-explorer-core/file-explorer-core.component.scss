@@ -1,3 +1,4 @@
+$blueColor: rgba(96, 191, 255, 0.479);
 table {
     $nameColumnWidth: 200px;
     border-collapse: collapse;
@@ -12,6 +13,9 @@ table {
         font-size: 10pt;
         padding-left: 15px;
     }
+    tr {
+        border: 1px solid rgba(0, 0, 0, 0);
+    }
     .date-column {
         min-width: $nameColumnWidth;
     }
@@ -24,7 +28,7 @@ table {
     }
 
     .file-row:hover {
-        background-color: rgba(96, 191, 255, 0.479);
+        background-color: $blueColor;
     }
     .gray-text {
         color: rgb(130, 130, 130);
@@ -38,4 +42,7 @@ table {
     box-sizing: border-box;
     height: 22px;
     width: calc(100% - 90px);
+}
+.selected {
+    background-color: darken($blueColor, 10%) !important;
 }

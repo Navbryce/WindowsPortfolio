@@ -1,6 +1,6 @@
 import { BrowserComponent } from './browser';
 import { ConsoleComponent } from './console';
-import { FileExplorerComponent } from './file-selector/';
+import { FileExplorerComponent, FileSelectComponent } from './file-selector/';
 import { TestProgram } from './test-program/test-program.component';
 import { InfoBoxComponent } from './info-box/info-box.component';
 
@@ -60,6 +60,18 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
       width: 400,
       height: 150
     }
+  },
+  {
+    component: FileSelectComponent,
+    id: 'file-selector',
+    icon: './assets/programs/file-explorer/folder-icon.png',
+    name: 'File Selector',
+    openOnStart: true, // change to false before production
+    pin: {
+      desktop: false,
+      taskbar: false
+    },
+    unique: false,
   },
   {
     id: 'github',

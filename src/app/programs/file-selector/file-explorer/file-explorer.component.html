@@ -1,3 +1,5 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
-  <file-explorer-core [programArgs]="programArgs"></file-explorer-core>
+  <file-explorer-core [programArgs]="programArgs" (fileOpenEmitter)="openFile($event)">
+
+  </file-explorer-core>
 </window-component>

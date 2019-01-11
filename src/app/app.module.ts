@@ -8,7 +8,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { AppComponent } from './app.component';
 import { DesktopComponent, ShortcutComponent } from './desktop';
 import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, FileExplorerCore,
-   InfoBoxComponent,
+   FileSelectComponent, InfoBoxComponent,
   FileExplorerComponent, TestProgram } from './programs';
 import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
@@ -18,7 +18,6 @@ import { IconComponent } from './window/icons';
 // services
 import {ProgramListService, TaskbarService } from './services';
 import { HttpClient } from '@angular/common/http';
-import { Direct } from 'protractor/built/driverProviders';
 
 @NgModule({
   declarations: [
@@ -29,6 +28,7 @@ import { Direct } from 'protractor/built/driverProviders';
     DirectoryButtonComponent,
     FileExplorerComponent,
     FileExplorerCore,
+    FileSelectComponent,
     IconComponent,
     InfoBoxComponent,
     ProgramIconComponent,
@@ -44,7 +44,7 @@ import { Direct } from 'protractor/built/driverProviders';
     PdfViewerModule
   ],
   entryComponents: [BrowserComponent, ConsoleComponent,
-     FileExplorerComponent, InfoBoxComponent, ShortcutComponent, TestProgram],
+     FileExplorerComponent, FileSelectComponent, InfoBoxComponent, ShortcutComponent, TestProgram],
   providers: [HttpClient, ProgramListService, TaskbarService],
   bootstrap: [AppComponent]
 })
