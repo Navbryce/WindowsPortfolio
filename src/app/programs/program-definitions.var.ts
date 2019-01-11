@@ -66,7 +66,7 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     id: 'file-selector',
     icon: './assets/programs/file-explorer/folder-icon.png',
     name: 'File Selector',
-    openOnStart: true, // change to false before production
+    openOnStart: false, // change to false before production
     pin: {
       desktop: false,
       taskbar: false
