@@ -1,0 +1,35 @@
+$selectAreaHeight: 60px;
+
+.explorer-wrapper {
+    height: calc(100% - #{$selectAreaHeight});
+}
+
+.select-area {
+    background-color: rgb(240, 240, 240);
+    height: $selectAreaHeight;
+    padding-top: 5px;
+
+    .button-block {
+        width: 150px;
+
+        .buttons {
+            margin-top: 5px;
+        }
+    }
+
+    .input-area {
+        margin-left: 50px;
+    
+        .name-input {
+            margin-left: 5px;
+        }
+    }
+}
+
+$selectMargin: 15px;
+.select-margin-left {
+    margin-left: $selectMargin;
+}
+.select-margin-right {
+    margin-right: $selectMargin;
+}

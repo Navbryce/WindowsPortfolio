@@ -1,4 +1,22 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
-    <file-explorer-core [programArgs]="programArgs"></file-explorer-core>
+    <div class="explorer-wrapper">
+        <file-explorer-core [programArgs]="programArgs"></file-explorer-core>
+    </div>
+    <div class="select-area flex">
+        <div class="flex grow input-area">
+            <label>File Name: </label><div class="grow name-input"><input class="full-width"></div>
+        </div>
+        <div class="button-block select-margin-left select-margin-right">
+            <div class="full-width">
+                <select class="full-width">
+                    <option>A</option>
+                </select>
+            </div>
+            <div class="buttons flex full-width">
+                <button class="grow">Open</button>
+                <button class="grow select-margin-left">Close</button>
+            </div>
+        </div>
+    </div>
 </window-component>
   

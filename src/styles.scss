@@ -12,6 +12,13 @@ body {
   overflow: hidden;
 }
 
+button {
+  background-color: rgb(225, 225, 225);
+  border: 1px solid rgb(173, 173, 173);
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
 .drag-area {
   $color: rgb(70, 130, 244);
   $startingColor: rgba($color, .3);
@@ -42,6 +49,12 @@ body {
     flex: 1;
   }
 }
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
 .full {
   @extend .full-height;
   @extend .full-width;
@@ -51,6 +64,9 @@ body {
 }
 .full-width {
   width: 100%;
+}
+.inline-block {
+  display: inline-block;
 }
 .overflow-y-scroll {
   overflow-y: scroll;
