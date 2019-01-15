@@ -1,10 +1,14 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
     <div class="explorer-wrapper">
-        <file-explorer-core [programArgs]="programArgs"></file-explorer-core>
+        <file-explorer-core [programArgs]="programArgs" 
+        (fileSelectEmitter)="fileSelect($event)">
+    </file-explorer-core>
     </div>
     <div class="select-area flex">
         <div class="flex grow input-area">
-            <label>File Name: </label><div class="grow name-input"><input class="full-width"></div>
+            <label>File Name: </label><div class="grow name-input">
+                <input [(ngModel)]="currentFileName" class="full-width">
+            </div>
         </div>
         <div class="button-block select-margin-left select-margin-right">
             <div class="full-width">

@@ -2,6 +2,7 @@ $blueColor: rgba(96, 191, 255, 0.479);
 table {
     $nameColumnWidth: 200px;
     border-collapse: collapse;
+    margin-top: 5px;
     text-align: left;
     white-space: nowrap;
     .head > td {

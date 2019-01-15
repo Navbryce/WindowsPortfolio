@@ -27,7 +27,11 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
       desktop: true,
       taskbar: true
     },
-    unique: false
+    unique: false,
+    preferred: {
+      width: 529,
+      height: 350
+    }
   },
   {
     component: BrowserComponent,
@@ -72,6 +76,11 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
       taskbar: false
     },
     unique: false,
+    alwaysUsePreferred: true,
+    preferred: {
+      width: 529,
+      height: 350
+    }
   },
   {
     id: 'github',

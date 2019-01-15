@@ -7,10 +7,21 @@ import { ProgramComponent } from '../../program-component.class';
     templateUrl: './file-select.component.html'
 })
 export class FileSelectComponent extends ProgramComponent {
+    public currentFile: any;
+    public currentFileName: string;
+
     constructor () {
         // generates defaults if not defined, such as id
         super();
     }
+
+    public fileSelect (file: any): void {
+        if (!!file && file.isFile) {
+            this.currentFile = file;
+            this.currentFileName = file.name;
+        }
+    }
+
     public windowResize (event: any): void {
 
     }

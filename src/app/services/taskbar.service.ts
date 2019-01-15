@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { ProgramListService } from './program-list.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 // TODO THIS NEEDS TO BE RENAMED TO PROGRAM CONTROLLER
 // IN CHARGE OF UPDATING AND MAINTAINING PROGRAM STATUSES.
@@ -71,13 +72,14 @@ export class TaskbarService {
     } else {
       returnObject = {
         id: id,
+        lastUpdated: new Date().getTime(),
         programDefinition: programDefinition,
         src: image_source,
         status: status
       };
       this._taskbarMap[id] = returnObject;
       this._update.next(id);
-      this.taskbarArray.push(returnObject);
+      this.taskbarArray.unshift(returnObject); // add to front
     }
     this.activeProgramsCount[programDefinition.id] = this.activeProgramsCount[programDefinition.id] == null ? 1 : this.activeProgramsCount[programDefinition.id] + 1;
     return returnObject;
@@ -127,11 +129,16 @@ export class TaskbarService {
     var returnValue = null;
     if (statusObject != null) {
       returnValue = statusObject;
-      if (statusObject.status != newStatus) {  // only send the update event if the program icon actually has a new status
+      if (statusObject.status !== newStatus) {  // only send the update event if the program icon actually has a new status
+        statusObject.lastUpdated = new Date().getTime();
         statusObject.status = newStatus;
         this._update.next(id);
       }
-      this.taskbarArray = Object.values(this._taskbarMap);  //  not the most efficient, but because we're not dealing with thousands of properties, it doesn't matter
+       //  not the most efficient, but because we're not dealing with thousands of properties, it doesn't matter
+      // sort so most recently updated is at the top
+      this.taskbarArray = Object.values(this._taskbarMap).sort((a: any, b: any) => {
+        return b.lastUpdated - a.lastUpdated;
+      });
     } else {
       returnValue = new Error(`The program with id ${id} never had a program status created for it.`);
     }
@@ -141,7 +148,7 @@ export class TaskbarService {
   // BEGIN Private Functions
 
   private findNewFocusWithAction (id: string, newState: number): void {
-     /* special actions need to be taken if the program being minimized/closed holds focus 
+     /* special actions need to be taken if the program being minimized/closed holds focus
      (need to find a new window to focus). newState represents the new state 
      of what current has focus (the id) */
     if (id === this.currentFocusId) {
@@ -159,7 +166,8 @@ export class TaskbarService {
 
   }
 
-  private updateFocusAdvanced (newFocusId: string, newStatusForPreviousFocus: number) { // lets you specify the new state of the old window to have focus
+  private updateFocusAdvanced (newFocusId: string, newStatusForPreviousFocus: number) {
+    // lets you specify the new state of the old window to have focus
     if (this.currentFocusId != newFocusId) { //  don't bother updating anything if there is no actual change
       if (this.currentFocusId != null) {
         this.updateProgramStatus(this.currentFocusId, newStatusForPreviousFocus); // it's no longer focused
