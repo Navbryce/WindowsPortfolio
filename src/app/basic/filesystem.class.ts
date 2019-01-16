@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 
 // misc classes and functions
 import { getIcon } from './icon-map.var';
-import { ValueTransformer } from '@angular/compiler/src/util';
+
 
 export class Filesystem {
     // backend url
@@ -134,14 +134,19 @@ export class Filesystem {
      * an isFile key will denote whether it's a file or directory
      * @param files - valid files object
      */
-    public getFileArray (files: any): Array<any> {
+    public getFileArray (files: any, filter: Array<String>): Array<any> {
         let filesArray: Array<any> = [];
-        filesArray = filesArray.concat(files.files.map((file) => {
-            file['isFile'] = true;
-            file['type'] = file.extension.substring(1, file.extension.length);
-            file['icon'] = getIcon(file.type, this.defaultProgramsMap);
-            return file;
-        }));
+        filesArray = filesArray.concat(files.files
+            .map((file) => {
+                file['isFile'] = true;
+                file['type'] = file.extension.substring(1, file.extension.length);
+                file['icon'] = getIcon(file.type, this.defaultProgramsMap);
+                return file;
+            })
+            .filter((file) => {
+                return filter == null || filter.includes(file.type);
+            }) 
+        );
 
         filesArray = filesArray.concat(files.dirs.map((dir) => {
             dir['isFile'] = false;
@@ -205,7 +210,7 @@ export class Filesystem {
 
     /**
      * Updates the file list instance variable
-     * @param path the paath to the directory
+     * @param path the path to the directory
      */
     private async updateFileList (path: string): Promise<Boolean> {
         return new Promise<Boolean>(async (resolve, reject) => {

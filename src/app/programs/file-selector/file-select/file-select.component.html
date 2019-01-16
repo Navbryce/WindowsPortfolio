@@ -1,8 +1,10 @@
 <window-component [inputId]="id" [programDefinition]="programDefinition">
     <div class="explorer-wrapper">
-        <file-explorer-core [programArgs]="programArgs" 
+        <file-explorer-core 
+        [filters]="currentFilter"
+        [programArgs]="programArgs" 
         (fileSelectEmitter)="fileSelect($event)">
-    </file-explorer-core>
+        </file-explorer-core>
     </div>
     <div class="select-area flex">
         <div class="flex grow input-area">
@@ -12,13 +14,18 @@
         </div>
         <div class="button-block select-margin-left select-margin-right">
             <div class="full-width">
-                <select class="full-width">
-                    <option>A</option>
+                <select [(ngModel)]="currentFilter" class="full-width">
+                    <option value="{{filter}}" *ngFor="let filter of filters">
+                        {{!!filter ? filter.toString() : "All Files (*.*)"}}
+                    </option>
+                    <ng-container *ngIf="filters == null">
+                        <option value="null">All Files (*.*)</option>
+                    </ng-container>
                 </select>
             </div>
             <div class="buttons flex full-width">
-                <button class="grow">Open</button>
-                <button class="grow select-margin-left">Close</button>
+                <button (click)="open()" class="grow">Open</button>
+                <button (click)="cancel()" class="grow select-margin-left">Cancel</button>
             </div>
         </div>
     </div>

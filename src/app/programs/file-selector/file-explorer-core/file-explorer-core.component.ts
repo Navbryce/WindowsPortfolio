@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Input, Output } from '@angular/core';
 
 // non angular components and classes
 import { Filesystem } from '../../../basic';
@@ -13,7 +13,7 @@ import { ProgramComponent } from '../../program-component.class';
   styleUrls: ['./file-explorer-core.component.scss'],
   templateUrl: './file-explorer-core.component.html'
 })
-export class FileExplorerCore extends ProgramComponent implements OnInit {
+export class FileExplorerCore extends ProgramComponent implements OnChanges, OnInit {
   public currentDirectory: string;
   public currentDirectoryPieces: Array<string>;
   public currentFiles: Array<any>;
@@ -22,6 +22,7 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
   public readonly fileSelectCooldown: number;
   public selectedFile: any = null;
 
+  @Input() filters: Array<String>;
   @Input() programArgs: any;
 
   // emits when a file has been double clicked (or clicked twice when selected)
@@ -35,6 +36,10 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
 
   public ngOnInit () {
     this.processProgramArguments(this.programArgs);
+  }
+
+  public ngOnChanges () {
+    this.filesTreeUpdate(this.filters);
   }
 
   public fileClicked (file: any): void {
@@ -103,7 +108,7 @@ export class FileExplorerCore extends ProgramComponent implements OnInit {
     if (files != null) {
       this.currentDirectory = files.simpPath;
       this.currentDirectoryPieces = this.fileSystem.getCurrentPieces();
-      this.currentFiles = this.fileSystem.getFileArray(files);
+      this.currentFiles = this.fileSystem.getFileArray(files, this.filters);
     } else {
       this.currentFiles = null;
     }
