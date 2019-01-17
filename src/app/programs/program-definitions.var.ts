@@ -46,7 +46,12 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     unique: false,
     openFiles: [
       'pdf'
-    ]
+    ],
+    alwaysUsePreferred: false,
+    preferred: {
+      width: 850,
+      height: 800
+    }
   },
   {
     component: InfoBoxComponent,
