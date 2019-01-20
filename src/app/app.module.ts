@@ -7,6 +7,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 // components
 import { AppComponent } from './app.component';
+import { MenuComponent, MenuBarComponent } from './basic';
 import { DesktopComponent, ShortcutComponent } from './desktop';
 import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, FileExplorerCore,
    FileSelectComponent, InfoBoxComponent,
@@ -32,6 +33,8 @@ import { HttpClient } from '@angular/common/http';
     FileSelectComponent,
     IconComponent,
     InfoBoxComponent,
+    MenuComponent,
+    MenuBarComponent,
     ProgramIconComponent,
     ShortcutComponent,
     TaskbarComponent,
