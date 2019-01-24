@@ -1,0 +1,8 @@
+<div (click)="openMenu()" class="button">
+    <p>{{menu.name}}</p>
+</div>
+<div *ngIf="menuOpen" class="dropdown">
+    <div *ngFor="let menuItem of menu.nestedMenu" class="item">
+        {{menuItem.name}}
+    </div>
+</div>
