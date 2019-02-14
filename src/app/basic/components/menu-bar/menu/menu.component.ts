@@ -22,13 +22,14 @@ export class MenuComponent implements OnInit {
     }
 
     public openMenu(): void {
-        this.menuOpen = true;
+        if (!this.menuOpen) {
+            this.menuOpen = true;
 
-        // wait a bit so the open event doesn't set off the close event
-        setTimeout(() => {
-            document.addEventListener('click', this.closeListener);
-
-        }, 1);
+            // wait a bit so the open event doesn't set off the close event
+            setTimeout(() => {
+                document.addEventListener('click', this.closeListener);
+            }, 10);
+        }
     }
 
     public closeMenu(): void {

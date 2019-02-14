@@ -14,6 +14,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     public currentFilter: Array<String> = null;
     public eventHandler: Function;
     public filters: Array<Array<String>>;
+
     @ViewChild(FileExplorerCore) explorer: FileExplorerCore;
 
     constructor (private taskbarService: TaskbarService) {
