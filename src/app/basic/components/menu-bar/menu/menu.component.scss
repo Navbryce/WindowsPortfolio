@@ -1,0 +1,28 @@
+$buttonBackground: rgb(200, 200, 200);
+.button {
+    display: inline-block;
+    height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: middle;
+    p {
+        display: inline;
+        margin: 0;
+        vertical-align: middle;
+    }
+    &:hover {
+        background-color: darken($buttonBackground, 5);
+    }
+    z-index: 1;
+}
+.dropdown {
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: absolute;
+    z-index: 5;
+
+    .item {
+        min-width: 50px;
+        padding: 5px;
+    }
+}

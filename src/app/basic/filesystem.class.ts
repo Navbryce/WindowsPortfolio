@@ -136,6 +136,7 @@ export class Filesystem {
      */
     public getFileArray (files: any, filter: Array<String>): Array<any> {
         let filesArray: Array<any> = [];
+
         filesArray = filesArray.concat(files.files
             .map((file) => {
                 file['isFile'] = true;

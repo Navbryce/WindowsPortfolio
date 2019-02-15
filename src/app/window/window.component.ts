@@ -547,7 +547,6 @@ export class WindowComponent {
     let frameWidth = WindowComponent.acceptableError; // transparent frame
     x = x + this.currentWidth - frameWidth > this.windowWidth ? this.windowWidth - frameWidth/2 - this.currentWidth : x;
     x = x + frameWidth < 0 ? -frameWidth : x;
-    y = y + this.currentHeight - frameWidth > this.windowHeight ? this.windowHeight - frameWidth/2 - this.currentHeight : y;
     y = y + frameWidth < 0 ? -frameWidth : y;
 
     if (x != this.currentX || y != this.currentY) {

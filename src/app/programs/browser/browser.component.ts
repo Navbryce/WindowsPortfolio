@@ -1,22 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { ProgramComponent } from '../program-component.class';
 
+// non-angular classes
+import { MenuBarItem } from '../../basic';
+import { TaskbarService } from '../../services';
+
 @Component({
-  selector: "browser",
+  selector: 'browser',
   templateUrl: './browser.component.html',
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent extends ProgramComponent implements OnInit {
   // the default source to use if not specified
   public readonly assetsRoot = '/assets/portfolio-documents/';
+  public menu: Array<MenuBarItem>;
   public pdfSource: String = '/SoftwareResume.pdf';
 
-  constructor () {
+  constructor (private taskbarService: TaskbarService) {
     super();
+    const fileMenu = [new MenuBarItem('Open',
+    () => {
+      const programArgs = {
+        filters: ['pdf'],
+        eventHandler(file: any) {
+          this.openFile(file);
+        }
+      };
+      // set thte this context
+      programArgs.eventHandler = programArgs.eventHandler.bind(this);
+      // open the file selector menu with the program args
+      this.taskbarService.createProgramInstanceFromId('file-selector',
+      programArgs);
+    })];
+    this.menu = [new MenuBarItem('File', null, fileMenu)];
   }
 
   ngOnInit() {
     this.parseArguments(this.programArgs);
+  }
+
+  public openFile (file: any): void {
+    /**
+      Opens the selected file
+    */
+
+    // only switch files if it's different
+    if (this.pdfSource != file.path) {
+      this.pdfSource = file.path;
+    }
   }
 
   public windowResize (event: any): void {

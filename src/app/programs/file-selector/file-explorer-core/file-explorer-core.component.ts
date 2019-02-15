@@ -36,10 +36,10 @@ export class FileExplorerCore extends ProgramComponent implements OnChanges, OnI
 
   public ngOnInit () {
     this.processProgramArguments(this.programArgs);
+
   }
 
   public ngOnChanges () {
-    this.filesTreeUpdate(this.filters);
   }
 
   public fileClicked (file: any): void {

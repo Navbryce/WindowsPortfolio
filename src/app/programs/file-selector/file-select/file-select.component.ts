@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProgramComponent } from '../../program-component.class';
 import { TaskbarService } from '../../../services';
+import { FileExplorerCore } from '../file-explorer-core';
 
 @Component({
     selector: 'file-select',
@@ -13,6 +14,8 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     public currentFilter: Array<String> = null;
     public eventHandler: Function;
     public filters: Array<Array<String>>;
+
+    @ViewChild(FileExplorerCore) explorer: FileExplorerCore;
 
     constructor (private taskbarService: TaskbarService) {
         // generates defaults if not defined, such as id
@@ -29,7 +32,18 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
 
     /* Called when the open button is clicked */
     public open (): void {
-        this.close(this.currentFile);
+        const fileSystem = this.explorer.fileSystem;
+        /* could be different from the current file if the user edited input.
+        make sure it exists */
+        fileSystem.fileExists(this.currentFileName)
+            .then((exists: boolean) => {
+                if (exists) {
+                    this.close(this.currentFile);
+                } else {
+                    this.taskbarService.createInfoBox('The file you selected does not exist.',
+                    'info', null);
+                }
+            });
     }
 
     /* Called when the cancel button is clicked */
@@ -66,7 +80,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
             },
             filters: []
         };
-        const processedArgs = args == null ?  defaultArgs 
+        const processedArgs = args == null ?  defaultArgs
             : super.compareToDefaultArguments(args, defaultArgs);
         this.filters = processedArgs.filters.length === 0 ? null
                         : processedArgs.filters;

@@ -38,7 +38,7 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     id: 'browser',
     icon: './assets/programs/browser/browser.png',
     name: 'Browser',
-    openOnStart: false,
+    openOnStart: false, // change to false before production
     pin: {
       desktop: true,
       taskbar: true
