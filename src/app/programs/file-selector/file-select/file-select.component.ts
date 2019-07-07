@@ -13,6 +13,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     public currentFileName: string;
     public currentFilter: Array<String> = null;
     public eventHandler: Function;
+    public closeListener: Function;
     public filters: Array<Array<String>>;
 
     @ViewChild(FileExplorerCore) explorer: FileExplorerCore;
@@ -56,6 +57,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
         if (!!fileSelected) {
             this.eventHandler(fileSelected);
         }
+        this.closeListener();
         // close the program
         this.taskbarService.closeProgram(this.id);
     }
@@ -76,6 +78,9 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     private processArguments (args: any) {
         const defaultArgs = {
             eventHandler () {
+                // do nothing by default
+            },
+            closeListener () {
                 // do nothing by default
             },
             filters: []

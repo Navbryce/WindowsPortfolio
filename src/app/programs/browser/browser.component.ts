@@ -16,21 +16,32 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   public menu: Array<MenuBarItem>;
   public pdfSource: String = '/SoftwareResume.pdf';
 
+  private fileMenuOpen: boolean;
+
   constructor (private taskbarService: TaskbarService) {
     super();
+    this.fileMenuOpen = false;
     const fileMenu = [new MenuBarItem('Open',
     () => {
-      const programArgs = {
-        filters: ['pdf'],
-        eventHandler(file: any) {
-          this.openFile(file);
-        }
-      };
-      // set thte this context
-      programArgs.eventHandler = programArgs.eventHandler.bind(this);
-      // open the file selector menu with the program args
-      this.taskbarService.createProgramInstanceFromId('file-selector',
-      programArgs);
+      if (!this.fileMenuOpen) {
+        this.fileMenuOpen = true;
+        const programArgs = {
+          filters: ['pdf'],
+          eventHandler(file: any) {
+            this.openFile(file);
+          },
+          closeListener() {
+            this.fileMenuOpen = false;
+          }
+        };
+        // set thte this context
+        programArgs.eventHandler = programArgs.eventHandler.bind(this);
+        programArgs.closeListener = programArgs.closeListener.bind(this);
+
+        // open the file selector menu with the program args
+        this.taskbarService.createProgramInstanceFromId('file-selector',
+            programArgs);
+      }
     })];
     this.menu = [new MenuBarItem('File', null, fileMenu)];
   }

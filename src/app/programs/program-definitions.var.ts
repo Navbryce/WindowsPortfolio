@@ -37,7 +37,7 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     component: BrowserComponent,
     id: 'browser',
     icon: './assets/programs/browser/browser.png',
-    name: 'Browser',
+    name: 'PDF Browser',
     openOnStart: false, // change to false before production
     pin: {
       desktop: true,
