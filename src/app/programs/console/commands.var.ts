@@ -77,7 +77,7 @@ var RawCommands: any = {
   resume: {
     genHelp: 'Get a link directly to Bryce\'s resume',
     output: [
-      "<a href='/assets/portfolio-documents/SoftwareResume.pdf' target='_blank'>Click here for Resume</a>"
+      "<a href='/assets/portfolio-documents/resume.pdf' target='_blank'>Click here for Resume</a>"
     ]
   }
 };
