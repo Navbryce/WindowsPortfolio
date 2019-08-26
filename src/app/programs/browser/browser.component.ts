@@ -14,7 +14,7 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   // the default source to use if not specified
   public readonly assetsRoot = '/assets/portfolio-documents/';
   public menu: Array<MenuBarItem>;
-  public pdfSource: String = '/SoftwareResume.pdf';
+  public pdfSource: String = '/resume.pdf';
 
   private fileMenuOpen: boolean;
 
