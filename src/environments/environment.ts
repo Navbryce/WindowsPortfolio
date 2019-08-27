@@ -9,7 +9,8 @@ const rawEnvironment = {
   backend: {
     ip: 'http://localhost',
     port: '8080'
-  }
+  },
+  resumePath: '/resume.pdf',
 };
 
 

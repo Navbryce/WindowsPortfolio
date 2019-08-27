@@ -5,6 +5,9 @@ import { ProgramComponent } from '../program-component.class';
 import { MenuBarItem } from '../../basic';
 import { TaskbarService } from '../../services';
 
+// environment
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'browser',
   templateUrl: './browser.component.html',
@@ -14,7 +17,7 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   // the default source to use if not specified
   public readonly assetsRoot = '/assets/portfolio-documents/';
   public menu: Array<MenuBarItem>;
-  public pdfSource: String = '/resume.pdf';
+  public pdfSource: String = environment.resumePath;
 
   private fileMenuOpen: boolean;
 

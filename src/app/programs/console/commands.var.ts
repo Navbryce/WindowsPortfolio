@@ -1,13 +1,14 @@
 import { Filesystem } from '../../basic';
-import { browserCommand } from "../browser/browser-command.function";
+import { browserCommand } from '../browser/browser-command.function';
 
+import { environment} from '../../../environments/environment';
 // export at bottom
 
-var RawCommands: any = {
+const RawCommands: any = {
   help: {
     output: [
-      "Welcome to the help menu",
-      "<b>Commands: </b>",
+      'Welcome to the help menu',
+      '<b>Commands: </b>',
     ]
   },
   cd: {
@@ -35,13 +36,13 @@ var RawCommands: any = {
   github: {
     genHelp: 'Get Bryce\'s GitHub',
     output: [
-      "<a href='https://github.com/navbryce/' target='_blank'>Click here for GitHub</a>"
+      '<a href=\'https://github.com/navbryce/\' target=\'_blank\'>Click here for GitHub</a>'
     ]
   },
   gitlab: {
     genHelp: 'Get Bryce\'s GitLab',
     output: [
-      "<a href='https://gitlab.com/navbryce/' target='_blank'>Click here for GitLab</a>"
+      '<a href=\'https://gitlab.com/navbryce/\' target=\'_blank\'>Click here for GitLab</a>'
     ]
   },
   git: {
@@ -62,7 +63,7 @@ var RawCommands: any = {
   linkedin: {
     genHelp: 'Get Bryce\'s LinkedIn',
     output: [
-      "<a href='https://www.linkedin.com/in/bryce-plunkett-930b77164' target='_blank'>Click here for LinkedIn</a>"
+      '<a href=\'https://www.linkedin.com/in/bryce-plunkett-930b77164\' target=\'_blank\'>Click here for LinkedIn</a>'
     ]
   },
   console: {
@@ -77,7 +78,7 @@ var RawCommands: any = {
   resume: {
     genHelp: 'Get a link directly to Bryce\'s resume',
     output: [
-      "<a href='/assets/portfolio-documents/resume.pdf' target='_blank'>Click here for Resume</a>"
+      `<a href='/assets/portfolio-documents${environment.resumePath}' target='_blank'>Click here for Resume</a>`
     ]
   }
 };
@@ -85,8 +86,8 @@ var RawCommands: any = {
 function getCommandsList (commands: any): Array<string> {
   /* gets all the commands as an array of strings.
     does NOT set any instance/global variables */
-  var commandList: Array<string> = [];
-  var commandsToExclude = ["help"];
+  const commandList: Array<string> = [];
+  const commandsToExclude = ['help'];
   Object.keys(commands).forEach((command) => {
     if (!commandsToExclude.includes(command)) {
       commandList.push(command);
@@ -100,7 +101,7 @@ function processCommands (commands: any): any {
   /* processes the commands */
 
   // find the longest command, not the most efficient, but quick to type
-  let longestCommand: number = Math.max.apply(null, (commandList.map((commandID) => {
+  const longestCommand: number = Math.max.apply(null, (commandList.map((commandID) => {
     return commandID.length;
   })));
 

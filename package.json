@@ -8,6 +8,7 @@
     "devBackend": "forever ./forever-config.json",
     "stopBackend": "forever stop -uid 'portfolio-backend'",
     "prodBackend": "node ./backend.js",
+    "devStart": "npm run start && npm run devBackend",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",

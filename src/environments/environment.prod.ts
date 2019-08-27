@@ -5,7 +5,8 @@ const rawEnvironment = {
   backend: {
     ip: '',
     port: ''
-  }
+  },
+  resumePath: '/resume.pdf',
 };
 
 export const environment = formatEnvironment(rawEnvironment);
