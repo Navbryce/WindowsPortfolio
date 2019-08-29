@@ -2,7 +2,7 @@
     <p>{{menu.name}}</p>
 </div>
 <div *ngIf="menuOpen" class="dropdown">
-    <div *ngFor="let menuItem of menu.nestedMenu" (click)="menuItem.eventListener()" class="item">
+    <a *ngFor="let menuItem of menu.nestedMenu" (click)="menuItem.eventListener()" [attr.href]="menuItem.link | async" class="item">
         {{menuItem.name}}
-    </div>
+    </a>
 </div>

@@ -22,7 +22,11 @@ $buttonBackground: rgb(200, 200, 200);
     z-index: 5;
 
     .item {
+        color: black;
+        cursor: pointer;
+        display: block;
         min-width: 50px;
         padding: 5px;
+        text-decoration: none;
     }
 }

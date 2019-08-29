@@ -25,6 +25,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
 
     public ngOnInit () {
         this.processArguments(this.programArgs);
+        console.log(this.programArgs);
 
         if (this.filters != null) {
             this.currentFilter = this.filters[0];
@@ -90,6 +91,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
         this.filters = processedArgs.filters.length === 0 ? null
                         : processedArgs.filters;
         this.eventHandler = processedArgs.eventHandler;
+        this.closeListener = processedArgs.closeListener;
 
     }
 }
