@@ -19,10 +19,10 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   public static readonly ASSETS_ROOT = '/assets/portfolio-documents/';
   public static readonly INITIAL_LOAD = environment.resumePath;
 
+  public fullPathEmitter: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public menu: Array<MenuBarItem>;
   public pdfSource: string;
 
-  private fullPathEmitter: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   private fileMenuOpen: boolean;
 
   constructor (private taskbarService: TaskbarService) {
