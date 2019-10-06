@@ -15,16 +15,27 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent extends ProgramComponent implements OnInit {
+  private _zoom = 1;
+  private fileMenuOpen: boolean;
 
+  get zoom(): number {
+    return this._zoom;
+  }
+
+  set zoom(value: number) {
+    if (value <= 0) {
+      throw new Error('Zoom must be greater than 0');
+    }
+    this._zoom = value;
+  }
   // the default source to use if not specified
   public static readonly ASSETS_ROOT = '/assets/portfolio-documents/';
   public static readonly INITIAL_LOAD = environment.resumePath;
 
+  public static readonly ZOOM_INCREMENT = .2;
   public fullPathEmitter: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public menu: Array<MenuBarItem>;
   public pdfSource: string;
-
-  private fileMenuOpen: boolean;
 
   constructor (private taskbarService: TaskbarService) {
     super();
@@ -103,6 +114,20 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   }
 
   public windowClose() {
+  }
+
+  public increaseZoom() {
+    this.zoom += BrowserComponent.ZOOM_INCREMENT;
+  }
+
+  public decreaseZoom() {
+    if (this.canZoomOut()) {
+      this.zoom -= BrowserComponent.ZOOM_INCREMENT;
+    }
+  }
+
+  public canZoomOut() {
+    return this.zoom - BrowserComponent.ZOOM_INCREMENT > 0;
   }
 
 }
