@@ -15,6 +15,9 @@ export class TestProgram extends ProgramComponent {
 
   }
 
+  public windowClose() {
+  }
+
   // @Input() programDefinition: any see /programs for more info (comes from extended class);
 
   // BEGIN Private Functions

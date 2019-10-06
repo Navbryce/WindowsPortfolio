@@ -15,6 +15,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
   styleUrls: ['./browser.component.scss']
 })
 export class BrowserComponent extends ProgramComponent implements OnInit {
+
   // the default source to use if not specified
   public static readonly ASSETS_ROOT = '/assets/portfolio-documents/';
   public static readonly INITIAL_LOAD = environment.resumePath;
@@ -59,6 +60,7 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   }
 
   ngOnInit() {
+    super.ngOnInit();
     this.parseArguments(this.programArgs);
   }
 
@@ -98,6 +100,9 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
       initialPath = BrowserComponent.INITIAL_LOAD;
     }
     this.openFilePath(initialPath);
+  }
+
+  public windowClose() {
   }
 
 }

@@ -22,9 +22,12 @@ export abstract class ProgramComponent extends CustomComponent implements OnInit
   }
   ngOnInit() {
     this.window.closeWindow.subscribe(() => {
+      this.windowClose();
       this.closeWindow.next(true);
     });
   }
+
+  public abstract windowClose();
 
   public abstract windowResize (event: any): void;
   protected compareToDefaultArguments (args, defaultArguments): any {

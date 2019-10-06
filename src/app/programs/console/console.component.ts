@@ -81,6 +81,9 @@ export class ConsoleComponent extends ProgramComponent {
 
   }
 
+  public windowClose() {
+  }
+
   // BEGIN: Private Functions
 
 }

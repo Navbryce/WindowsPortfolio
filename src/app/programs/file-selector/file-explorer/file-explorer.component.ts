@@ -22,4 +22,7 @@ export class FileExplorerComponent extends ProgramComponent implements OnInit {
   public windowResize (event: any): void {
 
   }
+
+  public windowClose() {
+  }
 }

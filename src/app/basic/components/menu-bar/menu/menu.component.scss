@@ -28,5 +28,9 @@ $buttonBackground: rgb(200, 200, 200);
         min-width: 50px;
         padding: 5px;
         text-decoration: none;
+
+        &:hover {
+            background-color: rgb(190, 190, 190);
+        }
     }
 }

@@ -18,6 +18,8 @@ export class InfoBoxComponent extends ProgramComponent implements OnInit {
     }
 
     ngOnInit() {
+        super.ngOnInit();
+
         this.parseArguments(this.programArgs);
     }
 
@@ -58,4 +60,6 @@ export class InfoBoxComponent extends ProgramComponent implements OnInit {
         this.eventHandler = resultArguments.eventHandler;
     }
 
+    public windowClose() {
+    }
 }

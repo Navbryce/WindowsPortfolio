@@ -24,8 +24,8 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     }
 
     public ngOnInit () {
+        super.ngOnInit();
         this.processArguments(this.programArgs);
-        console.log(this.programArgs);
 
         if (this.filters != null) {
             this.currentFilter = this.filters[0];
@@ -58,7 +58,6 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
         if (!!fileSelected) {
             this.eventHandler(fileSelected);
         }
-        this.closeListener();
         // close the program
         this.taskbarService.closeProgram(this.id);
     }
@@ -93,5 +92,9 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
         this.eventHandler = processedArgs.eventHandler;
         this.closeListener = processedArgs.closeListener;
 
+    }
+
+    public windowClose() {
+        this.closeListener();
     }
 }

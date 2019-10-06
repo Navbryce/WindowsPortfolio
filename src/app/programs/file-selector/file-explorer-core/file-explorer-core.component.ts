@@ -142,4 +142,7 @@ export class FileExplorerCore extends ProgramComponent implements OnChanges, OnI
     this.initializeValues(resultArguments);
   }
 
+  public windowClose() {
+  }
+
 }
