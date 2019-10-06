@@ -1,3 +1,7 @@
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+
 @function tint($color, $percentage) {
   @return mix(white, $color, $percentage);
 }

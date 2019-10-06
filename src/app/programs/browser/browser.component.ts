@@ -127,7 +127,7 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   }
 
   public canZoomOut() {
-    return this.zoom - BrowserComponent.ZOOM_INCREMENT > 0;
+    return Math.round((this.zoom - BrowserComponent.ZOOM_INCREMENT) * 100) > 0;
   }
 
 }

@@ -6,4 +6,16 @@
 }
 .wrapper {
     padding: 10px;
+
+    .viewer {
+        position: relative;
+        z-index: 0;
+    }
+
+    .tools {
+        bottom: 30px;
+        position: absolute;
+        right: 35px;
+        z-index: 1;
+    }
 }

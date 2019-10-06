@@ -20,6 +20,7 @@ import { IconComponent } from './window/icons';
 // services
 import {ProgramListService, TaskbarService } from './services';
 import { HttpClient } from '@angular/common/http';
+import {MatIconModule, MatButtonModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -41,13 +42,15 @@ import { HttpClient } from '@angular/common/http';
     TestProgram,
     WindowComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpClientModule,
-    PdfViewerModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        HttpClientModule,
+        PdfViewerModule,
+        MatButtonModule,
+        MatIconModule
+    ],
   entryComponents: [BrowserComponent, ConsoleComponent,
      FileExplorerComponent, FileSelectComponent, InfoBoxComponent, ShortcutComponent, TestProgram],
   providers: [HttpClient, ProgramListService, TaskbarService],

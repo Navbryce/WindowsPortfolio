@@ -4,8 +4,21 @@
   </div>
   <div class="background full overflow-y-scroll">
     <div class="wrapper">
-      <pdf-viewer [src]="fullPathEmitter | async" [render-text]="true">
+      <pdf-viewer class="viewer" [src]="fullPathEmitter | async" [render-text]="true" [zoom]="zoom">
       </pdf-viewer>
+
+      <div class="tools">
+        <div>
+          <button mat-mini-fab color="warn" (click)="increaseZoom()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <div style="margin-top: 10px;">
+          <button mat-mini-fab color="warn" (click)="decreaseZoom()" [disabled]="!canZoomOut()">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </window-component>
