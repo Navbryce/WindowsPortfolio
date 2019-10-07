@@ -1,12 +1,16 @@
 .background {
     background-color: rgb(180, 180, 180);
 }
+.scroll-area {
+    height: calc(100% - 30px); // -30px because of toolbar
+}
 .toolbar {
     height: 30px;
+    z-index: 1;
 }
 .wrapper {
     padding: 10px;
-
+    overflow: visible;
     .viewer {
         position: relative;
         z-index: 0;

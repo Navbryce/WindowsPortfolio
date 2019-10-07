@@ -31,8 +31,12 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
   // the default source to use if not specified
   public static readonly ASSETS_ROOT = '/assets/portfolio-documents/';
   public static readonly INITIAL_LOAD = environment.resumePath;
-
   public static readonly ZOOM_INCREMENT = .2;
+
+  public readonly SCROLLBAR_CONFIG = {
+
+  };
+
   public fullPathEmitter: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public menu: Array<MenuBarItem>;
   public pdfSource: string;

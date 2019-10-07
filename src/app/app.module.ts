@@ -4,6 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+};
 
 // components
 import { AppComponent } from './app.component';
@@ -24,23 +30,23 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    BrowserComponent,
-    ConsoleComponent,
-    DesktopComponent,
-    DirectoryButtonComponent,
-    FileExplorerComponent,
-    FileExplorerCore,
-    FileSelectComponent,
-    IconComponent,
-    InfoBoxComponent,
-    MenuComponent,
-    MenuBarComponent,
-    ProgramIconComponent,
-    ShortcutComponent,
-    TaskbarComponent,
-    TestProgram,
-    WindowComponent
+        AppComponent,
+        BrowserComponent,
+        ConsoleComponent,
+        DesktopComponent,
+        DirectoryButtonComponent,
+        FileExplorerComponent,
+        FileExplorerCore,
+        FileSelectComponent,
+        IconComponent,
+        InfoBoxComponent,
+        MenuComponent,
+        MenuBarComponent,
+        ProgramIconComponent,
+        ShortcutComponent,
+        TaskbarComponent,
+        TestProgram,
+        WindowComponent
   ],
     imports: [
         BrowserModule,
@@ -49,11 +55,20 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
         HttpClientModule,
         PdfViewerModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        PerfectScrollbarModule
     ],
   entryComponents: [BrowserComponent, ConsoleComponent,
      FileExplorerComponent, FileSelectComponent, InfoBoxComponent, ShortcutComponent, TestProgram],
-  providers: [HttpClient, ProgramListService, TaskbarService],
+  providers: [
+          HttpClient,
+          ProgramListService,
+          TaskbarService,
+          {
+              provide: PERFECT_SCROLLBAR_CONFIG,
+              useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+          }
+      ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

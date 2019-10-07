@@ -72,6 +72,12 @@ button {
 .inline-block {
   display: inline-block;
 }
+.overflow-scroll {
+  overflow: scroll;
+}
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
 .overflow-y-scroll {
   overflow-y: scroll;
 }

@@ -4,7 +4,7 @@
   </div>
   <div class="background full overflow-y-scroll">
     <div class="wrapper">
-      <pdf-viewer class="viewer" [src]="fullPathEmitter | async" [render-text]="true" [zoom]="zoom">
+      <pdf-viewer class="viewer" [src]="fullPathEmitter | async" [render-text]="true"  [stick-to-page]="true" [zoom]="zoom">
       </pdf-viewer>
 
       <div class="tools">
