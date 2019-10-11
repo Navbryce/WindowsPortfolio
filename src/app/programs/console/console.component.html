@@ -4,7 +4,12 @@
       <p *ngFor="let line of lines" [innerHTML]="line" class="output"></p>
       <div class="flex input vert-top">
         <p>{{console.user}}@{{console.directory}} $&nbsp;</p>
-        <textarea #inputArea (keyDown.enter)="consoleKeyListener($event)" [style.font-size.pt]="fontSize" autofocus="true" class="grow"></textarea>
+        <textarea #inputArea
+                  (keydown.enter)="enterKeyListener($event)"
+                  (keydown.arrowDown)="moveUpHistory()"
+                  (keydown.arrowUp)="moveDownHistory()"
+
+                  [style.font-size.pt]="fontSize" autofocus="true" class="grow"></textarea>
       </div>
     </div>
   </div>

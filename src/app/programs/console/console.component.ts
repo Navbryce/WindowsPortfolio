@@ -14,7 +14,8 @@ import { TaskbarService } from '../../services';
   templateUrl: './console.component.html'
 })
 export class ConsoleComponent extends ProgramComponent {
-  private history: Array<String> = [];
+  private currentHistoryIndex: number;
+  private history: Array<string> = [];
 
   public console: Console;
   public fontSize = 12;
@@ -45,15 +46,19 @@ export class ConsoleComponent extends ProgramComponent {
     return !!line;
   }
 
-  public consoleKeyListener (event: any): void {
+  public enterKeyListener (event: any): void {
     /* event listener for enter key for console input */
-    var command = event.srcElement.value;
-    this.inputArea.nativeElement.value = '';
-
+    const command = event.srcElement.value;
+    this.setInputText('');
     // prevent enter from making a space
     event.preventDefault();
 
     this.runCommand(command);
+    this.currentHistoryIndex = this.history.length; // reset the current position in command history
+  }
+
+  public setInputText(text: string) {
+    this.inputArea.nativeElement.value = text;
   }
 
 
@@ -72,9 +77,36 @@ export class ConsoleComponent extends ProgramComponent {
   public runCommand (command: String): boolean {
     // run the command
     // add the line to the console history
-    this.history.push(command);
+    this.history.push(command as string);
+
     this.addLine(this.console.user + '@' + this.console.directory + ' $ ' + command);
     return this.console.runCommandFromConsole(command);
+  }
+
+  /**
+   * Go further into history (less recently executed commands)
+   */
+  public moveDownHistory () {
+    event.preventDefault();
+
+    if (this.currentHistoryIndex >= 1) {
+      this.currentHistoryIndex--;
+      this.setInputText(this.history[this.currentHistoryIndex]);
+    }
+  }
+
+  /**
+   * Go to commands executed more recently
+   */
+  public moveUpHistory () {
+    event.preventDefault();
+    if (this.currentHistoryIndex === this.history.length - 1) {
+      this.currentHistoryIndex++;
+      this.setInputText('');
+    } else if (this.currentHistoryIndex < this.history.length - 1) {
+      this.currentHistoryIndex++;
+      this.setInputText(this.history[this.currentHistoryIndex]);
+    }
   }
 
   public windowResize (event: any): void {
