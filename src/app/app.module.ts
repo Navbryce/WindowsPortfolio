@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
 import { MenuComponent, MenuBarComponent } from './basic';
 import { DesktopComponent, ShortcutComponent } from './desktop';
 import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, FileExplorerCore,
-   FileSelectComponent, InfoBoxComponent,
+   FileSelectComponent, GameFlappyComponent, GameFlappyWindow, InfoBoxComponent,
   FileExplorerComponent, TestProgram } from './programs';
 import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
@@ -38,6 +38,7 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
         FileExplorerComponent,
         FileExplorerCore,
         FileSelectComponent,
+        GameFlappyWindow,
         IconComponent,
         InfoBoxComponent,
         MenuComponent,
@@ -46,7 +47,8 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
         ShortcutComponent,
         TaskbarComponent,
         TestProgram,
-        WindowComponent
+        WindowComponent,
+        GameFlappyComponent
   ],
     imports: [
         BrowserModule,
@@ -59,7 +61,7 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
         PerfectScrollbarModule
     ],
   entryComponents: [BrowserComponent, ConsoleComponent,
-     FileExplorerComponent, FileSelectComponent, InfoBoxComponent, ShortcutComponent, TestProgram],
+     FileExplorerComponent, FileSelectComponent, GameFlappyWindow, InfoBoxComponent, ShortcutComponent, TestProgram],
   providers: [
           HttpClient,
           ProgramListService,

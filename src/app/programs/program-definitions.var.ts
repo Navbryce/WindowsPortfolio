@@ -1,6 +1,7 @@
 import { BrowserComponent } from './browser';
 import { ConsoleComponent } from './console';
 import { FileExplorerComponent, FileSelectComponent } from './file-selector/';
+import { GameFlappyWindow} from './game-flappy-window';
 import { TestProgram } from './test-program/test-program.component';
 import { InfoBoxComponent } from './info-box/info-box.component';
 
@@ -50,6 +51,22 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     alwaysUsePreferred: false,
     preferred: {
       width: 850,
+      height: 800
+    }
+  },
+  {
+    component: GameFlappyWindow,
+    id: 'game-flappy-window',
+    icon: './assets/programs/game-flappy-window/icon.png',
+    name: 'Flappy Bird',
+    openOnStart: true,
+    pin: {
+      desktop: true,
+      taskbar: true,
+    },
+    unique: false,
+    preferred: {
+      width: 500,
       height: 800
     }
   },

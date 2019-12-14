@@ -15,13 +15,18 @@
 
 }
 .disclaimer {
-  background-color: white;
+  background-color: rgba(13, 118, 255, 0.95);
   border-bottom: 1px solid black;
+  color: white;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 10px;
   position: absolute;
   user-select: none !important;
   z-index: 5;
+
+  a {
+    color: #85ff00;
+  }
 
   p {
     display: inline;
