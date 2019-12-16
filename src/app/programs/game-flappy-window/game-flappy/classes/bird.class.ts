@@ -1,0 +1,35 @@
+export class Bird {
+    public static readonly BIRD_HEIGHT = 17;
+    public static readonly BIRD_WIDTH = 17;
+    public static readonly X_VELOCITY = 1.0;
+    private static readonly GRAVITY_ACCELERATION = 3.5;
+    private static readonly JUMP_Y_VELOCITY = 1.75;
+    private static readonly SCALING = 250;
+
+    private _y: number;
+    private _yVelocity: number;
+    constructor(initialY: number) {
+        this._y = initialY;
+        this._yVelocity = 0;
+    }
+
+    get y(): number {
+        return this._y;
+    }
+
+    get yVelocity(): number {
+        return this._yVelocity;
+    }
+
+    public fallTimeStep(timeSeconds: number): number {
+         this._yVelocity -= Bird.GRAVITY_ACCELERATION * timeSeconds;
+        this._y += this._yVelocity * timeSeconds * Bird.SCALING;
+
+        return this._y;
+    }
+
+    public jump(): number {
+        this._yVelocity = Bird.JUMP_Y_VELOCITY;
+        return this._y;
+    }
+}
