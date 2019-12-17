@@ -9,11 +9,26 @@ import {Bird} from './classes';
 export class GameFlappyComponent implements OnInit {
   private static readonly FRAME_INTERVAL_SECONDS = .01;
   private static readonly NUMBER_OF_BIRD_SPRITES = 3;
+  private static readonly FLAPS_A_SECOND = 2;
+  private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
+  private static readonly SCALING = 250;
 
+
+  private static readonly BACKGROUND_VELOCITY = Bird.X_VELOCITY * GameFlappyComponent.BACKGROUND_RELATIVE_VELOCITY_FACTOR;
+  private static readonly CHANGE_FLAP_ON_COUNT = Math.floor((1 / GameFlappyComponent.FRAME_INTERVAL_SECONDS) / (GameFlappyComponent.FLAPS_A_SECOND * GameFlappyComponent.NUMBER_OF_BIRD_SPRITES));
+
+  private static readonly FLOOR_COLOR = '#ded895';
+  private static readonly GAME_ASSETS_ROOT = './assets/programs/game-flappy-window';
+
+  private backgroundImage;
+  private backgroundX: number;
   private bird: Bird;
-  private birdSpriteCounter: number = null;
+  private birdSpriteCounter: number = null; // indicates the sprite the bird is currently on
   private readonly birdImages = [];
   private canvasContext: CanvasRenderingContext2D;
+  private floorImage;
+  private floorX: number;
+  private frameCounter: number;
   private gameInterval;
   private height: number;
   private width: number;
@@ -32,7 +47,7 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private initializeImages(): Promise<boolean> {
-    const imagePromises: Promise<boolean>[] = [this.initializeBirdImages()];
+    const imagePromises: Promise<boolean>[] = [this.initializeBirdImages(), this.initializeBackgroundImage(), this.initializeFloorImage()];
     return Promise.all(imagePromises)
         .then((result: boolean[]) => true);
   }
@@ -41,7 +56,7 @@ export class GameFlappyComponent implements OnInit {
     const birdPromises: Promise<boolean>[] = [];
     for (let counter = 0; counter < GameFlappyComponent.NUMBER_OF_BIRD_SPRITES; counter++) {
       const image = new Image();
-      image.src = `./assets/programs/game-flappy-window/sprites/${counter}.png`;
+      image.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/sprites/${counter}.png`;
 
       // push to bird image array
       this.birdImages.push(image);
@@ -58,11 +73,34 @@ export class GameFlappyComponent implements OnInit {
 
   }
 
+  private initializeBackgroundImage(): Promise<boolean> {
+    const image = new Image();
+    image.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/background.png`;
+    this.backgroundImage = image;
+    return new Promise((resolve) => {
+      image.onload = () => resolve(true);
+    });
+  }
+
+  private initializeFloorImage(): Promise<boolean> {
+    const image = new Image();
+    image.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/floor.png`;
+    this.floorImage = image;
+    return new Promise((resolve) => {
+      image.onload = () => resolve(true);
+    });
+  }
+
   private startGame() {
     if (this.bird == null && this.gameInterval == null) {
-      this.bird = new Bird(this.height / 2);
+      this.bird = new Bird(this.height / 2, GameFlappyComponent.SCALING);
       // initialize the bird sprite counter
       this.birdSpriteCounter = 0;
+
+      // initialize the frame number
+      this.frameCounter = 0;
+      this.backgroundX = 0;
+      this.floorX = 0;
 
       // initialize jump listener
       this.canvas.nativeElement.addEventListener('click', () => this.jumpListener());
@@ -83,25 +121,84 @@ export class GameFlappyComponent implements OnInit {
   private renderLoop() {
     this.clearCanvas();
 
+    this.updateAndDrawFloor();
+    this.updateAndDrawBackground();
+
     this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
-    this.drawBird();
-    this.birdSpriteCounter = (this.birdSpriteCounter + 1) % this.birdImages.length;
+
+    if (this.bird.y < this.height - this.backgroundImage.height) {
+      this.birdDied();
+    } else {
+      this.drawBird();
+      if (this.frameCounter % GameFlappyComponent.CHANGE_FLAP_ON_COUNT === 0) {
+        this.birdSpriteCounter = (this.birdSpriteCounter + 1) % this.birdImages.length;
+      }
+      this.frameCounter++;
+    }
+
+
+  }
+
+  private clearCanvas() {
+    this.canvasContext.clearRect(0, 0, this.width, this.height); // clear the canvas
+  }
+
+  private updateAndDrawBackground() {
+    this.backgroundX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * GameFlappyComponent.BACKGROUND_VELOCITY * GameFlappyComponent.SCALING;
+    if (this.backgroundX <= -this.backgroundImage.width) {
+      this.backgroundX = 0;
+    }
+    this.drawBackground();
+  }
+  private drawBackground() {
+    let afterMainBackground = this.backgroundX;
+    while (afterMainBackground < this.width) {
+      this.canvasContext.drawImage(this.backgroundImage, afterMainBackground, 0);
+      afterMainBackground += this.backgroundImage.width;
+    }
+  }
+
+  private updateAndDrawFloor() {
+    this.floorX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * Bird.X_VELOCITY * GameFlappyComponent.SCALING;
+    if (this.floorX <= -this.floorImage.width) {
+      this.floorX = 0;
+    }
+    this.drawFloor();
+  }
+  private drawFloor() {
+    // draw the background color of the floor
+    this.canvasContext.fillStyle = GameFlappyComponent.FLOOR_COLOR;
+    this.canvasContext.fillRect(0, this.backgroundImage.height, this.width, this.height);
+
+    // draw the moving part of the floor
+    let afterMainFloor = this.floorX;
+    while (afterMainFloor < this.width) {
+      this.canvasContext.drawImage(this.floorImage, afterMainFloor, this.backgroundImage.height);
+      afterMainFloor += this.floorImage.width;
+    }
   }
 
   private drawBird() {
     this.canvasContext.save();
     const birdImage = this.birdImages[this.birdSpriteCounter];
-    const actualY = (this.height - this.bird.y) + Bird.BIRD_HEIGHT / 2;
-    const actualX = (this.width / 2) + Bird.BIRD_WIDTH / 2;
+    const actualY = (this.height - this.bird.y) + birdImage.height / 2;
+    const actualX =  (this.width / 2) - birdImage.width / 2;
     const angle = Math.atan(-this.bird.yVelocity / Bird.X_VELOCITY); // calculate the angle the bird should point
     this.canvasContext.translate(actualX, actualY); // translate coordinate system to the bird's center point
     this.canvasContext.rotate(angle);
-    this.canvasContext.drawImage(birdImage, -Bird.BIRD_WIDTH / 2, -Bird.BIRD_HEIGHT / 2);
+    this.canvasContext.drawImage(birdImage, -birdImage.width / 2, -birdImage.height / 2);
     this.canvasContext.restore();
   }
 
-  private clearCanvas() {
-    this.canvasContext.clearRect(0, 0, this.width, this.height); // clear the canvas
+  private birdDied() {
+    clearInterval(this.gameInterval);
+    this.restartGame();
+  }
+
+  private restartGame() {
+    this.bird = null;
+    this.gameInterval = null;
+    this.startGame();
   }
 
   public dimensionsUpdateCheck(): boolean {
