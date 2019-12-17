@@ -1,7 +1,7 @@
 export class Bird {
     public static readonly X_VELOCITY = 1.0;
-    private static readonly GRAVITY_ACCELERATION = 3.5;
-    private static readonly JUMP_Y_VELOCITY = 1.75;
+    private static readonly GRAVITY_ACCELERATION = 4.25;
+    private static readonly JUMP_Y_VELOCITY = 1.9;
 
     private _y: number;
     private _yVelocity: number;

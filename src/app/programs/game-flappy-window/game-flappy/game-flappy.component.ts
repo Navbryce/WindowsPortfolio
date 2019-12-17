@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Bird} from './classes';
+import {Bird, Pipe} from './classes';
 
 @Component({
   selector: 'game-flappy',
@@ -7,10 +7,10 @@ import {Bird} from './classes';
   styleUrls: ['./game-flappy.component.scss']
 })
 export class GameFlappyComponent implements OnInit {
+  private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
+  private static readonly FLAPS_A_SECOND = 2;
   private static readonly FRAME_INTERVAL_SECONDS = .01;
   private static readonly NUMBER_OF_BIRD_SPRITES = 3;
-  private static readonly FLAPS_A_SECOND = 2;
-  private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
   private static readonly SCALING = 250;
 
 
@@ -31,6 +31,8 @@ export class GameFlappyComponent implements OnInit {
   private frameCounter: number;
   private gameInterval;
   private height: number;
+  private pipeImageMap;
+  private startMoving: boolean;
   private width: number;
 
   @ViewChild('wrapper') gameWrapper: ElementRef;
@@ -47,7 +49,8 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private initializeImages(): Promise<boolean> {
-    const imagePromises: Promise<boolean>[] = [this.initializeBirdImages(), this.initializeBackgroundImage(), this.initializeFloorImage()];
+    const imagePromises: Promise<boolean>[] = [this.initializeBirdImages(), this.initializeBackgroundImage(), this.initializeFloorImage(),
+      this.initializePipeImages()];
     return Promise.all(imagePromises)
         .then((result: boolean[]) => true);
   }
@@ -91,6 +94,25 @@ export class GameFlappyComponent implements OnInit {
     });
   }
 
+  private initializePipeImages(): Promise<boolean> {
+    const pipeHeadImage = new Image();
+    pipeHeadImage.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/pipe-head.png`;
+
+    const pipeHeadPromise = new Promise((resolve) => {
+      pipeHeadImage.onload = () => resolve(true);
+    });
+    const pipeBodyImage = new Image();
+    pipeBodyImage.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/pipe-body.png`;
+    const pipeBodyPromise = new Promise((resolve) => {
+      pipeBodyImage.onload = () => resolve(true);
+    });
+
+    this.pipeImageMap = {pipeHeadImage, pipeBodyImage};
+
+    return Promise.all([pipeHeadPromise, pipeBodyPromise])
+        .then((result) => true);
+  }
+
   private startGame() {
     if (this.bird == null && this.gameInterval == null) {
       this.bird = new Bird(this.height / 2, GameFlappyComponent.SCALING);
@@ -101,6 +123,7 @@ export class GameFlappyComponent implements OnInit {
       this.frameCounter = 0;
       this.backgroundX = 0;
       this.floorX = 0;
+      this.startMoving = false; // the game initially starts in a "wait" mode
 
       // initialize jump listener
       this.canvas.nativeElement.addEventListener('click', () => this.jumpListener());
@@ -115,26 +138,30 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private jumpListener() {
+    this.startMoving = this.startMoving || !this.startMoving;
     this.bird.jump();
   }
 
   private renderLoop() {
-    this.clearCanvas();
+    if (this.startMoving) {
+      this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
+    }
 
-    this.updateAndDrawFloor();
+    this.clearCanvas();
     this.updateAndDrawBackground();
 
-    this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
-
+    this.drawPipe(new Pipe(0, 100));
+    this.updateAndDrawFloor();
     if (this.bird.y < this.height - this.backgroundImage.height) {
       this.birdDied();
-    } else {
-      this.drawBird();
-      if (this.frameCounter % GameFlappyComponent.CHANGE_FLAP_ON_COUNT === 0) {
-        this.birdSpriteCounter = (this.birdSpriteCounter + 1) % this.birdImages.length;
-      }
-      this.frameCounter++;
     }
+    this.drawBird();
+
+    // update the bird sprite image
+    if (this.frameCounter % GameFlappyComponent.CHANGE_FLAP_ON_COUNT === 0) {
+      this.birdSpriteCounter = (this.birdSpriteCounter + 1) % this.birdImages.length;
+    }
+    this.frameCounter++;
 
 
   }
@@ -188,6 +215,28 @@ export class GameFlappyComponent implements OnInit {
     this.canvasContext.rotate(angle);
     this.canvasContext.drawImage(birdImage, -birdImage.width / 2, -birdImage.height / 2);
     this.canvasContext.restore();
+  }
+
+  private drawPipe(pipe: Pipe) {
+    const {pipeHeadImage, pipeBodyImage} = this.pipeImageMap;
+    const topHeadY = pipe.distanceFromCeiling - pipeHeadImage.height;
+    const bottomHeadY = pipe.distanceFromCeiling + pipe.gapHeight;
+    this.canvasContext.drawImage(pipeHeadImage, pipe.x, topHeadY);
+    // above pipe body
+    let lastTopBodyY = topHeadY;
+    while (lastTopBodyY > 0) {
+      lastTopBodyY -= pipeBodyImage.height;
+      this.canvasContext.drawImage(pipeBodyImage, pipe.x, lastTopBodyY);
+    }
+    this.canvasContext.drawImage(pipeHeadImage, pipe.x, bottomHeadY);
+    // below pipe body
+    let lastBottomBodyY = bottomHeadY + pipeHeadImage.height;
+    while (lastBottomBodyY < this.height) {
+      this.canvasContext.drawImage(pipeBodyImage, pipe.x, lastBottomBodyY);
+      lastBottomBodyY += pipeBodyImage.height;
+    }
+
+
   }
 
   private birdDied() {
