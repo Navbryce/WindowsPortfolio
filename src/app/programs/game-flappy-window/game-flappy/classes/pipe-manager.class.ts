@@ -73,9 +73,9 @@ export class PipeManager {
         const actualBirdX = bird.x - bird.width / 2;
         const pipeWidth = this.pipeImageMap.pipeHeadImage.width;
         if (actualBirdX < (pipe.x + pipeWidth) && (actualBirdX + bird.width) > pipe.x) {
-            let actualBirdY = bird.y - (bird.height / 2); // "uncenter" bird
-            actualBirdY = this.groundY - bird.y; // make relative to the top of the screen
-            if (actualBirdY > pipe.distanceFromCeiling + pipe.gapHeight || actualBirdY + bird.height < pipe.distanceFromCeiling) {
+            let actualBirdY = this.groundY - bird.y; // make relative to the top of the screen
+            actualBirdY -= bird.height / 2; // uncenter
+            if (actualBirdY + bird.height > pipe.distanceFromCeiling + pipe.gapHeight || actualBirdY  < pipe.distanceFromCeiling) {
                 collision = true;
             }
         }
