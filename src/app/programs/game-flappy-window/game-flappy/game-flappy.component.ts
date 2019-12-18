@@ -7,8 +7,6 @@ import {Bird, PipeImageMap, PipeManager, PipeStepState} from './classes';
   styleUrls: ['./game-flappy.component.scss']
 })
 export class GameFlappyComponent implements OnInit {
-  public restartScreen = false;
-
   private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
   private static readonly FLAPS_A_SECOND = 2;
   private static readonly TAPS_A_SECOND = 1;
@@ -17,6 +15,7 @@ export class GameFlappyComponent implements OnInit {
   private static readonly NUMBER_OF_BIRD_SPRITES = 3;
   private static readonly NUMBER_OF_TAP_SPRITES = 2;
   private static readonly SCALING = 250;
+  private static readonly SHOW_RESTART_DELAY = 200;
 
 
   private static readonly CHANGE_FLAP_ON_COUNT = Math.floor((1 / GameFlappyComponent.FRAME_INTERVAL_SECONDS) / (GameFlappyComponent.FLAPS_A_SECOND * GameFlappyComponent.NUMBER_OF_BIRD_SPRITES));
@@ -24,6 +23,8 @@ export class GameFlappyComponent implements OnInit {
 
   private static readonly FLOOR_COLOR = '#ded895';
   private static readonly GAME_ASSETS_ROOT = './assets/programs/game-flappy-window';
+
+  public showRestartScreen: boolean;
 
   private backgroundImage;
   private backgroundX: number;
@@ -41,6 +42,7 @@ export class GameFlappyComponent implements OnInit {
   private imagesInitialized = false;
   private pipeImageMap: PipeImageMap;
   private pipeManager: PipeManager;
+  private restartScreen = false;
   private tapImages = [];
   private tapImageSpriteCounter;
   private score: number;
@@ -159,6 +161,7 @@ export class GameFlappyComponent implements OnInit {
     const scoreSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/score.mp3`);
     const collideSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/collide.wav`);
     const deadSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/dead.wav`);
+    collideSound.addEventListener('ended', () => deadSound.play());
 
     this.sounds = {flapSound, scoreSound, collideSound, deadSound};
 
@@ -243,7 +246,7 @@ export class GameFlappyComponent implements OnInit {
 
     this.pipeManager.drawPipes(this.canvasContext);
     this.updateAndDrawFloor();
-    if (this.bird.birdDead) {
+    if (!this.bird.birdAlive) {
       this.birdDied();
     }
     this.drawBird();
@@ -321,8 +324,11 @@ export class GameFlappyComponent implements OnInit {
   private birdDied() {
     if (!this.restartScreen) {
       this.bestScore = Math.max(this.score, this.bestScore);
-      this.sounds.deadSound.play();
       this.restartScreen = true;
+      // delay the appearance of the restarts creen
+      setTimeout(() => {
+        this.showRestartScreen = true;
+      }, GameFlappyComponent.SHOW_RESTART_DELAY);
     }
   }
 
@@ -336,6 +342,7 @@ export class GameFlappyComponent implements OnInit {
     this.bird = null;
     this.gameInterval = null;
     this.restartScreen = false;
+    this.showRestartScreen = false;
     this.canvas.nativeElement.removeEventListener('click', this.clickListener);
     this.clickListener = null;
     this.startGame();
