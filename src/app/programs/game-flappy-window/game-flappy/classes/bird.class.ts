@@ -68,10 +68,8 @@ export class Bird {
     }
 
     public jump(): number {
-        if (this.birdAlive) {
-            this._yVelocity = Bird.JUMP_Y_VELOCITY;
-            return this._y;
-        }
+        this._yVelocity = Bird.JUMP_Y_VELOCITY;
+        return this._y;
     }
 
     public birdCollided() {

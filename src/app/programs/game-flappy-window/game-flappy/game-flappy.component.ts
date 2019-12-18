@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Bird, BirdState, PipeImageMap, PipeManager, PipeStepState} from './classes';
+import {Bird, PipeImageMap, PipeManager, PipeStepState} from './classes';
 
 @Component({
   selector: 'game-flappy',
@@ -8,7 +8,7 @@ import {Bird, BirdState, PipeImageMap, PipeManager, PipeStepState} from './class
 })
 export class GameFlappyComponent implements OnInit {
   public restartScreen = false;
-  
+
   private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
   private static readonly FLAPS_A_SECOND = 2;
   private static readonly TAPS_A_SECOND = 1;
@@ -44,6 +44,7 @@ export class GameFlappyComponent implements OnInit {
   private tapImages = [];
   private tapImageSpriteCounter;
   private score: number;
+  private sounds: {flapSound: any, scoreSound: any, collideSound: any, deadSound: any};
   private startMoving: boolean;
   private width: number;
 
@@ -54,11 +55,16 @@ export class GameFlappyComponent implements OnInit {
   constructor() { }
 
   async ngOnInit() {
-    await this.initializeImages();
+    await this.initializeAssets();
     this.imagesInitialized = true;
     this.canvasContext = this.canvas.nativeElement.getContext('2d');
     this.dimensionsUpdateCheck();
     this.startGame();
+  }
+
+  private async initializeAssets() {
+    await this.initializeImages();
+    await this.initializeSounds();
   }
 
   private initializeImages(): Promise<boolean> {
@@ -128,7 +134,7 @@ export class GameFlappyComponent implements OnInit {
         .then((result: boolean[]) => true);
 
   }
-  
+
   private initializePipeImages(): Promise<boolean> {
     const pipeHeadImage = new Image();
     pipeHeadImage.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/pipe-head.png`;
@@ -145,6 +151,26 @@ export class GameFlappyComponent implements OnInit {
     this.pipeImageMap = {pipeHeadImage, pipeBodyImage};
 
     return Promise.all([pipeHeadPromise, pipeBodyPromise])
+        .then((result) => true);
+  }
+
+  private initializeSounds(): Promise<boolean> {
+    const flapSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/flap.mp3`);
+    const scoreSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/score.mp3`);
+    const collideSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/collide.wav`);
+    const deadSound = new Audio(`${GameFlappyComponent.GAME_ASSETS_ROOT}/sounds/dead.wav`);
+
+    this.sounds = {flapSound, scoreSound, collideSound, deadSound};
+
+
+    const soundPromises = Object.keys(this.sounds).map((key: string) => {
+      const sound = this.sounds[key];
+      return new Promise<boolean>((resolve) => {
+        sound.addEventListener('canplaythrough', event => resolve(true));
+      });
+    });
+
+    return Promise.all(soundPromises)
         .then((result) => true);
   }
 
@@ -182,7 +208,13 @@ export class GameFlappyComponent implements OnInit {
 
   private jumpListener() {
     this.startMoving = this.startMoving || !this.startMoving;
-    this.bird.jump();
+    if (this.bird.birdAlive) {
+      this.sounds.flapSound.pause();
+      this.sounds.flapSound.currentTime = 0;
+      this.bird.jump();
+      this.sounds.flapSound.play();
+    }
+
   }
 
   private renderLoop() {
@@ -191,7 +223,11 @@ export class GameFlappyComponent implements OnInit {
       this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
       const newState: PipeStepState = this.pipeManager.timeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS, this.bird);
       if (newState === PipeStepState.SCORE) {
-        this.score++;
+        this.scoreIncrease();
+      }
+
+      if (newState === PipeStepState.COLLISION) {
+        this.sounds.collideSound.play();
       }
     }
 
@@ -282,11 +318,17 @@ export class GameFlappyComponent implements OnInit {
     this.canvasContext.drawImage(tapImage, x, y);
   }
 
-
-
   private birdDied() {
-    this.bestScore = Math.max(this.score, this.bestScore);
-    this.restartScreen = true;
+    if (!this.restartScreen) {
+      this.bestScore = Math.max(this.score, this.bestScore);
+      this.sounds.deadSound.play();
+      this.restartScreen = true;
+    }
+  }
+
+  private scoreIncrease() {
+    this.score++;
+    this.sounds.scoreSound.play();
   }
 
   private restartGame() {
