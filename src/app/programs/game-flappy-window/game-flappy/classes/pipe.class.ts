@@ -1,5 +1,5 @@
 export class Pipe {
-    private static readonly STANDARD_GAP_HEIGHT = 175;
+    public static readonly STANDARD_GAP_HEIGHT = 175;
     private _x: number;
 
     constructor(initialX: number, public readonly distanceFromCeiling: number, public readonly gapHeight: number = Pipe.STANDARD_GAP_HEIGHT) {

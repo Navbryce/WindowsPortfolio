@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Bird, Pipe} from './classes';
+import {Bird, BirdState, PipeImageMap, PipeManager, PipeStepState} from './classes';
 
 @Component({
   selector: 'game-flappy',
@@ -14,7 +14,6 @@ export class GameFlappyComponent implements OnInit {
   private static readonly SCALING = 250;
 
 
-  private static readonly BACKGROUND_VELOCITY = Bird.X_VELOCITY * GameFlappyComponent.BACKGROUND_RELATIVE_VELOCITY_FACTOR;
   private static readonly CHANGE_FLAP_ON_COUNT = Math.floor((1 / GameFlappyComponent.FRAME_INTERVAL_SECONDS) / (GameFlappyComponent.FLAPS_A_SECOND * GameFlappyComponent.NUMBER_OF_BIRD_SPRITES));
 
   private static readonly FLOOR_COLOR = '#ded895';
@@ -31,7 +30,9 @@ export class GameFlappyComponent implements OnInit {
   private frameCounter: number;
   private gameInterval;
   private height: number;
-  private pipeImageMap;
+  private pipeImageMap: PipeImageMap;
+  private pipeManager: PipeManager;
+  private score: number;
   private startMoving: boolean;
   private width: number;
 
@@ -115,7 +116,8 @@ export class GameFlappyComponent implements OnInit {
 
   private startGame() {
     if (this.bird == null && this.gameInterval == null) {
-      this.bird = new Bird(this.height / 2, GameFlappyComponent.SCALING);
+      this.bird = new Bird(this.width / 2, this.height / 2, GameFlappyComponent.SCALING,
+          this.birdImages[0].width, this.birdImages[0].height);
       // initialize the bird sprite counter
       this.birdSpriteCounter = 0;
 
@@ -124,6 +126,10 @@ export class GameFlappyComponent implements OnInit {
       this.backgroundX = 0;
       this.floorX = 0;
       this.startMoving = false; // the game initially starts in a "wait" mode
+      this.score = 0;
+      this.pipeManager = new PipeManager(this.pipeImageMap,
+          this.width, this.backgroundImage.height,
+          GameFlappyComponent.SCALING);
 
       // initialize jump listener
       this.canvas.nativeElement.addEventListener('click', () => this.jumpListener());
@@ -145,14 +151,18 @@ export class GameFlappyComponent implements OnInit {
   private renderLoop() {
     if (this.startMoving) {
       this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
+      const newState: PipeStepState = this.pipeManager.timeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS, this.bird);
+      if (newState === PipeStepState.SCORE) {
+        this.score++;
+      }
     }
 
     this.clearCanvas();
     this.updateAndDrawBackground();
 
-    this.drawPipe(new Pipe(0, 100));
+    this.pipeManager.drawPipes(this.canvasContext);
     this.updateAndDrawFloor();
-    if (this.bird.y < this.height - this.backgroundImage.height) {
+    if (this.bird.birdDead) {
       this.birdDied();
     }
     this.drawBird();
@@ -171,7 +181,8 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private updateAndDrawBackground() {
-    this.backgroundX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * GameFlappyComponent.BACKGROUND_VELOCITY * GameFlappyComponent.SCALING;
+    const backgroundVelocity = this.bird.xVelocity * GameFlappyComponent.BACKGROUND_RELATIVE_VELOCITY_FACTOR;
+    this.backgroundX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * backgroundVelocity * GameFlappyComponent.SCALING;
     if (this.backgroundX <= -this.backgroundImage.width) {
       this.backgroundX = 0;
     }
@@ -186,7 +197,7 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private updateAndDrawFloor() {
-    this.floorX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * Bird.X_VELOCITY * GameFlappyComponent.SCALING;
+    this.floorX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * this.bird.xVelocity * GameFlappyComponent.SCALING;
     if (this.floorX <= -this.floorImage.width) {
       this.floorX = 0;
     }
@@ -208,36 +219,16 @@ export class GameFlappyComponent implements OnInit {
   private drawBird() {
     this.canvasContext.save();
     const birdImage = this.birdImages[this.birdSpriteCounter];
-    const actualY = (this.height - this.bird.y) + birdImage.height / 2;
-    const actualX =  (this.width / 2) - birdImage.width / 2;
-    const angle = Math.atan(-this.bird.yVelocity / Bird.X_VELOCITY); // calculate the angle the bird should point
+    const actualY = (this.backgroundImage.height - this.bird.y)
+    const actualX =  (this.bird.x);
+    const angle = Math.atan(-this.bird.yVelocity / this.bird.xVelocity); // calculate the angle the bird should point
     this.canvasContext.translate(actualX, actualY); // translate coordinate system to the bird's center point
     this.canvasContext.rotate(angle);
-    this.canvasContext.drawImage(birdImage, -birdImage.width / 2, -birdImage.height / 2);
+    this.canvasContext.drawImage(birdImage, -this.bird.width / 2, -this.bird.height / 2);
     this.canvasContext.restore();
   }
 
-  private drawPipe(pipe: Pipe) {
-    const {pipeHeadImage, pipeBodyImage} = this.pipeImageMap;
-    const topHeadY = pipe.distanceFromCeiling - pipeHeadImage.height;
-    const bottomHeadY = pipe.distanceFromCeiling + pipe.gapHeight;
-    this.canvasContext.drawImage(pipeHeadImage, pipe.x, topHeadY);
-    // above pipe body
-    let lastTopBodyY = topHeadY;
-    while (lastTopBodyY > 0) {
-      lastTopBodyY -= pipeBodyImage.height;
-      this.canvasContext.drawImage(pipeBodyImage, pipe.x, lastTopBodyY);
-    }
-    this.canvasContext.drawImage(pipeHeadImage, pipe.x, bottomHeadY);
-    // below pipe body
-    let lastBottomBodyY = bottomHeadY + pipeHeadImage.height;
-    while (lastBottomBodyY < this.height) {
-      this.canvasContext.drawImage(pipeBodyImage, pipe.x, lastBottomBodyY);
-      lastBottomBodyY += pipeBodyImage.height;
-    }
 
-
-  }
 
   private birdDied() {
     clearInterval(this.gameInterval);
