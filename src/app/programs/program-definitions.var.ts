@@ -59,7 +59,7 @@ export let ProgramDefinitions = [ // positionOnLastClose set by windodw
     id: 'game-flappy-window',
     icon: './assets/programs/game-flappy-window/icon.png',
     name: 'Flappy Bird',
-    openOnStart: true,
+    openOnStart: false,
     pin: {
       desktop: true,
       taskbar: true,

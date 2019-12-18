@@ -9,18 +9,23 @@ import {Bird, BirdState, PipeImageMap, PipeManager, PipeStepState} from './class
 export class GameFlappyComponent implements OnInit {
   private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
   private static readonly FLAPS_A_SECOND = 2;
+  private static readonly TAPS_A_SECOND = 1;
+
   private static readonly FRAME_INTERVAL_SECONDS = .01;
   private static readonly NUMBER_OF_BIRD_SPRITES = 3;
+  private static readonly NUMBER_OF_TAP_SPRITES = 2;
   private static readonly SCALING = 250;
 
 
   private static readonly CHANGE_FLAP_ON_COUNT = Math.floor((1 / GameFlappyComponent.FRAME_INTERVAL_SECONDS) / (GameFlappyComponent.FLAPS_A_SECOND * GameFlappyComponent.NUMBER_OF_BIRD_SPRITES));
+  private static readonly CHANGE_TAP_ON_COUNT = Math.floor((1 / GameFlappyComponent.FRAME_INTERVAL_SECONDS) / (GameFlappyComponent.TAPS_A_SECOND * GameFlappyComponent.NUMBER_OF_TAP_SPRITES));
 
   private static readonly FLOOR_COLOR = '#ded895';
   private static readonly GAME_ASSETS_ROOT = './assets/programs/game-flappy-window';
 
   private backgroundImage;
   private backgroundX: number;
+  private bestScore = 0;
   private bird: Bird;
   private birdSpriteCounter: number = null; // indicates the sprite the bird is currently on
   private readonly birdImages = [];
@@ -30,10 +35,15 @@ export class GameFlappyComponent implements OnInit {
   private frameCounter: number;
   private gameInterval;
   private height: number;
+  private clickListener;
+  private imagesInitialized = false;
   private pipeImageMap: PipeImageMap;
   private pipeManager: PipeManager;
+  private tapImages = [];
+  private tapImageSpriteCounter;
   private score: number;
   private startMoving: boolean;
+  private restartScreen = false;
   private width: number;
 
   @ViewChild('wrapper') gameWrapper: ElementRef;
@@ -44,6 +54,7 @@ export class GameFlappyComponent implements OnInit {
 
   async ngOnInit() {
     await this.initializeImages();
+    this.imagesInitialized = true;
     this.canvasContext = this.canvas.nativeElement.getContext('2d');
     this.dimensionsUpdateCheck();
     this.startGame();
@@ -51,7 +62,7 @@ export class GameFlappyComponent implements OnInit {
 
   private initializeImages(): Promise<boolean> {
     const imagePromises: Promise<boolean>[] = [this.initializeBirdImages(), this.initializeBackgroundImage(), this.initializeFloorImage(),
-      this.initializePipeImages()];
+      this.initializePipeImages(), this.initializeTapImages()];
     return Promise.all(imagePromises)
         .then((result: boolean[]) => true);
   }
@@ -95,6 +106,28 @@ export class GameFlappyComponent implements OnInit {
     });
   }
 
+
+  private initializeTapImages(): Promise<boolean> {
+    const tapPromises: Promise<boolean>[] = [];
+    for (let counter = 0; counter < GameFlappyComponent.NUMBER_OF_TAP_SPRITES; counter++) {
+      const image = new Image();
+      image.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/tap-image/${counter}.png`;
+
+      // push to bird image array
+      this.tapImages.push(image);
+
+      // image load promises
+      const imageLoaded = new Promise<boolean>((resolve) => {
+        image.onload = () => resolve(true);
+      });
+      tapPromises.push(imageLoaded);
+    }
+
+    return Promise.all(tapPromises)
+        .then((result: boolean[]) => true);
+
+  }
+  
   private initializePipeImages(): Promise<boolean> {
     const pipeHeadImage = new Image();
     pipeHeadImage.src = `${GameFlappyComponent.GAME_ASSETS_ROOT}/pipe-head.png`;
@@ -114,12 +147,15 @@ export class GameFlappyComponent implements OnInit {
         .then((result) => true);
   }
 
+
   private startGame() {
     if (this.bird == null && this.gameInterval == null) {
-      this.bird = new Bird(this.width / 2, this.height / 2, GameFlappyComponent.SCALING,
+      this.bird = new Bird(this.width / 2, this.backgroundImage.height / 2, GameFlappyComponent.SCALING,
           this.birdImages[0].width, this.birdImages[0].height);
       // initialize the bird sprite counter
       this.birdSpriteCounter = 0;
+      // initialize tap image sprite counter
+      this.tapImageSpriteCounter = 0;
 
       // initialize the frame number
       this.frameCounter = 0;
@@ -130,9 +166,9 @@ export class GameFlappyComponent implements OnInit {
       this.pipeManager = new PipeManager(this.pipeImageMap,
           this.width, this.backgroundImage.height,
           GameFlappyComponent.SCALING);
-
+      this.clickListener = () => this.jumpListener();
       // initialize jump listener
-      this.canvas.nativeElement.addEventListener('click', () => this.jumpListener());
+      this.canvas.nativeElement.addEventListener('click', this.clickListener);
 
       // start the game interval
       this.gameInterval = setInterval(() => {
@@ -149,6 +185,7 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private renderLoop() {
+    this.clearCanvas();
     if (this.startMoving) {
       this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
       const newState: PipeStepState = this.pipeManager.timeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS, this.bird);
@@ -157,8 +194,15 @@ export class GameFlappyComponent implements OnInit {
       }
     }
 
-    this.clearCanvas();
     this.updateAndDrawBackground();
+    // tell the user to tap if they're not moving yet
+    if (!this.startMoving) {
+      this.drawTapImage();
+      // update tap sprite
+      if (this.frameCounter % GameFlappyComponent.CHANGE_TAP_ON_COUNT === 0) {
+        this.tapImageSpriteCounter = (this.tapImageSpriteCounter + 1) % this.tapImages.length;
+      }
+    }
 
     this.pipeManager.drawPipes(this.canvasContext);
     this.updateAndDrawFloor();
@@ -168,7 +212,7 @@ export class GameFlappyComponent implements OnInit {
     this.drawBird();
 
     // update the bird sprite image
-    if (this.frameCounter % GameFlappyComponent.CHANGE_FLAP_ON_COUNT === 0) {
+    if (this.frameCounter % GameFlappyComponent.CHANGE_FLAP_ON_COUNT === 0 && !this.bird.birdDead) {
       this.birdSpriteCounter = (this.birdSpriteCounter + 1) % this.birdImages.length;
     }
     this.frameCounter++;
@@ -228,16 +272,29 @@ export class GameFlappyComponent implements OnInit {
     this.canvasContext.restore();
   }
 
+  private drawTapImage() {
+    const tapImage = this.tapImages[this.tapImageSpriteCounter];
+    const imageWidth = tapImage.width;
+    const imageHeight = tapImage.height;
+    const x = this.width / 2 - imageWidth / 2;
+    const y = this.bird.y + this.bird.height / 2 + 50;
+    this.canvasContext.drawImage(tapImage, x, y);
+  }
+
 
 
   private birdDied() {
-    clearInterval(this.gameInterval);
-    this.restartGame();
+    this.bestScore = Math.max(this.score, this.bestScore);
+    this.restartScreen = true;
   }
 
   private restartGame() {
+    clearInterval(this.gameInterval);
     this.bird = null;
     this.gameInterval = null;
+    this.restartScreen = false;
+    this.canvas.nativeElement.removeEventListener('click', this.clickListener);
+    this.clickListener = null;
     this.startGame();
   }
 
@@ -265,6 +322,9 @@ export class GameFlappyComponent implements OnInit {
 
 
   public windowResize (event: any): void {
+    if (this.dimensionsUpdateCheck() && this.imagesInitialized) {
+      this.restartGame();
+    }
   }
 
 

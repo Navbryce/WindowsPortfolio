@@ -38,7 +38,6 @@ export class ConsoleComponent extends ProgramComponent {
 
   public addLine (line: String): boolean {
     this.lines.push(line);
-    console.log(line);
     const consoleWrapper = this.consoleWrapper.nativeElement;
     // keep scrolled at bottom (give it 10ms to render the line)
     setTimeout(() => {

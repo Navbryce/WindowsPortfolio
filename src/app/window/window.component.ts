@@ -268,6 +268,8 @@ export class WindowComponent {
     }
     setTimeout(() => { // disable transitions after the transition runs
       this.windowComponent.nativeElement.style.transition = "";
+      this.resizeNotify();
+
     }, 100)
   }
 

@@ -13,6 +13,7 @@ export enum PipeStepState {
 }
 
 export class PipeManager {
+    private static MIN_DISTANCE_BETWEEN_PIPES = 270;
     private static MIN_DISTANCE_FROM_CEILING = 50;
     private static MIN_DISTANCE_FROM_GROUND = 90;
 
@@ -26,9 +27,8 @@ export class PipeManager {
     public timeStep(timeStepDuration: number, bird: Bird): PipeStepState {
         let output: PipeStepState = PipeStepState.NO_CHANGE;
 
-        if (this.pipes.length === 0) {
-            this.pipes.push(this.generateNewPipe());
-        }
+       this.checkAndGenerateNewPipe();
+
         const actualBirdX = bird.x - bird.width / 2;
 
         let stopCheckingForCollisionsAndScore = false;
@@ -60,6 +60,18 @@ export class PipeManager {
             }
         }
         return output;
+    }
+
+    private checkAndGenerateNewPipe(): boolean {
+        const generateNewPipe = this.checkToGenerateNewPipe();
+        if (generateNewPipe) {
+            this.pipes.push(this.generateNewPipe());
+        }
+        return generateNewPipe;
+    }
+
+    private checkToGenerateNewPipe(): boolean {
+        return this.pipes.length === 0 || this.gameWidth - this.pipes[this.pipes.length - 1].x > PipeManager.MIN_DISTANCE_BETWEEN_PIPES;
     }
 
     private generateNewPipe(): Pipe {

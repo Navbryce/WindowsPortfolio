@@ -1,6 +1,68 @@
-.score {
+@font-face {
+  font-family: FlappyBird;
+  src: url('/assets/fonts/programs/FlappyBird.TTF');
+}
+@font-face {
+  font-family: FlappyBirdAlt;
+  src: url('/assets/fonts/programs/FlappyBirdAlt.ttf');
+}
+.flappy-text {
+  color: white;
+  -webkit-text-stroke: 2px black;
+  font-family: 'FlappyBird';
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  @extend .flappy-text;
+}
+.restart-screen {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 250px;
   position: absolute;
-  text-align: center;
   width: 100%;
   z-index: 1;
+
+  .scores {
+    background-color: #ded895;
+    border-radius: 5px;
+    padding: 9px 25px;
+
+    h1 {
+      font-size: 29pt;
+    }
+
+    h3 {
+      font-family: 'FlappyBirdAlt';
+      font-size: 10pt;
+      color: #ff7968;
+      margin: 0;
+      padding: 0;
+    }
+    text-align: center;
+  }
+  .restart-button {
+    margin-top: 40px;
+    &:hover {
+      cursor: pointer;
+      img {
+        filter: brightness(90%);
+      }
+    }
+  }
+}
+.score {
+  font-size: 40pt;
+  margin-top: 50px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+}
+.wrapper {
+  user-select: none;
 }

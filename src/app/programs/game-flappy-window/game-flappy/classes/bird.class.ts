@@ -4,7 +4,7 @@ export enum BirdState {
     DEAD
 }
 export class Bird {
-    private static readonly GRAVITY_ACCELERATION = 4.25;
+    private static readonly GRAVITY_ACCELERATION = 5;
     private static readonly JUMP_Y_VELOCITY = 1.9;
     private static readonly INITIAL_X_VELOCITY = 1.0;
 
@@ -55,11 +55,16 @@ export class Bird {
             this._yVelocity -= Bird.GRAVITY_ACCELERATION * timeSeconds;
             this._y += this._yVelocity * timeSeconds * this.velocityScale;
             if (this._y <= 0) {
-                this.state = BirdState.DEAD;
+                this.birdDied();
             }
         }
         return this._y;
 
+    }
+
+    private birdDied() {
+        this._xVelocity = 0;
+        this.state = BirdState.DEAD;
     }
 
     public jump(): number {

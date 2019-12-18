@@ -80,7 +80,16 @@ const RawCommands: any = {
     output: [
       `<a href='/assets/portfolio-documents${environment.resumePath}' target='_blank'>Click here for Resume</a>`
     ]
-  }
+  },
+  flappy: {
+    genHelp: 'Play a game',
+    launch: [
+      {
+        id: 'game-flappy-window',
+        args: ''
+      }
+    ]
+  },
 };
 
 function getCommandsList (commands: any): Array<string> {
@@ -96,29 +105,33 @@ function getCommandsList (commands: any): Array<string> {
   return commandList;
 }
 
-function processCommands (commands: any): any {
-  const commandList: Array<string> = getCommandsList(commands);
+function processCommands (commands: {[key: string]: any}): any {
+  // take commands map and turn into list
+  const commandList =  getCommandsList(commands);
+  // add numbers to each command (affects its length)
+  const commandTextList: Array<string> = commandList.map((command: string, index: number) => `${index + 1}) ${command}`);
   /* processes the commands */
 
-  // find the longest command, not the most efficient, but quick to type
-  const longestCommand: number = Math.max.apply(null, (commandList.map((commandID) => {
+  // find the longest command text, not the most efficient, but quick to type
+  const longestCommand: number = Math.max.apply(null, (commandTextList.map((commandID) => {
     return commandID.length;
   })));
 
   // get all the commands as an array of strings and create a new array of strings with the help info
-  const distanceToDef = longestCommand + 5;
+  const MINMUM_NUMBER_OF_PERIODS = 5;
+  const distanceToDef = longestCommand + MINMUM_NUMBER_OF_PERIODS;
   const helpList = commandList.map((commandID: string, index: number) => {
-    let output = `${index + 1}) ${commandID}`;
-    let numberOfPeriods = distanceToDef - commandID.length;
+    let commandText = commandTextList[index];
+    let numberOfPeriods = distanceToDef - commandText.length;
     while (numberOfPeriods > 0) {
-      output += '.';
+      commandText += '.';
       numberOfPeriods--;
     }
     const command = RawCommands[commandID];
     if (!!command.genHelp) {
-      output += command.genHelp;
+      commandText += command.genHelp;
     }
-    return output;
+    return commandText;
   });
 
   // add all the commands to the help command output

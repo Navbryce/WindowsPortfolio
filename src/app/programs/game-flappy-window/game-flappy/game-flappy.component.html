@@ -1,5 +1,14 @@
-<div #wrapper class="full">
-    <h1 class="score">{{score}}</h1>
+<div #wrapper class="full wrapper">
+    <div *ngIf="restartScreen" class="restart-screen">
+        <div class="scores">
+            <h3>Score:</h3>
+            <h1>{{score}}</h1>
+            <h3>Best:</h3>
+            <h1>{{bestScore}}</h1>
+        </div>
+        <a (click)="restartGame()" class="restart-button"><img src="./assets/programs/game-flappy-window/play.png"></a>
+    </div>
+    <h1 class="score" *ngIf="!restartScreen">{{score}}</h1>
     <canvas #canvas class="full">
     </canvas>
 </div>
