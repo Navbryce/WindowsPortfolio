@@ -7,6 +7,8 @@ import {Bird, BirdState, PipeImageMap, PipeManager, PipeStepState} from './class
   styleUrls: ['./game-flappy.component.scss']
 })
 export class GameFlappyComponent implements OnInit {
+  public restartScreen = false;
+  
   private static readonly BACKGROUND_RELATIVE_VELOCITY_FACTOR = .1;
   private static readonly FLAPS_A_SECOND = 2;
   private static readonly TAPS_A_SECOND = 1;
@@ -43,7 +45,6 @@ export class GameFlappyComponent implements OnInit {
   private tapImageSpriteCounter;
   private score: number;
   private startMoving: boolean;
-  private restartScreen = false;
   private width: number;
 
   @ViewChild('wrapper') gameWrapper: ElementRef;
