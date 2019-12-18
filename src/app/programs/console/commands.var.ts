@@ -25,7 +25,7 @@ const RawCommands: any = {
         output(file.name);
       });
       fileSystem.directoryContents.dirs.forEach((dir) => {
-        output(dir.name + '/');
+        output(`<span class='directory'>${dir.name}/</span>`);
       });
     }
   },

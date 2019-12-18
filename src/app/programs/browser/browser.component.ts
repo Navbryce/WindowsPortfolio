@@ -110,6 +110,9 @@ export class BrowserComponent extends ProgramComponent implements OnInit {
       if (args.file != null) {
         initialPath = args.file.path;
       }
+      if (args.src != null) {
+        initialPath = args.src;
+      }
     }
     if (initialPath == null) {
       initialPath = BrowserComponent.INITIAL_LOAD;
