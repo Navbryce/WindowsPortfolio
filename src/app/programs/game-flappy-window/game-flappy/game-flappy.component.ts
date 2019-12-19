@@ -229,7 +229,7 @@ export class GameFlappyComponent implements OnInit {
         this.scoreIncrease();
       }
 
-      if (newState === PipeStepState.COLLISION) {
+      if (this.bird.birdColliding) {
         this.sounds.collideSound.play();
       }
     }
@@ -246,7 +246,7 @@ export class GameFlappyComponent implements OnInit {
 
     this.pipeManager.drawPipes(this.canvasContext);
     this.updateAndDrawFloor();
-    if (!this.bird.birdAlive) {
+    if (this.bird.birdDead) {
       this.birdDied();
     }
     this.drawBird();

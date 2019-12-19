@@ -50,14 +50,18 @@ export class Bird {
         return this.birdState === BirdState.DEAD;
     }
 
+    get birdColliding(): boolean {
+        return this.birdState === BirdState.COLLIDING;
+    }
+
     public fallTimeStep(timeSeconds: number): number {
-        if (!this.birdDead) {
-            this._yVelocity -= Bird.GRAVITY_ACCELERATION * timeSeconds;
-            this._y += this._yVelocity * timeSeconds * this.velocityScale;
-            if (this._y <= 0) {
-                this.birdDied();
-            }
+        this._yVelocity -= Bird.GRAVITY_ACCELERATION * timeSeconds;
+        this._y += this._yVelocity * timeSeconds * this.velocityScale;
+        if (this._y <= 0) {
+            this.birdCollided();
+            this._y = 0;
         }
+
         return this._y;
 
     }
@@ -73,9 +77,11 @@ export class Bird {
     }
 
     public birdCollided() {
-        if (!this.birdDead) {
+        if (this.birdAlive) {
             this.state = BirdState.COLLIDING;
             this._xVelocity = 0;
+        } else {
+            this.birdDied();
         }
     }
 }

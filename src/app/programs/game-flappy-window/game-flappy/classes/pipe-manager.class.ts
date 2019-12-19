@@ -49,7 +49,7 @@ export class PipeManager {
                      */
                     stopCheckingForCollisionsAndScore = true;
                 } else {
-                    if (this.checkForCollision(pipe, bird) && bird.birdAlive) {
+                    if (this.checkForCollision(pipe, bird)) {
                         output = PipeStepState.COLLISION;
                         bird.birdCollided();
                         break;
