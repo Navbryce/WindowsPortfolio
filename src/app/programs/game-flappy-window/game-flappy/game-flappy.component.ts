@@ -42,6 +42,7 @@ export class GameFlappyComponent implements OnInit {
   private imagesInitialized = false;
   private pipeImageMap: PipeImageMap;
   private pipeManager: PipeManager;
+  private previousTime;
   private restartScreen = false;
   private tapImages = [];
   private tapImageSpriteCounter;
@@ -190,6 +191,7 @@ export class GameFlappyComponent implements OnInit {
       // initialize the frame number
       this.frameCounter = 0;
       this.backgroundX = 0;
+      this.previousTime = null;
       this.floorX = 0;
       this.startMoving = false; // the game initially starts in a "wait" mode
       this.score = 0;
@@ -201,9 +203,7 @@ export class GameFlappyComponent implements OnInit {
       this.canvas.nativeElement.addEventListener('click', this.clickListener);
 
       // start the game interval
-      this.gameInterval = setInterval(() => {
-        this.renderLoop();
-      }, GameFlappyComponent.FRAME_INTERVAL_SECONDS * 1000);
+      this.gameInterval = window.requestAnimationFrame((timeStamp) => this.renderLoop(timeStamp));
     } else {
       throw new Error('Trying to start the game when either the bird or game interval is not null');
     }
@@ -220,11 +220,17 @@ export class GameFlappyComponent implements OnInit {
 
   }
 
-  private renderLoop() {
+  private renderLoop(timeStamp) {
+    if (this.previousTime == null) {
+      this.previousTime = timeStamp;
+    }
+    const timePassed = (timeStamp - this.previousTime) / 1000;
+    this.previousTime = timeStamp;
+
     this.clearCanvas();
     if (this.startMoving) {
-      this.bird.fallTimeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS);
-      const newState: PipeStepState = this.pipeManager.timeStep(GameFlappyComponent.FRAME_INTERVAL_SECONDS, this.bird);
+      this.bird.fallTimeStep(timePassed);
+      const newState: PipeStepState = this.pipeManager.timeStep(timePassed, this.bird);
       if (newState === PipeStepState.SCORE) {
         this.scoreIncrease();
       }
@@ -245,7 +251,7 @@ export class GameFlappyComponent implements OnInit {
     }
 
     this.pipeManager.drawPipes(this.canvasContext);
-    this.updateAndDrawFloor();
+    this.updateAndDrawFloor(timePassed);
     if (this.bird.birdDead) {
       this.birdDied();
     }
@@ -257,7 +263,7 @@ export class GameFlappyComponent implements OnInit {
     }
     this.frameCounter++;
 
-
+    this.gameInterval = window.requestAnimationFrame((timeValue) => this.renderLoop(timeValue));
   }
 
   private clearCanvas() {
@@ -280,8 +286,8 @@ export class GameFlappyComponent implements OnInit {
     }
   }
 
-  private updateAndDrawFloor() {
-    this.floorX -= GameFlappyComponent.FRAME_INTERVAL_SECONDS * this.bird.xVelocity * GameFlappyComponent.SCALING;
+  private updateAndDrawFloor(timePassed) {
+    this.floorX -= timePassed * this.bird.xVelocity * GameFlappyComponent.SCALING;
     if (this.floorX <= -this.floorImage.width) {
       this.floorX = 0;
     }
@@ -338,7 +344,7 @@ export class GameFlappyComponent implements OnInit {
   }
 
   private restartGame() {
-    clearInterval(this.gameInterval);
+    window.cancelAnimationFrame(this.gameInterval);
     this.bird = null;
     this.gameInterval = null;
     this.restartScreen = false;
