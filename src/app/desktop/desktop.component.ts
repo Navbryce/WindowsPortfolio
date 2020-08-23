@@ -26,9 +26,9 @@ export class DesktopComponent extends CustomComponent implements OnInit {
   public startingDragLocation: any; // for the drag box on the desktop
   public width: number;
 
-  @ViewChild('background') background: ElementRef;
-  @ViewChild('shortCutWrapper', {read: ViewContainerRef}) shortCutWrapper: ViewContainerRef;
-  @ViewChild('wrapper') wrapper: ElementRef;
+  @ViewChild('background', {static: true}) background: ElementRef;
+  @ViewChild('shortCutWrapper', {read: ViewContainerRef, static: true}) shortCutWrapper: ViewContainerRef;
+  @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
 
   private iconGrid: Array<Array<any>>;
   private shortCutReferences: Array<any> = []; // all the shortcut component references

@@ -51,8 +51,8 @@ export class GameFlappyComponent implements OnInit {
   private startMoving: boolean;
   private width: number;
 
-  @ViewChild('wrapper') gameWrapper: ElementRef;
-  @ViewChild('canvas') canvas: ElementRef;
+  @ViewChild('wrapper', {static: true}) gameWrapper: ElementRef;
+  @ViewChild('canvas', {static: true}) canvas: ElementRef;
 
 
   constructor() { }

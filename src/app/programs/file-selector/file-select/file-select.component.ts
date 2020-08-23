@@ -16,7 +16,7 @@ export class FileSelectComponent extends ProgramComponent implements OnInit {
     public closeListener: Function;
     public filters: Array<Array<String>>;
 
-    @ViewChild(FileExplorerCore) explorer: FileExplorerCore;
+    @ViewChild(FileExplorerCore, {static: true}) explorer: FileExplorerCore;
 
     constructor (private taskbarService: TaskbarService) {
         // generates defaults if not defined, such as id

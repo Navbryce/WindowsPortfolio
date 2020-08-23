@@ -75,8 +75,8 @@ export class WindowComponent {
   @Output() minimize = new EventEmitter <boolean>();
   @Output() resizeFlag = new EventEmitter<any>(); // outputs object with width and height keys
 
-  @ViewChild('headerBar') headerBar: ElementRef;
-  @ViewChild('windowComponent') windowComponent: ElementRef;
+  @ViewChild('headerBar', {static: true}) headerBar: ElementRef;
+  @ViewChild('windowComponent', {static: true}) windowComponent: ElementRef;
 
 
   constructor (private changeDetector: ChangeDetectorRef, private taskbarService: TaskbarService) {

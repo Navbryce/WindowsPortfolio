@@ -16,8 +16,8 @@ export class ShortcutComponent implements OnInit {
 
   @Output('event') event: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('contentWrapper') contentWrapper: ElementRef;
-  @ViewChild('wrapper') wrapper: ElementRef;
+  @ViewChild('contentWrapper', {static: true}) contentWrapper: ElementRef;
+  @ViewChild('wrapper', {static: true}) wrapper: ElementRef;
 
   constructor () {
   }

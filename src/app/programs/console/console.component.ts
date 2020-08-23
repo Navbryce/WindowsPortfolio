@@ -24,8 +24,8 @@ export class ConsoleComponent extends ProgramComponent {
     this.inputArea.nativeElement.text = text;
   }
 
-  @ViewChild('consoleWrapper') consoleWrapper: ElementRef;
-  @ViewChild('inputArea') inputArea: ElementRef;
+  @ViewChild('consoleWrapper', {static: true}) consoleWrapper: ElementRef;
+  @ViewChild('inputArea', {static: true}) inputArea: ElementRef;
 
   constructor (private httpClient: HttpClient, private taskBarService: TaskbarService) {
     // generates defaults if not defined, such as id

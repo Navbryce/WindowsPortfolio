@@ -9,7 +9,7 @@ import {GameFlappyComponent} from './game-flappy';
     styleUrls: ['./game-flappy-window.component.scss']
 })
 export class GameFlappyWindow extends ProgramComponent implements OnInit {
-    @ViewChild(GameFlappyComponent) flappyGame: GameFlappyComponent;
+    @ViewChild(GameFlappyComponent, {static: true}) flappyGame: GameFlappyComponent;
 
     constructor (private taskbarService: TaskbarService) {
         super();

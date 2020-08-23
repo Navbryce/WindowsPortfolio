@@ -9,17 +9,17 @@ const app = express();
 
 // parse arguments
 var parser = new ArgumentParser({
-  version: '0.0.1',
-  addHelp:true,
-  description: 'Windows Portfolio Backend'
+    version: '0.0.1',
+    addHelp: true,
+    description: 'Windows Portfolio Backend'
 });
 
 parser.addArgument(
-  [ '-d', '--dist' ],
-  {
-    help: 'path from app (as root) that points to dist. don\'t include / at start',
-    defaultValue: 'dist/'
-  }
+    ['-d', '--dist'],
+    {
+        help: 'path from app (as root) that points to dist. don\'t include / at start',
+        defaultValue: 'dist/'
+    }
 );
 var args = parser.parseArgs();
 
@@ -35,14 +35,14 @@ app.use(express.static(distPath));
 // Parse the bodies from all requests
 app.use(bodyParser.json());
 // CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     /* Enable CORS requests */
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-  
-app.get('/', (req,res) => {
+
+app.get('/', (req, res) => {
     /* Route to the angular app */
     res.sendFile(distPath + '/index.html'); //_dirname = path to app
 });
@@ -54,32 +54,34 @@ app.post("/files", (req, res) => {
     getFiles(req.body.currentDirectory).then((success) => {
         res.json(success);
     })
-    .catch((error) => {
-        console.error(error);
-        res.json({error: error});
-    });
+        .catch((error) => {
+            console.error(error);
+            res.json({error: error});
+        });
 });
 
-app.post("/fileExists", (req, res) => {
-    res.send(fileExists(req.body.path));
+app.post("/fileExists", async (req, res) => {
+    res.send(await fileExists(req.body.path));
 });
 
 /* Listen for the app on the Heroku port (if set as an env variable)
 or default to 8080. */
 app.listen(process.env.PORT || 8080);
 
-/* Helper Functions */
-function fileExists (filePath) {
+
+async function fileExists(filePath) {
     /* checks to see if the file exists
         returns true/false if so
     */
 
     // makes sure the path is valid and simplifies it
-    let simpPath = pathCheck(filePath); 
+    let simpPath = pathCheck(filePath);
     // actually get the file information
     let result = false;
     try {
-        result = fs.lstatSync(path.join(assetsPath, simpPath)).isFile();
+        const fullPath = path.join(assetsPath, simpPath);
+        const containingDir = path.dirname(fullPath);
+        return dirContainsFile(containingDir, fullPath);
     } catch (error) {
         result = false;
         console.error(error);
@@ -87,7 +89,21 @@ function fileExists (filePath) {
     return result;
 }
 
-async function getFiles (direcPath) {
+async function dirContainsFile(dirPath, fullFilePath) {
+    // because fs.readfilesync is case insensitive
+    try {
+        const realFilePath = fs.realpathSync(fullFilePath);
+        const matchingPaths = fs.readdirSync(dirPath)
+            .map((fileName) => path.join(dirPath, fileName))
+            .filter(fullPath => fullPath === realFilePath);
+
+        return matchingPaths.length !== 0 && fs.statSync(matchingPaths[0]).isFile();
+    } catch (error) {
+        return false;
+    }
+}
+
+async function getFiles(direcPath) {
     /* Return a promise that returns the files and directories
      within a directory */
     return new Promise((resolve, reject) => {
@@ -99,7 +115,7 @@ async function getFiles (direcPath) {
             simpPath = pathCheck(direcPath);
             // add assetsPath because it's the root
             fullPath = path.join(assetsPath, simpPath);
-            files = fs.readdirSync(fullPath);  
+            files = fs.readdirSync(fullPath);
         } catch (error) {
             reject(error);
         }
@@ -126,20 +142,20 @@ async function getFiles (direcPath) {
     });
 }
 
-function pathCheck (inspectionPath) {
+function pathCheck(inspectionPath) {
     /* Makes sure the path is within the limited range of directories.
     if not, it sets the path to the root. Returns a simplified version of the 
-    path rooted at the assetsPath. */    
+    path rooted at the assetsPath. */
     let simpPath = path.join(assetsPath, inspectionPath); // just combines the path
     if (path.relative(assetsPath, simpPath).includes('..')) {
         /* the user is trying to access something outside assets.
         prevent them */
-        simpPath = assetsPath; 
+        simpPath = assetsPath;
     }
     /* 
     path.relative negates the assets path from the simp path
         because the root is the assets path. It also simplifies it.
     */
-    simpPath = '/' + path.relative(assetsPath, simpPath); 
+    simpPath = '/' + path.relative(assetsPath, simpPath);
     return simpPath;
 }

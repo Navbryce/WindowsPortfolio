@@ -16,7 +16,7 @@ export class AppComponent extends CustomComponent implements OnInit {
   // if the mobile prompt has already been answered
   public mobilePromptAnswered: Boolean = false;
 
-  @ViewChild('desktop', {read: ViewContainerRef}) desktop: ViewContainerRef;
+  @ViewChild('desktop', {read: ViewContainerRef, static: true}) desktop: ViewContainerRef;
 
   constructor (private componentFactoryResolver: ComponentFactoryResolver, private programListService: ProgramListService, private taskbarService: TaskbarService) {
     super();
