@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { ProgramListService } from './program-list.service';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 // TODO THIS NEEDS TO BE RENAMED TO PROGRAM CONTROLLER
 // IN CHARGE OF UPDATING AND MAINTAINING PROGRAM STATUSES.
