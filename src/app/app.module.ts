@@ -4,12 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-};
 
 // components
 import { AppComponent } from './app.component';
@@ -21,7 +15,6 @@ import { BrowserComponent, ConsoleComponent, DirectoryButtonComponent, FileExplo
 import { TaskbarComponent, ProgramIconComponent } from './taskbar';
 import { WindowComponent } from './window/';
 import { IconComponent } from './window/icons';
-
 
 // services
 import {ProgramListService, TaskbarService } from './services';
@@ -59,7 +52,6 @@ import { MatIconModule } from '@angular/material/icon';
         PdfViewerModule,
         MatButtonModule,
         MatIconModule,
-        PerfectScrollbarModule
     ],
   entryComponents: [BrowserComponent, ConsoleComponent,
      FileExplorerComponent, FileSelectComponent, GameFlappyWindow, InfoBoxComponent, ShortcutComponent, TestProgram],
@@ -67,10 +59,6 @@ import { MatIconModule } from '@angular/material/icon';
           HttpClient,
           ProgramListService,
           TaskbarService,
-          {
-              provide: PERFECT_SCROLLBAR_CONFIG,
-              useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-          }
       ],
   bootstrap: [AppComponent]
 })
