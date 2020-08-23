@@ -25,10 +25,12 @@ export class GameFlappyComponent implements OnInit {
   private static readonly GAME_ASSETS_ROOT = './assets/programs/game-flappy-window';
 
   public showRestartScreen: boolean;
+  public score: number;
+  public bestScore = 0;
+  public clickListener;
 
   private backgroundImage;
   private backgroundX: number;
-  private bestScore = 0;
   private bird: Bird;
   private birdSpriteCounter: number = null; // indicates the sprite the bird is currently on
   private readonly birdImages = [];
@@ -38,7 +40,6 @@ export class GameFlappyComponent implements OnInit {
   private frameCounter: number;
   private gameInterval;
   private height: number;
-  private clickListener;
   private imagesInitialized = false;
   private pipeImageMap: PipeImageMap;
   private pipeManager: PipeManager;
@@ -46,7 +47,6 @@ export class GameFlappyComponent implements OnInit {
   private restartScreen = false;
   private tapImages = [];
   private tapImageSpriteCounter;
-  private score: number;
   private sounds: {flapSound: any, scoreSound: any, collideSound: any, deadSound: any};
   private startMoving: boolean;
   private width: number;
@@ -343,7 +343,7 @@ export class GameFlappyComponent implements OnInit {
     this.sounds.scoreSound.play();
   }
 
-  private restartGame() {
+  public restartGame() {
     window.cancelAnimationFrame(this.gameInterval);
     this.bird = null;
     this.gameInterval = null;

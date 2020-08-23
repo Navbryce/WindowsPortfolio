@@ -1,10 +1,11 @@
-import { ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import { CustomComponent } from '../basic/components';
 import { WindowComponent } from '../window';
 
 // functions
-import { generateId } from '../functions'
+import { generateId } from '../functions';
 
+@Injectable({providedIn: 'any'})
 export abstract class ProgramComponent extends CustomComponent implements OnInit {
   public defaultId: string; // debugging purposes
   public id: string;
