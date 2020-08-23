@@ -7,7 +7,7 @@ import { TaskbarService } from '../../services';
 
 // environment
 import { environment } from '../../../environments/environment';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'browser',

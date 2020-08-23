@@ -5,7 +5,9 @@ import { WindowComponent } from '../window';
 // functions
 import { generateId } from '../functions';
 
-@Injectable({providedIn: 'any'})
+@Component({
+  template: ''
+})
 export abstract class ProgramComponent extends CustomComponent implements OnInit {
   public defaultId: string; // debugging purposes
   public id: string;

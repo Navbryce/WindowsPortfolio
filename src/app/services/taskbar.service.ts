@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProgramListService } from './program-list.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 
 // TODO THIS NEEDS TO BE RENAMED TO PROGRAM CONTROLLER
 // IN CHARGE OF UPDATING AND MAINTAINING PROGRAM STATUSES.

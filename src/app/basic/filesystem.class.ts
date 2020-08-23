@@ -1,5 +1,5 @@
 // event
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 // environment
 import { environment } from '../../environments/environment';

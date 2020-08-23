@@ -1,4 +1,4 @@
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 export class MenuBarItem {
     constructor (public name: String, public eventListener: Function, public link: Observable<string> = null,

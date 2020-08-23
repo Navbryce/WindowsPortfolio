@@ -39,7 +39,7 @@
     "ng2-pdf-viewer": "^6.3.2",
     "path": "^0.12.7",
     "rxjs": "^6.6.2",
-    "rxjs-compat": "^6.0.0-rc.0",
+    "rxjs-compat": "^6.6.2",
     "tslib": "^1.13.0",
     "zone.js": "^0.10.3"
   },
