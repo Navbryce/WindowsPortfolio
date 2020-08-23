@@ -26,7 +26,8 @@ import { IconComponent } from './window/icons';
 // services
 import {ProgramListService, TaskbarService } from './services';
 import { HttpClient } from '@angular/common/http';
-import {MatIconModule, MatButtonModule} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
