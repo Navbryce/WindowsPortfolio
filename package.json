@@ -35,7 +35,7 @@
     "argparse": "^1.0.10",
     "body-parser": "^1.18.3",
     "core-js": "^2.4.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "ng2-pdf-viewer": "^6.3.2",
     "path": "^0.12.7",
     "rxjs": "^6.6.2",
